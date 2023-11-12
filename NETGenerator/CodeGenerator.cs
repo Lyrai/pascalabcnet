@@ -11,6 +11,7 @@ using System;
 using System.Collections;
 using PascalABCCompiler.NetHelper;
 using NETGenerator;
+using PascalABCCompiler.NETGenerator;
 
 namespace PascalABCCompiler.CodeGenerators
 {
@@ -21,12 +22,12 @@ namespace PascalABCCompiler.CodeGenerators
 
 	public class Controller
 	{
-		private IILConverter il_converter;//=new NETGenerator.ILConverter();
+		private ILConverter il_converter;//=new NETGenerator.ILConverter();
 
 		public void Compile(SemanticTree.IProgramNode ProgramTree,string TargetFileName,string SourceFileName ,
             NETGenerator.CompilerOptions options, Hashtable StandartDirectories, string[] ResourceFiles)
 		{
-            il_converter = new NETGenerator.ILConverter(StandartDirectories);
+            il_converter = new ILConverter(StandartDirectories);
 			il_converter.ConvertFromTree(ProgramTree, TargetFileName, SourceFileName, options, ResourceFiles);
 		}
 

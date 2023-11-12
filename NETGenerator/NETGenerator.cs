@@ -123,7 +123,7 @@ namespace PascalABCCompiler.NETGenerator
     /// <summary>
     /// Класс, переводящий сем. дерево в сборку .NET
     /// </summary>
-    public class ILConverter : AbstractVisitor, IILConverter
+    public class ILConverter : AbstractVisitor
     {
         protected AppDomain ad;//домен приложения (в нем будет генерироваться сборка)
         protected AssemblyName an;//имя сборки

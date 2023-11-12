@@ -137,7 +137,6 @@
     </Compile>
     <Compile Include="AppConfigUtil.cs" />
     <Compile Include="Config\AssemblyInfo.cs" />
-    <Compile Include="IILConverter.cs" />
     <Compile Include="NETGenegratorTools.cs" />
     <Compile Include="CodeGenerator.cs">
       <SubType>Code</SubType>
@@ -148,7 +147,6 @@
     <Compile Include="NETGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="RoslynGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

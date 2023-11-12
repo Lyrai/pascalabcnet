@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.CodeAnalysis", "r
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.CodeAnalysis.CSharp", "roslyn-compilers\src\Compilers\CSharp\Portable\Microsoft.CodeAnalysis.CSharp.csproj", "{E72F2B92-F379-43B1-9780-1A10B04BE622}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpSyntaxGenerator", "roslyn-compilers\src\Tools\Source\CompilerGeneratorTools\Source\CSharpSyntaxGenerator\CSharpSyntaxGenerator.csproj", "{5F536FCD-E72C-4B6D-91FB-42C1EFFD7149}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -289,6 +291,18 @@ Global
 		{E72F2B92-F379-43B1-9780-1A10B04BE622}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E72F2B92-F379-43B1-9780-1A10B04BE622}.Release|x86.ActiveCfg = Release|Any CPU
 		{E72F2B92-F379-43B1-9780-1A10B04BE622}.Release|x86.Build.0 = Release|Any CPU
+		{5F536FCD-E72C-4B6D-91FB-42C1EFFD7149}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F536FCD-E72C-4B6D-91FB-42C1EFFD7149}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F536FCD-E72C-4B6D-91FB-42C1EFFD7149}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5F536FCD-E72C-4B6D-91FB-42C1EFFD7149}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5F536FCD-E72C-4B6D-91FB-42C1EFFD7149}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5F536FCD-E72C-4B6D-91FB-42C1EFFD7149}.Debug|x86.Build.0 = Debug|Any CPU
+		{5F536FCD-E72C-4B6D-91FB-42C1EFFD7149}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F536FCD-E72C-4B6D-91FB-42C1EFFD7149}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F536FCD-E72C-4B6D-91FB-42C1EFFD7149}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5F536FCD-E72C-4B6D-91FB-42C1EFFD7149}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5F536FCD-E72C-4B6D-91FB-42C1EFFD7149}.Release|x86.ActiveCfg = Release|Any CPU
+		{5F536FCD-E72C-4B6D-91FB-42C1EFFD7149}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -316,6 +330,7 @@ Global
 		{27D9800E-2689-4AA1-A2D6-128E4A9BAE98} = {F8CE2712-826B-450B-A72F-D32D80C99858}
 		{6D096830-ABCB-4F7C-A0EA-7F579591AE50} = {F8CE2712-826B-450B-A72F-D32D80C99858}
 		{E72F2B92-F379-43B1-9780-1A10B04BE622} = {F8CE2712-826B-450B-A72F-D32D80C99858}
+		{5F536FCD-E72C-4B6D-91FB-42C1EFFD7149} = {F8CE2712-826B-450B-A72F-D32D80C99858}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {761C7A47-891E-47CF-B674-0C2B53D2E48C}
