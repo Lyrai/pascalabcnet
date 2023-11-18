@@ -15,6 +15,7 @@ using System.Security;
 using System.Text;
 using System.Threading;
 using NETGenerator;
+using NETGenerator.Adapters;
 using PascalABCCompiler.NetHelper;
 using PascalABCCompiler.SemanticTree;
 
@@ -123,12 +124,12 @@ namespace PascalABCCompiler.NETGenerator
     /// <summary>
     /// Класс, переводящий сем. дерево в сборку .NET
     /// </summary>
-    public class ILConverter : AbstractVisitor, IILConverter
+    public class ILConverter : AbstractVisitor
     {
-        protected AppDomain ad;//домен приложения (в нем будет генерироваться сборка)
+        protected IAppDomainAdapter ad;//домен приложения (в нем будет генерироваться сборка)
         protected AssemblyName an;//имя сборки
-        protected AssemblyBuilder ab;//билдер для сборки
-        protected ModuleBuilder mb;//билдер для модуля
+        protected IAssemblyBuilderAdapter ab;//билдер для сборки
+        protected IModuleBuilderAdapter mb;//билдер для модуля
         protected TypeBuilder entry_type;//тип-обертка над осн. программой
         protected TypeBuilder cur_type;//текущий компилируемый тип
         protected MethodBuilder entry_meth;//входная точка в приложение
@@ -681,9 +682,9 @@ namespace PascalABCCompiler.NETGenerator
             }
                 
             if (RunOnly)
-                ab = ad.DefineDynamicAssembly(an, AssemblyBuilderAccess.Run, dir);//определяем сборку
+                ab = ad.DefineDynamicAssembly(an, dir);//определяем сборку
             else
-                ab = ad.DefineDynamicAssembly(an, AssemblyBuilderAccess.Save, dir);//определяем сборку
+                ab = ad.DefineDynamicAssembly(an, dir);//определяем сборку
             
             //int nn = ad.GetAssemblies().Length;
             if (options.NeedDefineVersionInfo)
