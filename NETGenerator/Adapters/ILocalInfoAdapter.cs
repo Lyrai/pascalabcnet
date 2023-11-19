@@ -1,6 +1,6 @@
 ﻿namespace NETGenerator.Adapters
 {
-    public interface ITypeBuilderAdapter
+    public interface ILocalInfoAdapter
     {
         
     }

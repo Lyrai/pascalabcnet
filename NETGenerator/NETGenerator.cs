@@ -130,8 +130,8 @@ namespace PascalABCCompiler.NETGenerator
         protected AssemblyName an;//имя сборки
         protected IAssemblyBuilderAdapter ab;//билдер для сборки
         protected IModuleBuilderAdapter mb;//билдер для модуля
-        protected TypeBuilder entry_type;//тип-обертка над осн. программой
-        protected TypeBuilder cur_type;//текущий компилируемый тип
+        protected TypeBuilderAdapter entry_type;//тип-обертка над осн. программой
+        protected TypeBuilderAdapter cur_type;//текущий компилируемый тип
         protected MethodBuilder entry_meth;//входная точка в приложение
         protected MethodBuilder cur_meth;//текущий билдер для метода
         protected MethodBuilder init_variables_mb;
@@ -143,8 +143,8 @@ namespace PascalABCCompiler.NETGenerator
         protected Stack<MethInfo> smi = new Stack<MethInfo>();//стек вложенных функций
         protected Helper helper = new Helper();//привязывает классы сем. дерева к нетовским билдерам
         protected int num_scope = 0;//уровень вложенности
-        protected List<TypeBuilder> types = new List<TypeBuilder>();//список закрытия типов
-        protected List<TypeBuilder> value_types = new List<TypeBuilder>();//список закрытия размерных типов (треб. особый порядок)
+        protected List<TypeBuilderAdapter> types = new List<TypeBuilderAdapter>();//список закрытия типов
+        protected List<TypeBuilderAdapter> value_types = new List<TypeBuilderAdapter>();//список закрытия размерных типов (треб. особый порядок)
         protected int uid = 1;//счетчик для задания уникальных имен (исп. при именовании классов-оболочек над влож. ф-ми)
         protected List<ICommonFunctionNode> funcs = new List<ICommonFunctionNode>();//
         protected bool is_addr = false;//флаг, передается ли значение как факт. var-параметр
@@ -168,8 +168,8 @@ namespace PascalABCCompiler.NETGenerator
         protected Dictionary<IConstantNode, FieldBuilder> ConvertedConstants = new Dictionary<IConstantNode, FieldBuilder>();
         //ivan
         protected List<EnumBuilder> enums = new List<EnumBuilder>();
-        protected List<TypeBuilder> NamespaceTypesList = new List<TypeBuilder>();
-        protected TypeBuilder cur_unit_type;
+        protected List<TypeBuilderAdapter> NamespaceTypesList = new List<TypeBuilderAdapter>();
+        protected TypeBuilderAdapter cur_unit_type;
         private Dictionary<IFunctionNode, IFunctionNode> prop_accessors = new Dictionary<IFunctionNode, IFunctionNode>();
         //ssyy
         private const int num_try_save = 10; //Кол-во попыток сохранения
@@ -181,7 +181,7 @@ namespace PascalABCCompiler.NETGenerator
         //\ssyy
         
         private MethodInfo fix_pointer_meth = null;
-        private Dictionary<TypeBuilder, TypeBuilder> marked_with_extension_attribute = new Dictionary<TypeBuilder, TypeBuilder>();
+        private Dictionary<TypeBuilderAdapter, TypeBuilderAdapter> marked_with_extension_attribute = new Dictionary<TypeBuilderAdapter, TypeBuilderAdapter>();
 
         private LocalBuilder current_index_lb;
         private bool has_dereferences = false;
@@ -297,7 +297,7 @@ namespace PascalABCCompiler.NETGenerator
             return ConvertedConstants[c];
         }
 
-        private Dictionary<TypeBuilder, ILGenerator> ModulesInitILGenerators = new Dictionary<TypeBuilder, ILGenerator>();
+        private Dictionary<TypeBuilderAdapter, ILGenerator> ModulesInitILGenerators = new Dictionary<TypeBuilderAdapter, ILGenerator>();
 
         private ConstructorBuilder fileOfAttributeConstructor;
 
@@ -306,7 +306,7 @@ namespace PascalABCCompiler.NETGenerator
             get
             {
                 if (fileOfAttributeConstructor != null) return fileOfAttributeConstructor;
-                TypeBuilder tb = mb.DefineType(PascalABCCompiler.TreeConverter.compiler_string_consts.file_of_attr_name, TypeAttributes.Public | TypeAttributes.BeforeFieldInit, typeof(Attribute));
+                TypeBuilderAdapter tb = mb.DefineType(PascalABCCompiler.TreeConverter.compiler_string_consts.file_of_attr_name, TypeAttributes.Public | TypeAttributes.BeforeFieldInit, typeof(Attribute));
                 types.Add(tb);
                 fileOfAttributeConstructor = tb.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, new Type[1] { TypeFactory.ObjectType });
                 FieldBuilder fld = tb.DefineField("Type", TypeFactory.ObjectType, FieldAttributes.Public);
@@ -326,7 +326,7 @@ namespace PascalABCCompiler.NETGenerator
             get
             {
                 if (setOfAttributeConstructor != null) return setOfAttributeConstructor;
-                TypeBuilder tb = mb.DefineType(PascalABCCompiler.TreeConverter.compiler_string_consts.set_of_attr_name, TypeAttributes.Public | TypeAttributes.BeforeFieldInit, typeof(Attribute));
+                TypeBuilderAdapter tb = mb.DefineType(PascalABCCompiler.TreeConverter.compiler_string_consts.set_of_attr_name, TypeAttributes.Public | TypeAttributes.BeforeFieldInit, typeof(Attribute));
                 types.Add(tb);
                 setOfAttributeConstructor = tb.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, new Type[1] { TypeFactory.ObjectType });
                 FieldBuilder fld = tb.DefineField("Type", TypeFactory.ObjectType, FieldAttributes.Public);
@@ -347,7 +347,7 @@ namespace PascalABCCompiler.NETGenerator
             get
             {
                 if (templateClassAttributeConstructor != null) return templateClassAttributeConstructor;
-                TypeBuilder tb = mb.DefineType(PascalABCCompiler.TreeConverter.compiler_string_consts.template_class_attr_name, TypeAttributes.Public | TypeAttributes.BeforeFieldInit, typeof(Attribute));
+                TypeBuilderAdapter tb = mb.DefineType(PascalABCCompiler.TreeConverter.compiler_string_consts.template_class_attr_name, TypeAttributes.Public | TypeAttributes.BeforeFieldInit, typeof(Attribute));
                 types.Add(tb);
                 templateClassAttributeConstructor = tb.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, new Type[1] { TypeFactory.ByteType.MakeArrayType() });
                 FieldBuilder fld = tb.DefineField("Tree", TypeFactory.ByteType.MakeArrayType(), FieldAttributes.Public);
@@ -368,7 +368,7 @@ namespace PascalABCCompiler.NETGenerator
             get
             {
                 if (typeSynonimAttributeConstructor != null) return typeSynonimAttributeConstructor;
-                TypeBuilder tb = mb.DefineType(PascalABCCompiler.TreeConverter.compiler_string_consts.type_synonim_attr_name, TypeAttributes.Public | TypeAttributes.BeforeFieldInit, typeof(Attribute));
+                TypeBuilderAdapter tb = mb.DefineType(PascalABCCompiler.TreeConverter.compiler_string_consts.type_synonim_attr_name, TypeAttributes.Public | TypeAttributes.BeforeFieldInit, typeof(Attribute));
                 types.Add(tb);
                 typeSynonimAttributeConstructor = tb.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, new Type[1] { TypeFactory.ObjectType });
                 FieldBuilder fld = tb.DefineField("Type", TypeFactory.ObjectType, FieldAttributes.Public);
@@ -389,7 +389,7 @@ namespace PascalABCCompiler.NETGenerator
             get
             {
                 if (shortStringAttributeConstructor != null) return shortStringAttributeConstructor;
-                TypeBuilder tb = mb.DefineType(PascalABCCompiler.TreeConverter.compiler_string_consts.short_string_attr_name, TypeAttributes.Public | TypeAttributes.BeforeFieldInit, typeof(Attribute));
+                TypeBuilderAdapter tb = mb.DefineType(PascalABCCompiler.TreeConverter.compiler_string_consts.short_string_attr_name, TypeAttributes.Public | TypeAttributes.BeforeFieldInit, typeof(Attribute));
                 types.Add(tb);
                 shortStringAttributeConstructor = tb.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, new Type[1] { TypeFactory.Int32Type });
                 FieldBuilder fld = tb.DefineField("Length", TypeFactory.Int32Type, FieldAttributes.Public);
@@ -626,7 +626,7 @@ namespace PascalABCCompiler.NETGenerator
             string fname = TargetFileName;
             var onlyfname = System.IO.Path.GetFileName(fname);
             comp_opt = options;
-            ad = Thread.GetDomain(); //получаем домен приложения
+            ad = AdapterFactory.AppDomain(); //получаем домен приложения
             an = new AssemblyName(); //создаем имя сборки
             an.Version = new Version("1.0.0.0");
             string dir = Directory.GetCurrentDirectory();
@@ -818,7 +818,7 @@ namespace PascalABCCompiler.NETGenerator
                 ConvertTypeHeaderInSpecialOrder(ictn);
             }
 
-            Dictionary<ICommonNamespaceNode, TypeBuilder> NamespacesTypes = new Dictionary<ICommonNamespaceNode, TypeBuilder>();
+            Dictionary<ICommonNamespaceNode, TypeBuilderAdapter> NamespacesTypes = new Dictionary<ICommonNamespaceNode, TypeBuilderAdapter>();
 
             for (int iii = 0; iii < cnns.Length; iii++)
             {
@@ -836,14 +836,14 @@ namespace PascalABCCompiler.NETGenerator
                     NamespacesTypes.Add(cnns[iii], cur_type);
                     if (cnns[iii].IsMain)
                     {   // SSM 05.02.20 here change
-                        TypeBuilder attr_class = mb.DefineType(cnnsnamespace_name + "." + "$GlobAttr", TypeAttributes.Public | TypeAttributes.BeforeFieldInit, typeof(Attribute));
+                        TypeBuilderAdapter attr_class = mb.DefineType(cnnsnamespace_name + "." + "$GlobAttr", TypeAttributes.Public | TypeAttributes.BeforeFieldInit, typeof(Attribute));
                         ConstructorInfo attr_ci = attr_class.DefineDefaultConstructor(MethodAttributes.Public);
                         cur_type.SetCustomAttribute(attr_ci, new byte[4] { 0x01, 0x00, 0x00, 0x00 });
                         attr_class.CreateType();
                     }
                     else if (!IsDotnetNative())
                     {   // SSM 05.02.20 here change
-                        TypeBuilder attr_class = mb.DefineType(cnnsnamespace_name + "." + "$ClassUnitAttr", TypeAttributes.Public | TypeAttributes.BeforeFieldInit, typeof(Attribute));
+                        TypeBuilderAdapter attr_class = mb.DefineType(cnnsnamespace_name + "." + "$ClassUnitAttr", TypeAttributes.Public | TypeAttributes.BeforeFieldInit, typeof(Attribute));
                         ConstructorInfo attr_ci = attr_class.DefineDefaultConstructor(MethodAttributes.Public);
                         cur_type.SetCustomAttribute(attr_ci, new byte[4] { 0x01, 0x00, 0x00, 0x00 });
                         attr_class.CreateType();
@@ -1082,7 +1082,7 @@ namespace PascalABCCompiler.NETGenerator
                 {
                     string[] namespaces = p.UsedNamespaces;
 
-                    TypeBuilder attr_class = mb.DefineType("$UsedNsAttr", TypeAttributes.Public | TypeAttributes.BeforeFieldInit, typeof(Attribute));
+                    TypeBuilderAdapter attr_class = mb.DefineType("$UsedNsAttr", TypeAttributes.Public | TypeAttributes.BeforeFieldInit, typeof(Attribute));
                     FieldBuilder fld_ns = attr_class.DefineField("ns", TypeFactory.StringType, FieldAttributes.Public);
                     FieldBuilder fld_count = attr_class.DefineField("count", TypeFactory.Int32Type, FieldAttributes.Public);
                     ConstructorBuilder attr_ci = attr_class.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, new Type[2] { TypeFactory.Int32Type, TypeFactory.StringType });
@@ -1396,7 +1396,7 @@ namespace PascalABCCompiler.NETGenerator
         private void CloseTypes()
         {
             //(ssyy) TODO: подумать, в каком порядке создавать типы
-            List<TypeBuilder> closed_types = new List<TypeBuilder>();
+            List<TypeBuilderAdapter> closed_types = new List<TypeBuilderAdapter>();
             for (int i = 0; i < types.Count; i++)
                 if (types[i].IsInterface)
                     try
@@ -1407,7 +1407,7 @@ namespace PascalABCCompiler.NETGenerator
                     {
                         if (ex.Message.Contains("рекурсивное") || ex.Message.Contains("recursive") || ex.Message.Contains("rekursiv"))
                         {
-                            SemanticTree.ICommonTypeNode ctn = helper.GetTypeNodeByTypeBuilder(types[i]);
+                            SemanticTree.ICommonTypeNode ctn = helper.GetTypeNodeByITypeBuilderAdapter(types[i]);
                             if (ctn != null)
                                 throw new PascalABCCompiler.Errors.CommonCompilerError(ex.Message, ctn.Location.document.file_name, ctn.Location.begin_line_num, ctn.Location.begin_column_num);
                         }
@@ -1415,7 +1415,7 @@ namespace PascalABCCompiler.NETGenerator
                         
             for (int i = 0; i < enums.Count; i++)
                 enums[i].CreateType();
-            List<TypeBuilder> failed_types = new List<TypeBuilder>();
+            List<TypeBuilderAdapter> failed_types = new List<TypeBuilderAdapter>();
             for (int i = 0; i < value_types.Count; i++)
             {
                 try
@@ -1424,7 +1424,7 @@ namespace PascalABCCompiler.NETGenerator
                 }
                 catch (TypeLoadException ex)
                 {
-                    SemanticTree.ICommonTypeNode ctn = helper.GetTypeNodeByTypeBuilder(value_types[i]);
+                    SemanticTree.ICommonTypeNode ctn = helper.GetTypeNodeByITypeBuilderAdapter(value_types[i]);
                     if (ctn != null)
                     {
                         if (ctn.is_generic_type_definition || ctn.ImplementingInterfaces != null && ctn.ImplementingInterfaces.Count > 0)
@@ -1435,7 +1435,7 @@ namespace PascalABCCompiler.NETGenerator
                             {
                                 if (!(gp.base_type is ICommonTypeNode))
                                     continue;
-                                TypeBuilder tb = helper.GetTypeReference(gp.base_type).tp as TypeBuilder;
+                                TypeBuilderAdapter tb = helper.GetTypeReference(gp.base_type).tp as TypeBuilderAdapter;
                                 if (tb != null)
                                 {
                                     try
@@ -1470,7 +1470,7 @@ namespace PascalABCCompiler.NETGenerator
                                     {
                                         if (!(gp.base_type is ICommonTypeNode))
                                             continue;
-                                        TypeBuilder tb = helper.GetTypeReference(gp.base_type).tp as TypeBuilder;
+                                        TypeBuilderAdapter tb = helper.GetTypeReference(gp.base_type).tp as TypeBuilderAdapter;
                                         if (tb != null && !closed_types.Contains(tb))
                                         {
                                             try
@@ -1520,7 +1520,7 @@ namespace PascalABCCompiler.NETGenerator
                 }
                 catch (TypeLoadException ex)
                 {
-                    SemanticTree.ICommonTypeNode ctn = helper.GetTypeNodeByTypeBuilder(failed_types[i]);
+                    SemanticTree.ICommonTypeNode ctn = helper.GetTypeNodeByITypeBuilderAdapter(failed_types[i]);
                     if (ctn != null)
                         throw new PascalABCCompiler.Errors.CommonCompilerError(ex.Message, ctn.Location.document.file_name, ctn.Location.begin_line_num, ctn.Location.begin_column_num);
                     else
@@ -1560,7 +1560,7 @@ namespace PascalABCCompiler.NETGenerator
         {
             if (t.serialized_tree != null)
             {
-                TypeBuilder tb = mb.DefineType(cur_unit + ".%" + t.name, TypeAttributes.Public, TypeFactory.ObjectType);
+                TypeBuilderAdapter tb = mb.DefineType(cur_unit + ".%" + t.name, TypeAttributes.Public, TypeFactory.ObjectType);
                 types.Add(tb);
                 CustomAttributeBuilder cust_bldr = new CustomAttributeBuilder(this.TemplateClassAttributeConstructor, new object[1] { t.serialized_tree });
                 tb.SetCustomAttribute(cust_bldr);
@@ -1569,7 +1569,7 @@ namespace PascalABCCompiler.NETGenerator
 
         private void CreateTypeSynonim(ITypeSynonym t)
         {
-            TypeBuilder tb = mb.DefineType(cur_unit + ".%" + t.name, TypeAttributes.Public, TypeFactory.ObjectType);
+            TypeBuilderAdapter tb = mb.DefineType(cur_unit + ".%" + t.name, TypeAttributes.Public, TypeFactory.ObjectType);
             types.Add(tb);
             add_possible_type_attribute(tb, t);
         }
@@ -1578,7 +1578,7 @@ namespace PascalABCCompiler.NETGenerator
         {
             Type tt = helper.GetPascalTypeReference(t);
             if (tt != null) return tt;
-            TypeBuilder tb = mb.DefineType(cur_unit + ".%" + t.name, TypeAttributes.Public, TypeFactory.ObjectType);
+            TypeBuilderAdapter tb = mb.DefineType(cur_unit + ".%" + t.name, TypeAttributes.Public, TypeFactory.ObjectType);
             types.Add(tb);
             helper.AddPascalTypeReference(t, tb);
             add_possible_type_attribute(tb, t);
@@ -1589,7 +1589,7 @@ namespace PascalABCCompiler.NETGenerator
         {
             Type tt = helper.GetPascalTypeReference(t);
             if (tt != null) return tt;
-            TypeBuilder tb = mb.DefineType(cur_unit + ".%" + t.name, TypeAttributes.Public, TypeFactory.ObjectType);
+            TypeBuilderAdapter tb = mb.DefineType(cur_unit + ".%" + t.name, TypeAttributes.Public, TypeFactory.ObjectType);
             types.Add(tb);
             helper.AddPascalTypeReference(t, tb);
             add_possible_type_attribute(tb, t);
@@ -1598,7 +1598,7 @@ namespace PascalABCCompiler.NETGenerator
 
         private Type CreateShortStringType(ITypeNode t)
         {
-            TypeBuilder tb = mb.DefineType(cur_unit + ".$string" + (uid++).ToString(), TypeAttributes.Public, TypeFactory.ObjectType);
+            TypeBuilderAdapter tb = mb.DefineType(cur_unit + ".$string" + (uid++).ToString(), TypeAttributes.Public, TypeFactory.ObjectType);
             types.Add(tb);
             add_possible_type_attribute(tb, t);
             return tb;
@@ -1691,7 +1691,7 @@ namespace PascalABCCompiler.NETGenerator
         private void AddTypeWithoutConvert(ICommonTypeNode t)
         {
             if (helper.GetTypeReference(t) != null) return;
-            TypeBuilder tb = mb.DefineType(BuildTypeName(t.name), ConvertAttributes(t), t.is_value_type?TypeFactory.ValueType:null, new Type[0]);
+            TypeBuilderAdapter tb = mb.DefineType(BuildTypeName(t.name), ConvertAttributes(t), t.is_value_type?TypeFactory.ValueType:null, new Type[0]);
             helper.AddType(t, tb);
             //(ssyy) обрабатываем generics
             if (t.is_generic_type_definition)
@@ -1762,16 +1762,16 @@ namespace PascalABCCompiler.NETGenerator
             }
         }
 
-        private Dictionary<TypeBuilder, TypeBuilder> added_types = new Dictionary<TypeBuilder, TypeBuilder>();
-        private void BuildCloseTypeOrder(ICommonTypeNode value, TypeBuilder tb)
+        private Dictionary<TypeBuilderAdapter, TypeBuilderAdapter> added_types = new Dictionary<TypeBuilderAdapter, TypeBuilderAdapter>();
+        private void BuildCloseTypeOrder(ICommonTypeNode value, TypeBuilderAdapter tb)
         {
             foreach (ICommonClassFieldNode fld in value.fields)
             {
                 ITypeNode ctn = fld.type;
                 TypeInfo ti = helper.GetTypeReference(ctn);
-                if (ctn is ICommonTypeNode && ti.tp.IsValueType && ti.tp is TypeBuilder && tb != ti.tp)
+                if (ctn is ICommonTypeNode && ti.tp.IsValueType && ti.tp is TypeBuilderAdapter && tb != ti.tp)
                 {
-                    BuildCloseTypeOrder((ICommonTypeNode)ctn, (TypeBuilder)ti.tp);
+                    BuildCloseTypeOrder((ICommonTypeNode)ctn, (TypeBuilderAdapter)ti.tp);
                 }
             }
             if (!added_types.ContainsKey(tb))
@@ -1823,7 +1823,7 @@ namespace PascalABCCompiler.NETGenerator
                 ICompiledConstructorNode iccn = dn as ICompiledConstructorNode;
                 if (iccn != null)
                 {
-                    ConstructorInfo ci = TypeBuilder.GetConstructor(t, iccn.constructor_info);
+                    ConstructorInfo ci = TypeBuilderAdapter.GetConstructor(t, iccn.constructor_info);
                     helper.AddConstructor(value.used_members[dn] as IFunctionNode, ci);
                     continue;
                 }
@@ -1834,7 +1834,7 @@ namespace PascalABCCompiler.NETGenerator
                     MethodInfo mi = null;
                     try
                     {
-                        mi = TypeBuilder.GetMethod(t, icmn.method_info);
+                        mi = TypeBuilderAdapter.GetMethod(t, icmn.method_info);
                     }
                     catch (Exception ex)
                     {
@@ -1851,9 +1851,9 @@ namespace PascalABCCompiler.NETGenerator
                                 }
                             }
 
-                            mi = TypeBuilder.GetMethod(t, mi);
+                            mi = TypeBuilderAdapter.GetMethod(t, mi);
                         }
-                        else if (t.Name != "TypeBuilderInstantiation")
+                        else if (t.Name != "ITypeBuilderAdapterInstantiation")
                         {
                             try
                             {
@@ -1881,7 +1881,7 @@ namespace PascalABCCompiler.NETGenerator
                 if (icfn != null)
                 {
                     Type ftype = GetTypeOfGenericInstanceField(t, icfn.compiled_field);
-                    FieldInfo fi = TypeBuilder.GetField(t, icfn.compiled_field);
+                    FieldInfo fi = TypeBuilderAdapter.GetField(t, icfn.compiled_field);
 
                     helper.AddGenericField(value.used_members[dn] as ICommonClassFieldNode, fi, ftype, null);
                     continue;
@@ -1901,7 +1901,7 @@ namespace PascalABCCompiler.NETGenerator
                     if (mi != null)
                     {
                         ConstructorInfo cnstr = mi.cnstr;
-                        ConstructorInfo ci = TypeBuilder.GetConstructor(t, cnstr);
+                        ConstructorInfo ci = TypeBuilderAdapter.GetConstructor(t, cnstr);
                         helper.AddConstructor(value.used_members[icmn] as IFunctionNode, ci);
                     }
                     return true;
@@ -1912,9 +1912,9 @@ namespace PascalABCCompiler.NETGenerator
                     if (methtmp == null)
                         return true;
                     MethodInfo meth = methtmp.mi;
-                    if (meth.GetType().FullName == "System.Reflection.Emit.MethodOnTypeBuilderInstantiation")
+                    if (meth.GetType().FullName == "System.Reflection.Emit.MethodOnITypeBuilderAdapterInstantiation")
                         meth = meth.GetGenericMethodDefinition();
-                    MethodInfo mi = TypeBuilder.GetMethod(t, meth);
+                    MethodInfo mi = TypeBuilderAdapter.GetMethod(t, meth);
                     helper.AddMethod(value.used_members[icmn] as IFunctionNode, mi);
                     return true;
                 }
@@ -1949,8 +1949,8 @@ namespace PascalABCCompiler.NETGenerator
                     {
                         FieldInfo finfo = fldinfo.fi;
                         Type ftype = GetTypeOfGenericInstanceField(t, finfo);
-                        FieldInfo fi = TypeBuilder.GetField(t, finfo); // возвращает fi: FieldOnTypeBuilderInstantiation
-                        helper.AddGenericField(value.used_members[dn] as ICommonClassFieldNode, fi, ftype, finfo); // передаю также старое finfo чтобы на следующей итерации вызовом TypeBuilder.GetField(t, finfo) сконструировать правильное fi
+                        FieldInfo fi = TypeBuilderAdapter.GetField(t, finfo); // возвращает fi: FieldOnITypeBuilderAdapterInstantiation
+                        helper.AddGenericField(value.used_members[dn] as ICommonClassFieldNode, fi, ftype, finfo); // передаю также старое finfo чтобы на следующей итерации вызовом ITypeBuilderAdapter.GetField(t, finfo) сконструировать правильное fi
                     }
                     else
                     {
@@ -1973,7 +1973,7 @@ namespace PascalABCCompiler.NETGenerator
                         */
 
                         FieldInfo finfo = (fldinfo as GenericFldInfo).prev_fi;
-                        FieldInfo fi = TypeBuilder.GetField(t, finfo);
+                        FieldInfo fi = TypeBuilderAdapter.GetField(t, finfo);
                         helper.AddGenericField(value.used_members[dn] as ICommonClassFieldNode, fi, (fldinfo as GenericFldInfo).field_type, finfo); 
                         //FieldInfo finfo = fldinfo.fi;
                         //FieldInfo fi = finfo;
@@ -2070,8 +2070,8 @@ namespace PascalABCCompiler.NETGenerator
                         ((attrs[i].AttributeConstructor is ICompiledConstructorNode) ? (attrs[i].AttributeConstructor as ICompiledConstructorNode).constructor_info : helper.GetConstructor(attrs[i].AttributeConstructor).cnstr, get_constants(attrs[i].Arguments),
                         get_named_properties(attrs[i].PropertyNames), get_constants(attrs[i].PropertyInitializers),
                         get_named_fields(attrs[i].FieldNames), get_constants(attrs[i].FieldInitializers));
-                    if (t is TypeBuilder)
-                        (t as TypeBuilder).SetCustomAttribute(cab);
+                    if (t is TypeBuilderAdapter)
+                        (t as TypeBuilderAdapter).SetCustomAttribute(cab);
                     else if (t is EnumBuilder)
                         (t as EnumBuilder).SetCustomAttribute(cab);
                 }
@@ -2197,14 +2197,14 @@ namespace PascalABCCompiler.NETGenerator
             TypeInfo ti = helper.GetTypeReference(value);
 
             //ivan
-            if (ti.tp.IsEnum || !(ti.tp is TypeBuilder)) return;
-            TypeBuilder tb = (TypeBuilder)ti.tp;
+            if (ti.tp.IsEnum || !(ti.tp is TypeBuilderAdapter)) return;
+            TypeBuilderAdapter tb = (TypeBuilderAdapter)ti.tp;
             if (tb.IsValueType)
                 BuildCloseTypeOrder(value, tb);
             //сохраняем контекст
             TypeInfo tmp_ti = cur_ti;
             cur_ti = ti;
-            TypeBuilder tmp = cur_type;
+            TypeBuilderAdapter tmp = cur_type;
             cur_type = tb;
 
             //(ssyy) Если это интерфейс, то пропускаем следующую хрень
@@ -2296,7 +2296,7 @@ namespace PascalABCCompiler.NETGenerator
             return false;
         }
 
-        private void AddInitMembers(TypeInfo ti, TypeBuilder tb, ICommonTypeNode ctn)
+        private void AddInitMembers(TypeInfo ti, TypeBuilderAdapter tb, ICommonTypeNode ctn)
         {
             MethodBuilder init_mb = tb.DefineMethod("$Init$", MethodAttributes.Public, TypeFactory.VoidType, Type.EmptyTypes);
             ti.init_meth = init_mb;
@@ -2327,7 +2327,7 @@ namespace PascalABCCompiler.NETGenerator
             }
         }
 
-        private void AddTypeToCloseList(TypeBuilder tb)
+        private void AddTypeToCloseList(TypeBuilderAdapter tb)
         {
             if (!tb.IsValueType) types.Add(tb);
         }
@@ -2464,11 +2464,11 @@ namespace PascalABCCompiler.NETGenerator
                 TypeInfo inst_ti = helper.AddExistingType(igtn, rez);
                 TypeInfo generic_def_ti = helper.GetTypeReference(igtn.original_generic);
                 if (generic_def_ti.init_meth != null)
-                    inst_ti.init_meth = TypeBuilder.GetMethod(rez, generic_def_ti.init_meth);
+                    inst_ti.init_meth = TypeBuilderAdapter.GetMethod(rez, generic_def_ti.init_meth);
                 if (generic_def_ti.clone_meth != null)
-                    inst_ti.clone_meth = TypeBuilder.GetMethod(rez, generic_def_ti.clone_meth);
+                    inst_ti.clone_meth = TypeBuilderAdapter.GetMethod(rez, generic_def_ti.clone_meth);
                 if (generic_def_ti.assign_meth != null)
-                    inst_ti.assign_meth = TypeBuilder.GetMethod(rez, generic_def_ti.assign_meth);
+                    inst_ti.assign_meth = TypeBuilderAdapter.GetMethod(rez, generic_def_ti.assign_meth);
                 return;
             }
             if (comp_opt.target == TargetType.Dll)
@@ -2483,11 +2483,11 @@ namespace PascalABCCompiler.NETGenerator
             //определяем тип
             TypeInfo ti = helper.GetTypeReference(value);
             bool not_exist = ti == null;
-            TypeBuilder tb = null;
+            TypeBuilderAdapter tb = null;
             GenericTypeParameterBuilder gtpb = null;
             if (!not_exist)
             {
-                tb = ti.tp as TypeBuilder;
+                tb = ti.tp as TypeBuilderAdapter;
                 gtpb = ti.tp as GenericTypeParameterBuilder;
             }
 
@@ -2667,7 +2667,7 @@ namespace PascalABCCompiler.NETGenerator
         private Frame MakeAuxType(ICommonFunctionNode func)
         {
 
-            TypeBuilder tb = cur_type.DefineNestedType("$" + func.name + "$" + uid++, TypeAttributes.NestedPublic);
+            TypeBuilderAdapter tb = cur_type.DefineNestedType("$" + func.name + "$" + uid++, TypeAttributes.NestedPublic);
             //определяем поле - ссылку на верхнюю запись активации
             FieldBuilder fb = tb.DefineField("$parent$", tb.DeclaringType.IsValueType ? tb.DeclaringType.MakePointerType() : tb.DeclaringType, FieldAttributes.Public);
             //конструктор в кач-ве параметра, которого передается ссылка на верх. з/а
@@ -2739,7 +2739,7 @@ namespace PascalABCCompiler.NETGenerator
         {
             //if (is_in_unit && helper.IsUsed(func)==false) return;
             num_scope++; //увеличиваем глубину обл. видимости
-            TypeBuilder tb = null, tmp_type = cur_type;
+            TypeBuilderAdapter tb = null, tmp_type = cur_type;
             Frame frm = null;
 
             //func.functions_nodes.Length > 0 - имеет вложенные
@@ -2983,7 +2983,7 @@ namespace PascalABCCompiler.NETGenerator
                 return;
             }
             MethInfo mi = helper.GetMethod(func);
-            TypeBuilder tmp_type = cur_type;
+            TypeBuilderAdapter tmp_type = cur_type;
             if (mi.disp != null) cur_type = mi.disp.tb;
             MethodBuilder tmp = cur_meth;
             cur_meth = (MethodBuilder)mi.mi;
@@ -3023,7 +3023,7 @@ namespace PascalABCCompiler.NETGenerator
         {
             //if (is_in_unit && helper.IsUsed(func)==false) return;
             num_scope++;
-            TypeBuilder tmp_type = cur_type;
+            TypeBuilderAdapter tmp_type = cur_type;
             if (mi.disp != null) cur_type = mi.disp.tb;
             MethodBuilder tmp = cur_meth;
             cur_meth = (MethodBuilder)mi.mi;
@@ -4733,7 +4733,7 @@ namespace PascalABCCompiler.NETGenerator
                 return helper.GetTypeReference(tn).tp;
         }
 
-        private void add_possible_type_attribute(TypeBuilder tb, ITypeSynonym type)
+        private void add_possible_type_attribute(TypeBuilderAdapter tb, ITypeSynonym type)
         {
             Type orig_type = get_type_reference_for_pascal_attributes(type.original_type);
             CustomAttributeBuilder cust_bldr = null;
@@ -4744,7 +4744,7 @@ namespace PascalABCCompiler.NETGenerator
             tb.SetCustomAttribute(cust_bldr);
         }
 
-        private void add_possible_type_attribute(TypeBuilder tb, ITypeNode type)
+        private void add_possible_type_attribute(TypeBuilderAdapter tb, ITypeNode type)
         {
             if (comp_opt.target != TargetType.Dll)
                 return;
@@ -4964,7 +4964,7 @@ namespace PascalABCCompiler.NETGenerator
             //определяем поле для хранения ссылки на массив .NET
             FieldBuilder fb = cur_type.DefineField(value.name, type, fattr);
             helper.AddField(value, fb);
-            TypeBuilder tb = (TypeBuilder)aux_ti.tp;
+            TypeBuilderAdapter tb = (TypeBuilderAdapter)aux_ti.tp;
             //определяем конструктор, в котором создаем массив
             ConstructorBuilder cb = tb.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, Type.EmptyTypes);
             TypeInfo ti = helper.AddType(value.type, tb);
@@ -6604,7 +6604,7 @@ namespace PascalABCCompiler.NETGenerator
         private MethInfo ConvertMethodWithNested(SemanticTree.ICommonMethodNode meth, ConstructorBuilder methodb)
         {
             num_scope++; //увеличиваем глубину обл. видимости
-            TypeBuilder tb = null, tmp_type = cur_type;
+            TypeBuilderAdapter tb = null, tmp_type = cur_type;
             Frame frm = null;
             //func.functions_nodes.Length > 0 - имеет вложенные
             //funcs.Count > 0 - сама вложенная
@@ -6701,7 +6701,7 @@ namespace PascalABCCompiler.NETGenerator
         private MethInfo ConvertMethodWithNested(SemanticTree.ICommonMethodNode meth, MethodBuilder methodb)
         {
             num_scope++; //увеличиваем глубину обл. видимости
-            TypeBuilder tb = null, tmp_type = cur_type;
+            TypeBuilderAdapter tb = null, tmp_type = cur_type;
             Frame frm = null;
             //func.functions_nodes.Length > 0 - имеет вложенные
             //funcs.Count > 0 - сама вложенная
@@ -6807,7 +6807,7 @@ namespace PascalABCCompiler.NETGenerator
         private void ConvertNestedInMethodFunctionHeader(ICommonNestedInFunctionFunctionNode func, Type decl_type)
         {
             num_scope++; //увеличиваем глубину обл. видимости
-            TypeBuilder tb = null, tmp_type = cur_type;
+            TypeBuilderAdapter tb = null, tmp_type = cur_type;
             Frame frm = null;
             //func.functions_nodes.Length > 0 - имеет вложенные
             //funcs.Count > 0 - сама вложенная
@@ -9242,7 +9242,7 @@ namespace PascalABCCompiler.NETGenerator
                             
                             MethodInfo mi = null;
                             if (real_parameters[0].type is IGenericTypeInstance)
-                                mi = TypeBuilder.GetMethod(ti.tp, typeof(Nullable<>).GetMethod("get_HasValue"));
+                                mi = TypeBuilderAdapter.GetMethod(ti.tp, typeof(Nullable<>).GetMethod("get_HasValue"));
                             else
                                 mi = ti.tp.GetMethod("get_HasValue");
                             il.Emit(OpCodes.Call, mi);
@@ -9272,7 +9272,7 @@ namespace PascalABCCompiler.NETGenerator
                             il.Emit(OpCodes.Ldloca, tmp_lb);
                             MethodInfo mi = null;
                             if (real_parameters[1].type is IGenericTypeInstance)
-                                mi = TypeBuilder.GetMethod(ti.tp, typeof(Nullable<>).GetMethod("get_HasValue"));
+                                mi = TypeBuilderAdapter.GetMethod(ti.tp, typeof(Nullable<>).GetMethod("get_HasValue"));
                             else
                                 mi = ti.tp.GetMethod("get_HasValue");
                             il.Emit(OpCodes.Call, mi);
@@ -9305,7 +9305,7 @@ namespace PascalABCCompiler.NETGenerator
                             il.Emit(OpCodes.Stloc, lb_left);
                             il.Emit(OpCodes.Ldloca, lb_left);
                             if (real_parameters[0].type is IGenericTypeInstance)
-                                mi_left = TypeBuilder.GetMethod(ti_left.tp, typeof(Nullable<>).GetMethod("get_HasValue", new Type[] { }));
+                                mi_left = TypeBuilderAdapter.GetMethod(ti_left.tp, typeof(Nullable<>).GetMethod("get_HasValue", new Type[] { }));
                             else
                                 mi_left = ti_left.tp.GetMethod("get_HasValue", new Type[] { });
                             il.Emit(OpCodes.Call, mi_left);
@@ -9317,7 +9317,7 @@ namespace PascalABCCompiler.NETGenerator
                             il.Emit(OpCodes.Stloc, lb_right);
                             il.Emit(OpCodes.Ldloca, lb_right);
                             if (real_parameters[1].type is IGenericTypeInstance)
-                                mi_right = TypeBuilder.GetMethod(ti_right.tp, typeof(Nullable<>).GetMethod("get_HasValue", new Type[] { }));
+                                mi_right = TypeBuilderAdapter.GetMethod(ti_right.tp, typeof(Nullable<>).GetMethod("get_HasValue", new Type[] { }));
                             else
                                 mi_right = ti_right.tp.GetMethod("get_HasValue", new Type[] { });
 
@@ -9355,14 +9355,14 @@ namespace PascalABCCompiler.NETGenerator
                             if (real_parameters[1] is IDefaultOperatorNode)
                             {
                                 if (real_parameters[0].type is IGenericTypeInstance)
-                                    mi_left = TypeBuilder.GetMethod(ti_left.tp, typeof(Nullable<>).GetMethod("get_HasValue", new Type[] { }));
+                                    mi_left = TypeBuilderAdapter.GetMethod(ti_left.tp, typeof(Nullable<>).GetMethod("get_HasValue", new Type[] { }));
                                 else
                                     mi_left = ti_left.tp.GetMethod("get_HasValue", new Type[] { });
                             }
                             else
                             {
                                 if (real_parameters[0].type is IGenericTypeInstance)
-                                    mi_left = TypeBuilder.GetMethod(ti_left.tp, typeof(Nullable<>).GetMethod("GetValueOrDefault", new Type[] { }));
+                                    mi_left = TypeBuilderAdapter.GetMethod(ti_left.tp, typeof(Nullable<>).GetMethod("GetValueOrDefault", new Type[] { }));
                                 else
                                     mi_left = ti_left.tp.GetMethod("GetValueOrDefault", new Type[] { });
                             }
@@ -9378,14 +9378,14 @@ namespace PascalABCCompiler.NETGenerator
                             if (real_parameters[0] is IDefaultOperatorNode)
                             {
                                 if (real_parameters[1].type is IGenericTypeInstance)
-                                    mi_right = TypeBuilder.GetMethod(ti_right.tp, typeof(Nullable<>).GetMethod("get_HasValue", new Type[] { }));
+                                    mi_right = TypeBuilderAdapter.GetMethod(ti_right.tp, typeof(Nullable<>).GetMethod("get_HasValue", new Type[] { }));
                                 else
                                     mi_right = ti_right.tp.GetMethod("get_HasValue", new Type[] { });
                             }
                             else
                             {
                                 if (real_parameters[1].type is IGenericTypeInstance)
-                                    mi_right = TypeBuilder.GetMethod(ti_right.tp, typeof(Nullable<>).GetMethod("GetValueOrDefault", new Type[] { }));
+                                    mi_right = TypeBuilderAdapter.GetMethod(ti_right.tp, typeof(Nullable<>).GetMethod("GetValueOrDefault", new Type[] { }));
                                 else
                                     mi_right = ti_right.tp.GetMethod("GetValueOrDefault", new Type[] { });
                             }
@@ -9995,15 +9995,15 @@ namespace PascalABCCompiler.NETGenerator
             TypeInfo ti = helper.GetTypeReference(value);
             if (ti.def_cnstr != null) return;
             ti.is_arr = true;
-            TypeBuilder tb = (TypeBuilder)ti.tp;
+            TypeBuilderAdapter tb = (TypeBuilderAdapter)ti.tp;
             TypeInfo tmp_ti = cur_ti;
             cur_ti = ti;
-            //TypeBuilder tb = (TypeBuilder)helper.GetTypeBuilder(value);
+            //ITypeBuilderAdapter tb = (ITypeBuilderAdapter)helper.GetITypeBuilderAdapter(value);
             //это метод для выделения памяти под массивы
             MethodBuilder mb = tb.DefineMethod("$Init$", MethodAttributes.Private, TypeFactory.VoidType, Type.EmptyTypes);
             ti.init_meth = mb;
             MethodBuilder hndl_mb = null;
-            TypeBuilder tmp = cur_type;
+            TypeBuilderAdapter tmp = cur_type;
             cur_type = tb;
 
             foreach (ICommonClassFieldNode fld in value.fields)
@@ -10031,11 +10031,11 @@ namespace PascalABCCompiler.NETGenerator
             if (value is ISimpleArrayNode || value.type_special_kind == type_special_kind.array_kind) return;
             MakeAttribute(value);
             TypeInfo ti = helper.GetTypeReference(value);
-            if (ti.tp.IsEnum || !(ti.tp is TypeBuilder)) return;
-            TypeBuilder tb = (TypeBuilder)ti.tp;
+            if (ti.tp.IsEnum || !(ti.tp is TypeBuilderAdapter)) return;
+            TypeBuilderAdapter tb = (TypeBuilderAdapter)ti.tp;
             TypeInfo tmp_ti = cur_ti;
             cur_ti = ti;
-            TypeBuilder tmp = cur_type;
+            TypeBuilderAdapter tmp = cur_type;
             cur_type = tb;
 
             foreach (ICommonMethodNode meth in value.methods)
@@ -11034,7 +11034,7 @@ namespace PascalABCCompiler.NETGenerator
                     MethodInfo mi = null;
                     TypeInfo cond_ti = helper.GetTypeReference(value.condition.type);
                     if (value.condition.type is IGenericTypeInstance)
-                        mi = TypeBuilder.GetMethod(cond_ti.tp, typeof(Nullable<>).GetMethod("get_HasValue"));
+                        mi = TypeBuilderAdapter.GetMethod(cond_ti.tp, typeof(Nullable<>).GetMethod("get_HasValue"));
                     else
                         mi = cond_ti.tp.GetMethod("get_HasValue");
                     il.Emit(OpCodes.Call, mi);
@@ -11554,7 +11554,7 @@ namespace PascalABCCompiler.NETGenerator
             if (enumer_mi.ReturnType.IsGenericType && !enumer_mi.ReturnType.IsGenericTypeDefinition)
             {
                 if (helper.IsConstructedGenericType(return_type))
-                    get_current_meth = TypeBuilder.GetMethod(return_type, enumer_mi.ReturnType.GetGenericTypeDefinition().GetMethod("get_Current"));
+                    get_current_meth = TypeBuilderAdapter.GetMethod(return_type, enumer_mi.ReturnType.GetGenericTypeDefinition().GetMethod("get_Current"));
                 else
                     get_current_meth = return_type.GetMethod("get_Current");
             }

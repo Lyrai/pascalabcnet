@@ -7,7 +7,7 @@ namespace NETGenerator.Adapters
     public interface IModuleBuilderAdapter
     {
         ISymbolDocumentWriter DefineDocument(string url, Guid language, Guid languageVendor, Guid documentType);
-        ITypeBuilderAdapter DefineType(string name, TypeAttributes attr, Type parent);
-        ITypeBuilderAdapter DefineType (string name, TypeAttributes attr);
+        TypeBuilderAdapter DefineType(string name, TypeAttributes attr, Type parent);
+        TypeBuilderAdapter DefineType (string name, TypeAttributes attr);
     }
 }
