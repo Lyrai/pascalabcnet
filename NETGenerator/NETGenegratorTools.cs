@@ -7,7 +7,7 @@ using System.Reflection.Emit;
 using System.Collections;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using NETGenerator.Adapters;
+using PascalABCCompiler.NETGenerator.Adapters;
 
 namespace PascalABCCompiler.NETGenerator
 {
@@ -19,41 +19,41 @@ namespace PascalABCCompiler.NETGenerator
         public static TypeInfo char_type;
         public static TypeInfo string_type;
         public static TypeInfo byte_type;
-        public static TypeAdapter ExceptionType = typeof(Exception);
-        public static TypeAdapter VoidType =   typeof(void);
-        public static TypeAdapter StringType = typeof(string);
-        public static TypeAdapter ObjectType = typeof(object);
-        public static TypeAdapter MonitorType = typeof(System.Threading.Monitor);
-        public static TypeAdapter IntPtr = typeof(System.IntPtr);
-        public static TypeAdapter ArrayType = typeof(System.Array);
-        public static TypeAdapter MulticastDelegateType = typeof(MulticastDelegate);
-        public static TypeAdapter DefaultMemberAttributeType = typeof(DefaultMemberAttribute);
-        public static TypeAdapter EnumType = typeof(Enum);
-        public static TypeAdapter ExtensionAttributeType = typeof(System.Runtime.CompilerServices.ExtensionAttribute);
-        public static TypeAdapter ConvertType = typeof(Convert);
+        public static TypeAdapter ExceptionType = typeof(Exception).GetAdapter();
+        public static TypeAdapter VoidType =   typeof(void).GetAdapter();
+        public static TypeAdapter StringType = typeof(string).GetAdapter();
+        public static TypeAdapter ObjectType = typeof(object).GetAdapter();
+        public static TypeAdapter MonitorType = typeof(System.Threading.Monitor).GetAdapter();
+        public static TypeAdapter IntPtr = typeof(System.IntPtr).GetAdapter();
+        public static TypeAdapter ArrayType = typeof(System.Array).GetAdapter();
+        public static TypeAdapter MulticastDelegateType = typeof(MulticastDelegate).GetAdapter();
+        public static TypeAdapter DefaultMemberAttributeType = typeof(DefaultMemberAttribute).GetAdapter();
+        public static TypeAdapter EnumType = typeof(Enum).GetAdapter();
+        public static TypeAdapter ExtensionAttributeType = typeof(System.Runtime.CompilerServices.ExtensionAttribute).GetAdapter();
+        public static TypeAdapter ConvertType = typeof(Convert).GetAdapter();
 
         //primitive
-        public static TypeAdapter BoolType = typeof(Boolean);
-        public static TypeAdapter SByteType = typeof(SByte);
-        public static TypeAdapter ByteType = typeof(Byte);
-        public static TypeAdapter CharType = typeof(Char);
-        public static TypeAdapter Int16Type = typeof(Int16);
-        public static TypeAdapter Int32Type = typeof(Int32);
-        public static TypeAdapter Int64Type = typeof(Int64);
-        public static TypeAdapter UInt16Type = typeof(UInt16);
-        public static TypeAdapter UInt32Type = typeof(UInt32);
-        public static TypeAdapter UInt64Type = typeof(UInt64);
-        public static TypeAdapter SingleType = typeof(Single);
-        public static TypeAdapter DoubleType = typeof(Double);
-        public static TypeAdapter GCHandleType = typeof(GCHandle);
-        public static TypeAdapter MarshalType = typeof(Marshal);
-        public static TypeAdapter TypeType =   typeof(Type);
-        public static TypeAdapter ValueType = typeof(ValueType);
-        public static TypeAdapter IEnumerableType = typeof(System.Collections.IEnumerable);
-        public static TypeAdapter IEnumeratorType = typeof(System.Collections.IEnumerator);
-        public static TypeAdapter IDisposableType = typeof(IDisposable);
-        public static TypeAdapter IEnumerableGenericType = typeof(System.Collections.Generic.IEnumerable<>);
-        public static TypeAdapter IEnumeratorGenericType = typeof(System.Collections.Generic.IEnumerator<>);
+        public static TypeAdapter BoolType = typeof(Boolean).GetAdapter();
+        public static TypeAdapter SByteType = typeof(SByte).GetAdapter();
+        public static TypeAdapter ByteType = typeof(Byte).GetAdapter();
+        public static TypeAdapter CharType = typeof(Char).GetAdapter();
+        public static TypeAdapter Int16Type = typeof(Int16).GetAdapter();
+        public static TypeAdapter Int32Type = typeof(Int32).GetAdapter();
+        public static TypeAdapter Int64Type = typeof(Int64).GetAdapter();
+        public static TypeAdapter UInt16Type = typeof(UInt16).GetAdapter();
+        public static TypeAdapter UInt32Type = typeof(UInt32).GetAdapter();
+        public static TypeAdapter UInt64Type = typeof(UInt64).GetAdapter();
+        public static TypeAdapter SingleType = typeof(Single).GetAdapter();
+        public static TypeAdapter DoubleType = typeof(Double).GetAdapter();
+        public static TypeAdapter GCHandleType = typeof(GCHandle).GetAdapter();
+        public static TypeAdapter MarshalType = typeof(Marshal).GetAdapter();
+        public static TypeAdapter TypeType =   typeof(Type).GetAdapter();
+        public static TypeAdapter ValueType = typeof(ValueType).GetAdapter();
+        public static TypeAdapter IEnumerableType = typeof(System.Collections.IEnumerable).GetAdapter();
+        public static TypeAdapter IEnumeratorType = typeof(System.Collections.IEnumerator).GetAdapter();
+        public static TypeAdapter IDisposableType = typeof(IDisposable).GetAdapter();
+        public static TypeAdapter IEnumerableGenericType = typeof(System.Collections.Generic.IEnumerable<>).GetAdapter();
+        public static TypeAdapter IEnumeratorGenericType = typeof(System.Collections.Generic.IEnumerator<>).GetAdapter();
 
         private static Hashtable types;
         private static Hashtable sizes;
@@ -118,10 +118,10 @@ namespace PascalABCCompiler.NETGenerator
             //sizes[UIntPtr] = sizeof(UIntPtr);
             
             //types[TypeType] = TypeType;
-            ArrayCopyMethod = AdapterFactory.Type(typeof(Array)).GetMethod("Copy", new TypeAdapter[] { typeof(Array), typeof(Array), typeof(int) });
+            ArrayCopyMethod = AdapterFactory.Type(typeof(Array)).GetMethod("Copy", new TypeAdapter[] { typeof(Array).GetAdapter(), typeof(Array).GetAdapter(), typeof(int).GetAdapter() });
             StringNullOrEmptyMethod = AdapterFactory.Type(typeof(string)).GetMethod("IsNullOrEmpty");
             GCHandleAlloc = AdapterFactory.Type(typeof(GCHandle)).GetMethod("Alloc",new TypeAdapter[] {TypeFactory.ObjectType});
-            GCHandleAllocPinned = AdapterFactory.Type(typeof(GCHandle)).GetMethod("Alloc", new TypeAdapter[] { TypeFactory.ObjectType, typeof(GCHandleType) });
+            GCHandleAllocPinned = AdapterFactory.Type(typeof(GCHandle)).GetMethod("Alloc", new TypeAdapter[] { TypeFactory.ObjectType, typeof(GCHandleType).GetAdapter() });
             OffsetToStringDataProperty = AdapterFactory.Type(typeof(System.Runtime.CompilerServices.RuntimeHelpers)).GetProperty("OffsetToStringData",BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).GetGetMethod();
             StringLengthMethod = AdapterFactory.Type(typeof(string)).GetProperty("Length").GetGetMethod();
             IndexOutOfRangeConstructor = AdapterFactory.Type(typeof(IndexOutOfRangeException)).GetConstructor(TypeAdapter.EmptyTypes);
@@ -147,7 +147,7 @@ namespace PascalABCCompiler.NETGenerator
     {
         public static void PushStind(IILGeneratorAdapter il, TypeAdapter elem_type)
         {
-            switch (Type.GetTypeCode(elem_type))
+            switch (TypeAdapter.GetTypeCode(elem_type))
             {
                 case TypeCode.Boolean:
                 case TypeCode.Byte:
@@ -434,7 +434,7 @@ namespace PascalABCCompiler.NETGenerator
             if (IsPointer(tp))
                 return;
             //(ssyy) Вставил 15.05.08
-            if (from_value_type != null)
+            if (from_value_type is object)
             {
                 il.Emit(OpCodes.Box, from_value_type);
             }

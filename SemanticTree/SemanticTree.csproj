@@ -73,6 +73,7 @@
     <Reference Update="System.Xml">
       <Name>System.XML</Name>
     </Reference>
+    <ProjectReference Include="..\NETGenerator\NETGenerator.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Configuration\GlobalAssemblyInfo.cs">

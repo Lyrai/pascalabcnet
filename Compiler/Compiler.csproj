@@ -92,6 +92,7 @@
     <ProjectReference Include="..\SyntaxTree\SyntaxTree.csproj" />
     <ProjectReference Include="..\SyntaxVisitors\SyntaxVisitors.csproj" />
     <ProjectReference Include="..\TreeConverter\TreeConverter.csproj" />
+    <ProjectReference Include="..\NETGenerator\NETGenerator.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Configuration\GlobalAssemblyInfo.cs">

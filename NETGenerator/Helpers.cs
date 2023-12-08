@@ -5,7 +5,7 @@ using System;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Collections;
-using NETGenerator.Adapters;
+using PascalABCCompiler.NETGenerator.Adapters;
 
 namespace PascalABCCompiler.NETGenerator {
 	
@@ -17,8 +17,8 @@ namespace PascalABCCompiler.NETGenerator {
 		
 		static HandlerFactory()
 		{
-			eventHandler = typeof(EventHandler);
-			parameters = new TypeAdapter[] { typeof(object), typeof(IntPtr) };
+			eventHandler = typeof(EventHandler).GetAdapter();
+			parameters = new [] { typeof(object).GetAdapter(), typeof(IntPtr).GetAdapter() };
 			ci = eventHandler.GetConstructor(parameters);
 		}
 	}
@@ -104,7 +104,7 @@ namespace PascalABCCompiler.NETGenerator {
 		public IMethodInfoAdapter clone_meth;//метод копирования в массиве
 		public IMethodInfoAdapter init_meth;//метод инициализации
         public IMethodInfoAdapter assign_meth;//метод присваивания значений размерных типов
-        public ConstructorBuilder static_cnstr;
+        public IConstructorBuilderAdapter static_cnstr;
         public IMethodBuilderAdapter fix_meth;
 		//временно для событий
 		public IMethodBuilderAdapter handl_meth;
@@ -147,14 +147,19 @@ namespace PascalABCCompiler.NETGenerator {
 	
 	public class EvntInfo : NodeInfo
 	{
-		private EventBuilder _ei;
+		private IEventBuilderAdapter _ei;
 		
-		public EvntInfo(EventBuilder ei)
+		public EvntInfo(IEventBuilderAdapter ei)
 		{
 			_ei = ei;
 		}
 		
-		public EventBuilder ei
+		public EvntInfo(EventBuilder ei)
+		{
+			_ei = ei.GetAdapter();
+		}
+		
+		public IEventBuilderAdapter ei
         {
 			get {
 				return _ei;
@@ -217,14 +222,19 @@ namespace PascalABCCompiler.NETGenerator {
 	}
 	
     public class PropInfo : NodeInfo {
-    	private PropertyInfo _prop;
+    	private IPropertyInfoAdapter _prop;
     	
     	public PropInfo(PropertyInfo _prop)
     	{
-    		this._prop = _prop;
+    		this._prop = AdapterFactory.PropertyInfo(_prop);
     	}
     	
-    	public PropertyInfo prop
+        public PropInfo(IPropertyInfoAdapter _prop)
+        {
+	        this._prop = _prop;
+        }
+        
+    	public IPropertyInfoAdapter prop
     	{
     		get
     		{
@@ -234,16 +244,16 @@ namespace PascalABCCompiler.NETGenerator {
     }
     
 	public class ConstrInfo : NodeInfo {
-		private ConstructorInfo _ci;
+		private IConstructorInfoAdapter _ci;
 		
 		public ConstrInfo() {}
 		
-		public ConstrInfo(ConstructorInfo ci)
+		public ConstrInfo(IConstructorInfoAdapter ci)
 		{
 			_ci = ci;
 		}
 		
-		public ConstructorInfo ci {
+		public IConstructorInfoAdapter ci {
 			get {
 				return _ci;
 			}
@@ -254,14 +264,14 @@ namespace PascalABCCompiler.NETGenerator {
 	}
 	
 	public class MethInfo : NodeInfo {
-		private MethodInfo _mi;
-		//private LocalBuilder _ret_val;//переменная для возвр. значения //(ssyy) Нет пользы
-		private LocalBuilder _frame;//перем, хранящая запись активации
+		private IMethodInfoAdapter _mi;
+		//private ILocalBuilderAdapter _ret_val;//переменная для возвр. значения //(ssyy) Нет пользы
+		private ILocalBuilderAdapter _frame;//перем, хранящая запись активации
 		private MethInfo _up_meth;//ссылка на верхний метод
 		private Frame _disp;//запись активации
 		private bool _nested=false;//является ли вложенной или содержащей вложенные
 		private int _num_scope;//номер области видимости
-		private ConstructorInfo _cnstr;
+		private IConstructorInfoAdapter _cnstr;
 		private bool _stand=false;//для станд. процедур, у которого нет тела в семант. дереве ("New","Dispose")
         private bool _is_in_class = false;//является ли он процедурой, влож. в метод
         private bool _is_ptr_ret_type = false;
@@ -269,6 +279,11 @@ namespace PascalABCCompiler.NETGenerator {
 		public MethInfo() {}
 		
 		public MethInfo(MethodInfo mi)
+		{
+			_mi = AdapterFactory.MethodInfo(mi);
+		}
+		
+		public MethInfo(IMethodInfoAdapter mi)
 		{
 			_mi = mi;
 		}
@@ -309,7 +324,7 @@ namespace PascalABCCompiler.NETGenerator {
 			}
 		}
 		
-		public MethodInfo mi {
+		public IMethodInfoAdapter mi {
 			get {
 				return _mi;
 			}
@@ -327,7 +342,7 @@ namespace PascalABCCompiler.NETGenerator {
 			}
 		}
 		
-		public ConstructorInfo cnstr {
+		public IConstructorInfoAdapter cnstr {
 			get {
 				return _cnstr;
 			}
@@ -363,7 +378,7 @@ namespace PascalABCCompiler.NETGenerator {
 			}
 		}
 		
-		public LocalBuilder frame {
+		public ILocalBuilderAdapter frame {
 			get {
 				return _frame;
 			}
@@ -373,7 +388,7 @@ namespace PascalABCCompiler.NETGenerator {
 		}
 		
         //(ssyy) Нет пользы
-		/*public LocalBuilder ret_val {
+		/*public ILocalBuilderAdapter ret_val {
 			get {
 				return _ret_val;
 			}
@@ -392,14 +407,20 @@ namespace PascalABCCompiler.NETGenerator {
 	}
 	
 	public class VarInfo : NodeInfo {
-		private LocalBuilder _lb;//билдер для переменной
-		private FieldBuilder _fb;//а вдруг переменная нелокальная
+		private ILocalBuilderAdapter _lb;//билдер для переменной
+		private IFieldBuilderAdapter _fb;//а вдруг переменная нелокальная
 		private VarKind _kind;//тип переменной
 		private MethInfo _meth;//метод, в котором определена переменная
 		
 		public VarInfo() {}
 		
 		public VarInfo(LocalBuilder lb)
+		{
+			_lb = AdapterFactory.LocalBuilder(lb);
+			_kind = VarKind.vkLocal;
+		}
+		
+		public VarInfo(ILocalBuilderAdapter lb)
 		{
 			_lb = lb;
 			_kind = VarKind.vkLocal;
@@ -414,7 +435,7 @@ namespace PascalABCCompiler.NETGenerator {
 			}
 		}
 		
-		public FieldBuilder fb {
+		public IFieldBuilderAdapter fb {
 			get {
 				return _fb;
 			}
@@ -432,7 +453,7 @@ namespace PascalABCCompiler.NETGenerator {
 			}
 		}
 		
-		public LocalBuilder lb {
+		public ILocalBuilderAdapter lb {
 			get {
 				return _lb;
 			}
@@ -448,16 +469,21 @@ namespace PascalABCCompiler.NETGenerator {
 	}
 	
 	public class ParamInfo : NodeInfo {
-		private ParameterBuilder _pb;//билдер для параметра
-		private FieldBuilder _fb;//вдруг параметр нелокальный
+		private IParameterBuilderAdapter _pb;//билдер для параметра
+		private IFieldBuilderAdapter _fb;//вдруг параметр нелокальный
 		private ParamKind _kind = ParamKind.pkNone;
 		private MethInfo _meth;//метод, в котор. описан параметр
 		
 		public ParamInfo() {}
 		
-		public ParamInfo(ParameterBuilder pb)
+		public ParamInfo(IParameterBuilderAdapter pb)
 		{
 			_pb = pb;
+		}
+		
+		public ParamInfo(ParameterBuilder pb)
+		{
+			_pb = pb.GetAdapter();
 		}
 		
 		public MethInfo meth {
@@ -478,7 +504,7 @@ namespace PascalABCCompiler.NETGenerator {
 			}
 		}
 		
-		public FieldBuilder fb {
+		public IFieldBuilderAdapter fb {
 			get {
 				return _fb;
 			}
@@ -487,7 +513,7 @@ namespace PascalABCCompiler.NETGenerator {
 			}
 		}
 		
-		public ParameterBuilder pb {
+		public IParameterBuilderAdapter pb {
 			get {
 				return _pb;
 			}
@@ -498,9 +524,14 @@ namespace PascalABCCompiler.NETGenerator {
 	}
 	
 	public class ConstInfo : NodeInfo {
-		public FieldBuilder fb;
+		public IFieldBuilderAdapter fb;
 		
 		public ConstInfo(FieldBuilder fb)
+		{
+			this.fb = AdapterFactory.FieldBuilder(fb);
+		}
+		
+		public ConstInfo(IFieldBuilderAdapter fb)
 		{
 			this.fb = fb;
 		}
@@ -509,9 +540,9 @@ namespace PascalABCCompiler.NETGenerator {
 	//Структура для записи активации процедуры
 	public class Frame {
 		public TypeBuilderAdapter tb; //класс - запись активации
-		public FieldBuilder parent; //поле-ссылка на род. запись активации
-		public ConstructorBuilder cb; //конструктор записи активации
-		public MethodBuilder mb;
+		public IFieldBuilderAdapter parent; //поле-ссылка на род. запись активации
+		public IConstructorBuilderAdapter cb; //конструктор записи активации
+		public IMethodBuilderAdapter mb;
 		
 		public Frame() {}
 	}
@@ -519,21 +550,21 @@ namespace PascalABCCompiler.NETGenerator {
 	public class Helper {
 		public Hashtable defs=new Hashtable();
         private Hashtable processing_types = new Hashtable();
-		private MethodInfo arr_mi=null;
+		private IMethodInfoAdapter arr_mi=null;
 		private Hashtable pas_defs = new Hashtable();
         private Hashtable memoized_exprs = new Hashtable();
 		private Hashtable dummy_methods = new Hashtable();
 
 		public Helper() {}
 		
-		public void AddDummyMethod(TypeBuilderAdapter tb, MethodBuilder mb)
+		public void AddDummyMethod(TypeBuilderAdapter tb, IMethodBuilderAdapter mb)
         {
 			dummy_methods[tb] = mb;
         }
 
-		public MethodBuilder GetDummyMethod(TypeBuilderAdapter tb)
+		public IMethodBuilderAdapter GetDummyMethod(TypeBuilderAdapter tb)
         {
-			return dummy_methods[tb] as MethodBuilder;
+			return dummy_methods[tb] as IMethodBuilderAdapter;
         }
 
 		public void AddPascalTypeReference(ITypeNode tn, TypeAdapter t)
@@ -546,7 +577,7 @@ namespace PascalABCCompiler.NETGenerator {
 			return pas_defs[tn] as TypeAdapter;
 		}
 		
-		public ConstInfo AddConstant(IConstantDefinitionNode cnst, FieldBuilder fb)
+		public ConstInfo AddConstant(IConstantDefinitionNode cnst, IFieldBuilderAdapter fb)
 		{
 			ConstInfo ci = new ConstInfo(fb);
 			defs[cnst] = ci;
@@ -554,7 +585,7 @@ namespace PascalABCCompiler.NETGenerator {
 		}
 		
         //добавление локальной переменной
-		public VarInfo AddVariable(IVAriableDefinitionNode var, LocalBuilder lb)
+		public VarInfo AddVariable(IVAriableDefinitionNode var, ILocalBuilderAdapter lb)
 		{
 			VarInfo vi = new VarInfo(lb);
 			defs[var] = vi;
@@ -562,7 +593,7 @@ namespace PascalABCCompiler.NETGenerator {
 		}
 
         //ssyy
-        public Label GetLabel(ILabelNode label, ILGenerator il)
+        public Label GetLabel(ILabelNode label, IILGeneratorAdapter il)
         {
             if (defs.ContainsKey(label))
             {
@@ -581,7 +612,7 @@ namespace PascalABCCompiler.NETGenerator {
 		}
 		
         //добавление глоб. переменной
-		public VarInfo AddGlobalVariable(IVAriableDefinitionNode var, FieldBuilder fb)
+		public VarInfo AddGlobalVariable(IVAriableDefinitionNode var, IFieldBuilderAdapter fb)
 		{
 			VarInfo vi = new VarInfo();
 			defs[var] = vi;
@@ -590,7 +621,7 @@ namespace PascalABCCompiler.NETGenerator {
 			return vi;
 		}
 		
-		public EvntInfo AddEvent(IEventNode ev, EventBuilder eb)
+		public EvntInfo AddEvent(IEventNode ev, IEventBuilderAdapter eb)
 		{
 			EvntInfo ei = new EvntInfo(eb);
 			defs[ev] = ei;
@@ -603,7 +634,7 @@ namespace PascalABCCompiler.NETGenerator {
 		}
 		
         //добавление нелок. переменной
-		public VarInfo AddNonLocalVariable(IVAriableDefinitionNode var, FieldBuilder fb)
+		public VarInfo AddNonLocalVariable(IVAriableDefinitionNode var, IFieldBuilderAdapter fb)
 		{
 			VarInfo vi = new VarInfo();
 			defs[var] = vi;
@@ -613,7 +644,7 @@ namespace PascalABCCompiler.NETGenerator {
 		}
 		
         //добавление функции (метода)
-		public MethInfo AddMethod(IFunctionNode func, MethodInfo mi)
+		public MethInfo AddMethod(IFunctionNode func, IMethodInfoAdapter mi)
 		{
 			MethInfo m = new MethInfo(mi);
 			defs[func] = m;
@@ -621,7 +652,7 @@ namespace PascalABCCompiler.NETGenerator {
 		}
 		
         //добавление функции, вложенной в функцию
-		public MethInfo AddMethod(IFunctionNode func, MethodInfo mi, MethInfo up)
+		public MethInfo AddMethod(IFunctionNode func, IMethodInfoAdapter mi, MethInfo up)
 		{
 			MethInfo m = new MethInfo(mi);
 			m.up_meth = up;
@@ -636,7 +667,7 @@ namespace PascalABCCompiler.NETGenerator {
 		}
 		
         //добавление конструктора
-		public MethInfo AddConstructor(IFunctionNode func, ConstructorInfo ci)
+		public MethInfo AddConstructor(IFunctionNode func, IConstructorInfoAdapter ci)
 		{
 			//ConstrInfo m = new ConstrInfo(ci);
 			MethInfo mi = new MethInfo();
@@ -645,7 +676,7 @@ namespace PascalABCCompiler.NETGenerator {
 			return mi;
 		}
 		
-		public PropInfo AddProperty(IPropertyNode prop, PropertyInfo pi)
+		public PropInfo AddProperty(IPropertyNode prop, IPropertyInfoAdapter pi)
 		{
 			PropInfo pi2 = new PropInfo(pi);
 			defs[prop] = pi2;
@@ -680,7 +711,7 @@ namespace PascalABCCompiler.NETGenerator {
         }
 
         //добавление параметра
-		public ParamInfo AddParameter(IParameterNode p, ParameterBuilder pb)
+		public ParamInfo AddParameter(IParameterNode p, IParameterBuilderAdapter pb)
 		{
 			ParamInfo pi = new ParamInfo(pb);
 			defs[p] = pi;
@@ -688,7 +719,7 @@ namespace PascalABCCompiler.NETGenerator {
 		}
 		
         //добавление нелок. параметра
-		public ParamInfo AddGlobalParameter(IParameterNode p, FieldBuilder fb)
+		public ParamInfo AddGlobalParameter(IParameterNode p, IFieldBuilderAdapter fb)
 		{
 			ParamInfo pi = new ParamInfo();
 			pi.kind = ParamKind.pkGlobal;
@@ -811,9 +842,9 @@ namespace PascalABCCompiler.NETGenerator {
         	return null;
         }
 
-        private ConstructorInfo find_constructor_with_params(TypeAdapter t)
+        private IConstructorInfoAdapter find_constructor_with_params(TypeAdapter t)
         {
-            foreach (ConstructorInfo ci in t.GetConstructors())
+            foreach (IConstructorInfoAdapter ci in t.GetConstructors())
             {
                 if (ci.GetParameters().Length == 2)
                     return ci;
@@ -830,9 +861,9 @@ namespace PascalABCCompiler.NETGenerator {
         	return null;
         }
 
-        private ConstructorInfo find_constructor_with_one_param(TypeAdapter t)
+        private IConstructorInfoAdapter find_constructor_with_one_param(TypeAdapter t)
         {
-            foreach (ConstructorInfo ci in t.GetConstructors())
+            foreach (IConstructorInfoAdapter ci in t.GetConstructors())
             {
                 if (ci.GetParameters().Length == 1)
                     return ci;
@@ -842,7 +873,7 @@ namespace PascalABCCompiler.NETGenerator {
 
         public bool IsConstructedGenericType(TypeAdapter t)
         {
-            if (t is TypeBuilderAdapter || t is GenericTypeParameterBuilder || t is EnumBuilder || t.GetType().FullName == "System.Reflection.Emit.ITypeBuilderAdapterInstantiation")
+            if (t is TypeBuilderAdapter || t is GenericTypeParameterBuilderAdapter || t is EnumBuilderAdapter || t.GetType().FullName == "System.Reflection.Emit.TypeBuilderInstantiation")
                 return true;
             if (t.IsGenericType)
                 foreach (TypeAdapter gt in t.GetGenericArguments())
@@ -932,14 +963,14 @@ namespace PascalABCCompiler.NETGenerator {
             return processing_types[type] != null;
         }
 
-        public void LinkExpressionToLocalBuilder(IExpressionNode expr, LocalBuilder lb)
+        public void LinkExpressionToLocalBuilder(IExpressionNode expr, ILocalBuilderAdapter lb)
         {
             memoized_exprs[expr] = lb;
         }
 
-        public LocalBuilder GetLocalBuilderForExpression(IExpressionNode expr)
+        public ILocalBuilderAdapter GetLocalBuilderForExpression(IExpressionNode expr)
         {
-            return memoized_exprs[expr] as LocalBuilder;
+            return memoized_exprs[expr] as ILocalBuilderAdapter;
         }
 
         //получение типа
@@ -1071,7 +1102,7 @@ namespace PascalABCCompiler.NETGenerator {
 		{
 			MethInfo mi = defs[meth] as MethInfo;
 			if (mi != null)
-			return mi.mi as MethodBuilder;
+			return mi.mi as IMethodBuilderAdapter;
 			return null;
 		}
 		
@@ -1084,16 +1115,16 @@ namespace PascalABCCompiler.NETGenerator {
 		}
 		
         //получение метода создания массива
-		public MethodInfo GetArrayInstance()
+		public IMethodInfoAdapter GetArrayInstance()
 		{
 			if (arr_mi != null) return arr_mi;
-			arr_mi = AdapterFactory.Type(typeof(System.Array)).GetMethod("CreateInstance",new TypeAdapter[2]{typeof(Type),typeof(int)});
+			arr_mi = AdapterFactory.Type(typeof(System.Array)).GetMethod("CreateInstance",new TypeAdapter[2]{typeof(Type).GetAdapter(), typeof(int).GetAdapter()});
 			return arr_mi;
 		}
 
         //добавление фиктивного метода (если метод содерж. вложенные, создается заглушка)
         //т. е. метод не добавл. в таблицу
-        public MethInfo AddFictiveMethod(IFunctionNode func, MethodBuilder mi)
+        public MethInfo AddFictiveMethod(IFunctionNode func, IMethodBuilderAdapter mi)
         {
             MethInfo m = new MethInfo(mi);
             //defs[func] = m;

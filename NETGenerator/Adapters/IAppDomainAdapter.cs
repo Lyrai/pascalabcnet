@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace NETGenerator.Adapters
+namespace PascalABCCompiler.NETGenerator.Adapters
 {
     public interface IAppDomainAdapter
     {

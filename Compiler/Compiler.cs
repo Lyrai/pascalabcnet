@@ -166,6 +166,7 @@ using PascalABCCompiler.SyntaxTreeConverters;
 using System.Text;
 using PascalABCCompiler.TreeRealization;
 using System.Linq;
+using NETGenerator.Adapters;
 
 namespace PascalABCCompiler
 {
@@ -2269,7 +2270,7 @@ namespace PascalABCCompiler
                             }
                             else*/
                             if (compilerOptions.UseDllForSystemUnits)
-                                cdo.RtlPABCSystemType = NetHelper.NetHelper.FindRtlType("PABCSystem.PABCSystem");
+                                cdo.RtlPABCSystemType = NetHelper.NetHelper.FindRtlType("PABCSystem.PABCSystem").GetAdapter();
                             CodeGeneratorsController.Compile(pn, CompilerOptions.OutputFileName, CompilerOptions.SourceFileName, cdo, CompilerOptions.StandartDirectories, ResourceFilesArray);
                             CodeGeneratorsController.EmitAssemblyRedirects(
                                 assemblyResolveScope,

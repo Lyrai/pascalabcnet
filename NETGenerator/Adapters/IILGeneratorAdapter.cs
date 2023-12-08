@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Diagnostics.SymbolStore;
 using System.Reflection.Emit;
 
-namespace NETGenerator.Adapters
+namespace PascalABCCompiler.NETGenerator.Adapters
 {
     public interface IILGeneratorAdapter
     {
@@ -18,8 +19,16 @@ namespace NETGenerator.Adapters
         void Emit(OpCode opcode, IConstructorInfoAdapter method);
         void Emit(OpCode opcode, ILocalBuilderAdapter method);
         void Emit(OpCode opcode, TypeAdapter type);
+        void Emit(OpCode opcode, Label label);
+        void Emit(OpCode opcode, Label[] label);
         void EmitCall(OpCode opcode, IMethodInfoAdapter method, TypeAdapter[] parameterTypesOpt);
-
-        ILocalBuilderAdapter DeclareLocal(TypeAdapter type);
+        ILocalBuilderAdapter DeclareLocal(TypeAdapter type, bool pinned = false);
+        void MarkSequencePoint(ISymbolDocumentWriter document, int startLine, int startColumn, int endLine, int endColumn);
+        Label DefineLabel();
+        void MarkLabel(Label label);
+        Label BeginExceptionBlock();
+        void BeginCatchBlock(TypeAdapter type);
+        void BeginFinallyBlock();
+        void EndExceptionBlock();
     }
 }

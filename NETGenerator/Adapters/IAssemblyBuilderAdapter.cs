@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
+using System.Reflection.Emit;
 
-namespace NETGenerator.Adapters
+namespace PascalABCCompiler.NETGenerator.Adapters
 {
     public interface IAssemblyBuilderAdapter
     {
@@ -9,6 +10,11 @@ namespace NETGenerator.Adapters
         void DefineUnmanagedResource(byte[] path);
         IModuleBuilderAdapter DefineDynamicModule(string name, bool emitSymbolInfo);
         IModuleBuilderAdapter DefineDynamicModule(string name, string fileName, bool emitSymbolInfo);
-        void SetCustomAttribute(ConstructorInfo con, byte[] binaryAttribute);
+        void SetCustomAttribute(IConstructorInfoAdapter con, byte[] binaryAttribute);
+        void SetEntryPoint(IMethodBuilderAdapter method, PEFileKinds fileKind);
+        void SetCustomAttribute(ICustomAttributeBuilderAdapter attribute);
+        TypeAdapter CreateInstance(string typeName);
+        void Save(string filename);
+        void Save(string filename, PortableExecutableKinds peKind, ImageFileMachine imageFile);
     }
 }

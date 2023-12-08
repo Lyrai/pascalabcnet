@@ -1,6 +1,6 @@
-﻿namespace NETGenerator.Adapters
+﻿namespace PascalABCCompiler.NETGenerator.Adapters
 {
-    public interface IPropertyInfoAdapter
+    public interface IPropertyInfoAdapter: IMemberInfoAdapter
     {
         IMethodInfoAdapter GetGetMethod();
     }

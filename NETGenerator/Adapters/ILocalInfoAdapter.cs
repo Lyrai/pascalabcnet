@@ -1,4 +1,4 @@
-﻿namespace NETGenerator.Adapters
+﻿namespace PascalABCCompiler.NETGenerator.Adapters
 {
     public interface ILocalInfoAdapter
     {
