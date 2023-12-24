@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters;
 
 namespace PascalABCCompiler.NETGenerator.Adapters
 {
@@ -13,14 +15,34 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             return Instance().CreateAppDomain();
         }
 
-        public static TypeAdapter Type(Type type)
+        public static ITypeAdapter Type(Type type)
         {
             return Instance().CreateType(type);
+        }
+        
+        public static ITypeBuilderAdapter TypeBuilder(TypeBuilder type)
+        {
+            return Instance().CreateTypeBuilder(type);
+        }
+        
+        public static IEnumBuilderAdapter EnumBuilder(EnumBuilder builder)
+        {
+            return Instance().CreateEnumBuilder(builder);
         }
 
         public static IMethodInfoAdapter MethodInfo(MethodInfo info)
         {
             return Instance().CreateMethodInfo(info);
+        }
+        
+        public static IMethodBuilderAdapter MethodBuilder(MethodBuilder builder)
+        {
+            return Instance().CreateMethodBuilder(builder);
+        }
+        
+        public static IMemberInfoAdapter MemberInfo(MemberInfo info)
+        {
+            return Instance().CreateMemberInfo(info);
         }
         
         public static IFieldInfoAdapter FieldInfo(FieldInfo info)
@@ -42,10 +64,25 @@ namespace PascalABCCompiler.NETGenerator.Adapters
         {
             return Instance().CreateConstructorInfo(info);
         }
+        
+        public static IConstructorBuilderAdapter ConstructorBuilder(ConstructorBuilder builder)
+        {
+            return Instance().CreateConstructorBuilder(builder);
+        }
 
         public static IParameterBuilderAdapter ParameterBuilder(ParameterBuilder builder)
         {
             return Instance().CreateParameterBuilder(builder);
+        }
+        
+        public static IModuleBuilderAdapter ModuleBuilder(ModuleBuilder builder)
+        {
+            return Instance().CreateModuleBuilder(builder);
+        }
+        
+        public static IParameterInfoAdapter ParameterInfo(ParameterInfo info)
+        {
+            return Instance().CreateParameterInfo(info);
         }
 
         public static ICustomAttributeBuilderAdapter CustomAttributeBuilder(IConstructorInfoAdapter constructor, object[] args)
@@ -86,18 +123,44 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             return Instance().CreateAssemblyBuilder(builder);
         }
 
+        public static IILGeneratorAdapter ILGenerator(ILGenerator generator)
+        {
+            return Instance().CreateILGenerator(generator);
+        }
+        
+        public static AssemblyAdapter Assembly(Assembly assembly)
+        {
+            return Instance().CreateAssembly(assembly);
+        }
+        
+        public static IModuleAdapter Module(Module generator)
+        {
+            return Instance().CreateModule(generator);
+        }
+        
+        public static IGenericTypeParameterBuilderAdapter GenericTypeParameterBuilder(GenericTypeParameterBuilder builder)
+        {
+            return Instance().CreateGenericTypeParameterBuilder(builder);
+        }
+
+
         protected abstract IAppDomainAdapter CreateAppDomain();
-        protected abstract TypeAdapter CreateType(Type type);
+        protected abstract ITypeAdapter CreateType(Type type);
+        protected abstract ITypeBuilderAdapter CreateTypeBuilder(TypeBuilder builder);
+        protected abstract IEnumBuilderAdapter CreateEnumBuilder(EnumBuilder builder);
         protected abstract IMethodInfoAdapter CreateMethodInfo(MethodInfo info);
+        protected abstract IMethodBuilderAdapter CreateMethodBuilder(MethodBuilder builder);
         protected abstract IFieldInfoAdapter CreateFieldInfo(FieldInfo info);
         protected abstract ILocalBuilderAdapter CreateLocalBuilder(LocalBuilder builder);
         protected abstract IFieldBuilderAdapter CreateFieldBuilder(FieldBuilder builder);
         protected abstract IParameterBuilderAdapter CreateParameterBuilder(ParameterBuilder builder);
+        protected abstract IParameterInfoAdapter CreateParameterInfo(ParameterInfo info);
         protected abstract IEventBuilderAdapter CreateEventBuilder(EventBuilder builder);
+        protected abstract IModuleBuilderAdapter CreateModuleBuilder(ModuleBuilder builder);
         protected abstract IAssemblyBuilderAdapter CreateAssemblyBuilder(AssemblyBuilder builder);
+        protected abstract IGenericTypeParameterBuilderAdapter CreateGenericTypeParameterBuilder(GenericTypeParameterBuilder builder);
         protected abstract ICustomAttributeBuilderAdapter CreateCustomAttributeBuilder(IConstructorInfoAdapter constructor, object[] args);
         protected abstract ICustomAttributeBuilderAdapter CreateCustomAttributeBuilder(IConstructorInfoAdapter constructor, object[] constructorArgs, IPropertyInfoAdapter[] namedProperties, object[] propertyValues);
-
         protected abstract ICustomAttributeBuilderAdapter CreateCustomAttributeBuilder(
             IConstructorInfoAdapter constructor,
             object[] constructorArgs, IPropertyInfoAdapter[] namedProperties, object[] propertyValues,
@@ -105,53 +168,318 @@ namespace PascalABCCompiler.NETGenerator.Adapters
         protected abstract IPropertyInfoAdapter CreatePropertyInfo(PropertyInfo info);
         protected abstract IPropertyBuilderAdapter CreatePropertyBuilder(PropertyBuilder builder);
         protected abstract IConstructorInfoAdapter CreateConstructorInfo(ConstructorInfo info);
+        protected abstract IConstructorBuilderAdapter CreateConstructorBuilder(ConstructorBuilder builder);
+        protected abstract IMemberInfoAdapter CreateMemberInfo(MemberInfo info);
+        protected abstract IILGeneratorAdapter CreateILGenerator(ILGenerator generator);
+        protected abstract AssemblyAdapter CreateAssembly(Assembly assembly);
+        protected abstract IModuleAdapter CreateModule(Module module);
+
 
         private static AdapterFactory Instance()
         {
-            return _instance ?? null;
+            if (!(_instance is object))
+            {
+#if NET472
+                _instance = new FrameworkAdapterFactory();
+#else
+                _instance =  null;
+#endif
+            }
+
+            return _instance;
+
         }
     }
 
     public static class AdapterExtensions
     {
-        public static TypeAdapter GetAdapter(this Type type)
+        private static Dictionary<object, object> _adaptees = new Dictionary<object, object>();
+
+        public static ITypeAdapter GetAdapter(this Type type)
         {
-            return AdapterFactory.Type(type);
+            if (type is null)
+                return null;
+
+            var typeName = type.GetType().Name;
+            var method = typeof(AdapterFactory).GetMethod(typeName, BindingFlags.Static | BindingFlags.Public) ?? typeof(AdapterFactory).GetMethod("Type", BindingFlags.Static | BindingFlags.Public);
+            ITypeAdapter instance = method.Invoke(null, new [] { type }) as ITypeAdapter;
+            
+            //var instance = AdapterFactory.Type(type);
+            // _adaptees.Add(type, instance);
+            return instance;
         }
 
-        public static IConstructorInfoAdapter GetAdapter(this ConstructorInfo constructor)
+        public static ITypeBuilderAdapter GetAdapter(this TypeBuilder builder)
         {
-            return AdapterFactory.ConstructorInfo(constructor);
+            if (builder is null)
+                return null;
+            
+            // if (_adaptees.ContainsKey(builder)) 
+                // return _adaptees[builder] as ITypeBuilderAdapter;
+            
+            var instance = AdapterFactory.TypeBuilder(builder);
+            // _adaptees.Add(builder, instance);
+            return instance;
+        }
+
+        public static IEnumBuilderAdapter GetAdapter(this EnumBuilder builder)
+        {
+            if (builder is null)
+                return null;
+            
+            // if (_adaptees.ContainsKey(builder)) 
+                // return _adaptees[builder] as IEnumBuilderAdapter;
+            
+            var instance = AdapterFactory.EnumBuilder(builder);
+            // _adaptees.Add(builder, instance);
+            return instance;
+        }
+
+        public static IConstructorInfoAdapter GetAdapter(this ConstructorInfo info)
+        {
+            if (info is null)
+                return null;
+
+            var typeName = info.GetType().Name;
+            var method = typeof(AdapterFactory).GetMethod(typeName, BindingFlags.Static | BindingFlags.Public) ?? typeof(AdapterFactory).GetMethod("ConstructorInfo", BindingFlags.Static | BindingFlags.Public);
+            IConstructorInfoAdapter instance = method.Invoke(null, new [] { info }) as IConstructorInfoAdapter;
+                
+            // _adaptees.Add(info, instance);
+            return instance;
+        }
+        
+        public static IConstructorBuilderAdapter GetAdapter(this ConstructorBuilder builder)
+        {
+            if (builder is null)
+                return null;
+            
+            // if (_adaptees.ContainsKey(builder))
+                // return _adaptees[builder] as IConstructorBuilderAdapter;
+
+            var instance = AdapterFactory.ConstructorBuilder(builder);
+            // _adaptees.Add(builder, instance);
+            return instance;
         }
 
         public static IMethodInfoAdapter GetAdapter(this MethodInfo info)
         {
-            return AdapterFactory.MethodInfo(info);
+            if (info is null)
+                return null;
+
+            var typeName = info.GetType().Name;
+            var method = typeof(AdapterFactory).GetMethod(typeName, BindingFlags.Static | BindingFlags.Public) ?? typeof(AdapterFactory).GetMethod("MethodInfo", BindingFlags.Static | BindingFlags.Public);
+            IMethodInfoAdapter instance = method.Invoke(null, new [] { info }) as IMethodInfoAdapter;
+
+            // _adaptees.Add(info, instance);
+            return instance;
+        }
+        
+        public static IMethodBuilderAdapter GetAdapter(this MethodBuilder builder)
+        {
+            if (builder is null)
+                return null;
+            
+            // if (_adaptees.ContainsKey(builder))
+                // return _adaptees[builder] as IMethodBuilderAdapter;
+
+            var instance = AdapterFactory.MethodBuilder(builder);
+            // _adaptees.Add(builder, instance);
+            return instance;
         }
 
         public static IFieldInfoAdapter GetAdapter(this FieldInfo info)
         {
-            return AdapterFactory.FieldInfo(info);
+            if (info is null)
+                return null;
+            
+            var typeName = info.GetType().Name;
+            var method = typeof(AdapterFactory).GetMethod(typeName, BindingFlags.Static | BindingFlags.Public) ?? typeof(AdapterFactory).GetMethod("FieldInfo", BindingFlags.Static | BindingFlags.Public);
+            IFieldInfoAdapter instance = method.Invoke(null, new [] { info }) as IFieldInfoAdapter;
+
+            // _adaptees.Add(info, instance);
+            return instance;
         }
 
         public static IPropertyInfoAdapter GetAdapter(this PropertyInfo info)
         {
-            return AdapterFactory.PropertyInfo(info);
+            if (info is null)
+                return null;
+            
+            var typeName = info.GetType().Name;
+            var method = typeof(AdapterFactory).GetMethod(typeName, BindingFlags.Static | BindingFlags.Public) ?? typeof(AdapterFactory).GetMethod("PropertyInfo", BindingFlags.Static | BindingFlags.Public);
+            IPropertyInfoAdapter instance = method.Invoke(null, new [] { info }) as IPropertyInfoAdapter;
+
+            // _adaptees.Add(info, instance);
+            return instance;
+        }
+        
+        public static IMemberInfoAdapter GetAdapter(this MemberInfo info)
+        {
+            if (info is null)
+                return null;
+            
+            var typeName = info.GetType().Name;
+            var method = typeof(AdapterFactory).GetMethod(typeName, BindingFlags.Static | BindingFlags.Public) ?? typeof(AdapterFactory).GetMethod("MemberInfo", BindingFlags.Static | BindingFlags.Public);
+            IMemberInfoAdapter instance = method.Invoke(null, new [] { info }) as IMemberInfoAdapter;
+            
+            // _adaptees.Add(info, instance);
+            return instance;
         }
 
         public static IParameterBuilderAdapter GetAdapter(this ParameterBuilder builder)
         {
-            return AdapterFactory.ParameterBuilder(builder);
+            if (builder is null)
+                return null;
+            
+            // if (_adaptees.ContainsKey(builder))
+                // return _adaptees[builder] as IParameterBuilderAdapter;
+
+            var instance = AdapterFactory.ParameterBuilder(builder);
+            // _adaptees.Add(builder, instance);
+            return instance;
+        }
+        
+        public static IParameterInfoAdapter GetAdapter(this ParameterInfo info)
+        {
+            if (info is null)
+                return null;
+            
+            // if (_adaptees.ContainsKey(info))
+                // return _adaptees[info] as IParameterInfoAdapter;
+
+            var instance = AdapterFactory.ParameterInfo(info);
+            // _adaptees.Add(info, instance);
+            return instance;
         }
 
         public static IEventBuilderAdapter GetAdapter(this EventBuilder builder)
         {
-            return AdapterFactory.EventBuilder(builder);
+            if (builder is null)
+                return null;
+            
+            // if (_adaptees.ContainsKey(builder))
+                // return _adaptees[builder] as IEventBuilderAdapter;
+
+            var instance = AdapterFactory.EventBuilder(builder);
+            // _adaptees.Add(builder, instance);
+            return instance;
+        }
+        
+        public static IGenericTypeParameterBuilderAdapter GetAdapter(this GenericTypeParameterBuilder builder)
+        {
+            if (builder is null)
+                return null;
+            
+            // if (_adaptees.ContainsKey(builder))
+                // return _adaptees[builder] as IGenericTypeParameterBuilderAdapter;
+
+            var instance = AdapterFactory.GenericTypeParameterBuilder(builder);
+            // _adaptees.Add(builder, instance);
+            return instance;
         }
         
         public static IAssemblyBuilderAdapter GetAdapter(this AssemblyBuilder builder)
         {
-            return AdapterFactory.AssemblyBuilder(builder);
+            if (builder is null)
+                return null;
+            
+            // if (_adaptees.ContainsKey(builder))
+                // return _adaptees[builder] as IAssemblyBuilderAdapter;
+
+            var instance = AdapterFactory.AssemblyBuilder(builder);
+            // _adaptees.Add(builder, instance);
+            return instance;
+        }
+        
+        public static IModuleBuilderAdapter GetAdapter(this ModuleBuilder builder)
+        {
+            if (builder is null)
+                return null;
+            
+            // if (_adaptees.ContainsKey(builder))
+                // return _adaptees[builder] as IModuleBuilderAdapter;
+
+            var instance = AdapterFactory.ModuleBuilder(builder);
+            // _adaptees.Add(builder, instance);
+            return instance;
+        }
+
+        public static IILGeneratorAdapter GetAdapter(this ILGenerator generator)
+        {
+            if (generator is null)
+                return null;
+            
+            // if (_adaptees.ContainsKey(generator))
+                // return _adaptees[generator] as IILGeneratorAdapter;
+
+            var instance = AdapterFactory.ILGenerator(generator);
+            // _adaptees.Add(generator, instance);
+            return instance;
+        }
+        
+        public static AssemblyAdapter GetAdapter(this Assembly assembly)
+        {
+            if (assembly is null)
+                return null;
+            
+            // if (_adaptees.ContainsKey(assembly))
+                // return _adaptees[assembly] as AssemblyAdapter;
+
+            var instance = AdapterFactory.Assembly(assembly);
+            // _adaptees.Add(assembly, instance);
+            return instance;
+        }
+        
+        public static IModuleAdapter GetAdapter(this Module module)
+        {
+            if (module is null)
+                return null;
+            
+            // if (_adaptees.ContainsKey(module))
+                // return _adaptees[module] as IModuleAdapter;
+
+            var instance = AdapterFactory.Module(module);
+            // _adaptees.Add(module, instance);
+            return instance;
+        }
+        
+        public static IFieldBuilderAdapter GetAdapter(this FieldBuilder builder)
+        {
+            if (builder is null)
+                return null;
+            
+            // if (_adaptees.ContainsKey(builder))
+                // return _adaptees[builder] as IFieldBuilderAdapter;
+
+            var instance = AdapterFactory.FieldBuilder(builder);
+            // _adaptees.Add(builder, instance);
+            return instance;
+        }
+
+        public static IPropertyBuilderAdapter GetAdapter(this PropertyBuilder builder)
+        {
+            if (builder is null)
+                return null;
+            
+            // if (_adaptees.ContainsKey(builder))
+                // return _adaptees[builder] as IPropertyBuilderAdapter;
+
+            var instance = AdapterFactory.PropertyBuilder(builder);
+            // _adaptees.Add(builder, instance);
+            return instance;
+        }
+        
+        public static ILocalBuilderAdapter GetAdapter(this LocalBuilder builder)
+        {
+            if (builder is null)
+                return null;
+            
+            // if (_adaptees.ContainsKey(builder))
+                // return _adaptees[builder] as ILocalBuilderAdapter;
+
+            var instance = AdapterFactory.LocalBuilder(builder);
+            // _adaptees.Add(builder, instance);
+            return instance;
         }
     }
 }

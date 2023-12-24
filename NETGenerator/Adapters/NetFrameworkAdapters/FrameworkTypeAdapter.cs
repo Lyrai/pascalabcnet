@@ -4,24 +4,32 @@ using System.Reflection;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
-    public class FrameworkTypeAdapter: TypeAdapter
+    public class FrameworkTypeAdapter: ITypeAdapter
     {
-        public override bool IsGenericType { get; }
-        public override bool IsArray { get; }
-        public override bool IsGenericTypeDefinition { get; }
-        public override bool IsGenericParameter { get; }
-        public override bool IsValueType { get; }
-        public override bool IsPointer { get; }
-        public override bool IsEnum { get; }
-        public override bool IsInterface { get; }
-        public override bool IsClass { get; }
-        public override bool IsPrimitive { get; }
-        public override string FullName { get; }
-        public override string Name { get; }
-        public override int GenericParameterPosition { get; }
-        public override TypeAdapter BaseType { get; }
-        public override TypeAdapter DeclaringType { get; }
-        public override IModuleAdapter Module { get; }
+        public bool IsGenericType => Adaptee.IsGenericType;
+        public bool IsArray => Adaptee.IsArray;
+        public bool IsGenericTypeDefinition => Adaptee.IsGenericTypeDefinition;
+        public bool IsGenericParameter => Adaptee.IsGenericParameter;
+        public bool IsValueType => Adaptee.IsValueType;
+        public bool IsPointer => Adaptee.IsPointer;
+        public bool IsEnum => Adaptee.IsEnum;
+        public bool IsInterface => Adaptee.IsInterface;
+        public bool IsClass => Adaptee.IsClass;
+        public bool IsPrimitive => Adaptee.IsPrimitive;
+        public bool IsSealed => Adaptee.IsSealed;
+        public bool IsAbstract => Adaptee.IsAbstract;
+        public bool IsByRef => Adaptee.IsByRef;
+        public bool IsNotPublic => Adaptee.IsNotPublic;
+        public IMethodInfoAdapter DeclaringMethod => (Adaptee.DeclaringMethod as MethodInfo).GetAdapter();
+        public string FullName => Adaptee.FullName;
+        public string Name => Adaptee.Name;
+        public string Namespace => Adaptee.Namespace;
+        public string AssemblyQualifiedName => Adaptee.AssemblyQualifiedName;
+        public AssemblyAdapter Assembly => Adaptee.Assembly.GetAdapter();
+        public int GenericParameterPosition => Adaptee.GenericParameterPosition;
+        public ITypeAdapter BaseType => Adaptee.BaseType.GetAdapter();
+        public ITypeAdapter DeclaringType => Adaptee.DeclaringType.GetAdapter();
+        public IModuleAdapter Module => Adaptee.Module.GetAdapter();
         public Type Adaptee { get; }
 
         public FrameworkTypeAdapter(Type adaptee)
@@ -29,129 +37,199 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
             Adaptee = adaptee;
         }
         
-        public override IMethodInfoAdapter GetMethod(string name)
+        public IMethodInfoAdapter GetMethod(string name)
         {
             return Adaptee.GetMethod(name).GetAdapter();
         }
 
-        public override IMethodInfoAdapter GetMethod(string name, TypeAdapter[] parameterTypes)
+        public IMethodInfoAdapter GetMethod(string name, ITypeAdapter[] parameterTypes)
         {
             return Adaptee.GetMethod(name, GetAdaptee(parameterTypes)).GetAdapter();
         }
 
-        public override IMethodInfoAdapter GetMethod(string name, BindingFlags flags)
+        public IMethodInfoAdapter GetMethod(string name, BindingFlags flags)
         {
             return Adaptee.GetMethod(name, flags).GetAdapter();
         }
 
-        public override IMethodInfoAdapter[] GetMethods()
+        public IMethodInfoAdapter[] GetMethods()
         {
             return Adaptee.GetMethods().Select(m => m.GetAdapter()).ToArray();
         }
 
-        public override IMethodInfoAdapter[] GetMethods(BindingFlags flags)
+        public IMethodInfoAdapter[] GetMethods(BindingFlags flags)
         {
             return Adaptee.GetMethods().Select(m => m.GetAdapter()).ToArray();
         }
 
-        public override IConstructorInfoAdapter GetConstructor(TypeAdapter[] parameterTypes)
+        public IConstructorInfoAdapter GetConstructor(ITypeAdapter[] parameterTypes)
         {
             return Adaptee.GetConstructor(GetAdaptee(parameterTypes)).GetAdapter();
         }
 
-        public override IConstructorInfoAdapter[] GetConstructors()
+        public IConstructorInfoAdapter[] GetConstructors()
         {
             return Adaptee.GetConstructors().Select(c => c.GetAdapter()).ToArray();
         }
 
-        public override TypeAdapter[] GetGenericArguments()
+        public IConstructorInfoAdapter[] GetConstructors(BindingFlags flags)
+        {
+            return Adaptee.GetConstructors(flags).Select(c => c.GetAdapter()).ToArray();
+        }
+
+        public ITypeAdapter[] GetGenericArguments()
         {
             return Adaptee.GetGenericArguments().Select(t => t.GetAdapter()).ToArray();
         }
 
-        public override TypeAdapter GetElementType()
+        public ITypeAdapter GetElementType()
         {
             return Adaptee.GetElementType().GetAdapter();
         }
 
-        public override TypeAdapter GetGenericTypeDefinition()
+        public ITypeAdapter GetGenericTypeDefinition()
         {
             return Adaptee.GetGenericTypeDefinition().GetAdapter();
         }
 
-        public override IPropertyInfoAdapter GetProperty(string name)
+        public IPropertyInfoAdapter GetProperty(string name)
         {
             return Adaptee.GetProperty(name).GetAdapter();
         }
 
-        public override IPropertyInfoAdapter GetProperty(string name, BindingFlags flags)
+        public IPropertyInfoAdapter GetProperty(string name, BindingFlags flags)
         {
             return Adaptee.GetProperty(name, flags).GetAdapter();
         }
 
-        public override TypeAdapter GetInterface(string name)
+        public IFieldInfoAdapter GetField(string name, BindingFlags flags)
+        {
+            return Adaptee.GetField(name, flags).GetAdapter();
+        }
+
+        public ITypeAdapter GetInterface(string name)
         {
             return Adaptee.GetInterface(name).GetAdapter();
         }
 
-        public override TypeAdapter[] GetInterfaces()
+        public ITypeAdapter[] GetInterfaces()
         {
-            throw new System.NotImplementedException();
+            return Adaptee.GetInterfaces().Select(t => t.GetAdapter()).ToArray();
         }
 
-        public override IMemberInfoAdapter[] GetMember(string name, BindingFlags flags)
+        public ITypeAdapter[] GetNestedTypes()
         {
-            throw new System.NotImplementedException();
+            return Adaptee.GetNestedTypes().Select(t => t.GetAdapter()).ToArray();
         }
 
-        public override int GetArrayRank()
+        public IMemberInfoAdapter[] GetMember(string name, BindingFlags flags)
         {
-            throw new System.NotImplementedException();
+            return Adaptee.GetMember(name, flags).Select(t => t.GetAdapter()).ToArray();
         }
 
-        public override TypeAdapter MakeGenericType(TypeAdapter type)
+        public IFieldInfoAdapter[] GetFields()
         {
-            throw new System.NotImplementedException();
+            return Adaptee.GetFields().Select(t => t.GetAdapter()).ToArray();
         }
 
-        public override TypeAdapter MakeGenericType(TypeAdapter[] types)
+        public IMemberInfoAdapter[] GetDefaultMembers()
         {
-            throw new System.NotImplementedException();
+            return Adaptee.GetDefaultMembers().Select(t => t.GetAdapter()).ToArray();
         }
 
-        public override TypeAdapter MakeArrayType()
+        public IMemberInfoAdapter[] GetMembers(BindingFlags flags)
         {
-            throw new System.NotImplementedException();
+            return Adaptee.GetMembers(flags).Select(t => t.GetAdapter()).ToArray();
         }
 
-        public override TypeAdapter MakeArrayType(int rank)
+        public int GetArrayRank()
         {
-            throw new System.NotImplementedException();
+            return Adaptee.GetArrayRank();
         }
 
-        public override TypeAdapter MakePointerType()
+        public ITypeAdapter MakeGenericType(ITypeAdapter type)
         {
-            throw new System.NotImplementedException();
+            return Adaptee.MakeGenericType(GetAdaptee(type)).GetAdapter();
         }
 
-        public override TypeAdapter MakeByRefType()
+        public ITypeAdapter MakeGenericType(ITypeAdapter[] types)
         {
-            throw new System.NotImplementedException();
+            return Adaptee.MakeGenericType(GetAdaptee(types)).GetAdapter();
         }
 
-        public override bool Equals(TypeAdapter other)
+        public ITypeAdapter MakeArrayType()
         {
-            throw new System.NotImplementedException();
+            return Adaptee.MakeArrayType().GetAdapter();
         }
 
-        private Type GetAdaptee(TypeAdapter adapter)
+        public ITypeAdapter MakeArrayType(int rank)
         {
-            return (adapter as FrameworkTypeAdapter).Adaptee;
+            return Adaptee.MakeArrayType(rank).GetAdapter();
         }
 
-        private Type[] GetAdaptee(TypeAdapter[] adapters)
+        public ITypeAdapter MakePointerType()
         {
-            return adapters.Select(t => (t as FrameworkTypeAdapter).Adaptee).ToArray();
+            return Adaptee.MakePointerType().GetAdapter();
+        }
+
+        public ITypeAdapter MakeByRefType()
+        {
+            return Adaptee.MakeByRefType().GetAdapter();
+        }
+
+        public object[] GetCustomAttributes(ITypeAdapter attributeType, bool inherit)
+        {
+            return Adaptee.GetCustomAttributes(GetAdaptee(attributeType), inherit);
+        }
+
+        public object[] GetCustomAttributes(bool inherit)
+        {
+            return Adaptee.GetCustomAttributes(inherit);
+        }
+
+        public bool Equals(ITypeAdapter other)
+        {
+            return Adaptee == GetAdaptee(other);
+        }
+
+        public override bool Equals(object other)
+        {
+            if (other is ITypeAdapter adapter)
+            {
+                return Equals(adapter);
+            }
+
+            if (other is Type t)
+            {
+                return Adaptee == t;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return Adaptee.GetHashCode();
+        }
+
+        public static bool operator ==(FrameworkTypeAdapter first, ITypeAdapter second)
+        {
+            return first?.Adaptee == (second as FrameworkTypeAdapter)?.Adaptee;
+        }
+
+        public static bool operator !=(FrameworkTypeAdapter first, ITypeAdapter second)
+        {
+            return !(first == second);
+        }
+
+        private Type GetAdaptee(ITypeAdapter adapter)
+        {
+            return (adapter as FrameworkTypeAdapter)?.Adaptee;
+        }
+
+        private Type[] GetAdaptee(ITypeAdapter[] adapters)
+        {
+            return adapters.Select(t => (t as FrameworkTypeAdapter)?.Adaptee).ToArray();
         }
     }
 }

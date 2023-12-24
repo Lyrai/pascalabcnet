@@ -10,10 +10,10 @@ namespace PascalABCCompiler.NETGenerator.Adapters
         void SetCustomAttribute(ICustomAttributeBuilderAdapter attribute);
         IParameterBuilderAdapter DefineParameter(int index, ParameterAttributes attributes, string name);
         void DefineGenericParameters(string[] names);
-        void SetReturnType(TypeAdapter type);
-        void SetParameters(TypeAdapter[] types);
+        void SetReturnType(ITypeAdapter type);
+        void SetParameters(ITypeAdapter[] types);
         void SetMarshal(UnmanagedMarshal marshal);
         void SetImplementationFlags(MethodImplAttributes attributes);
-        TypeAdapter[] GetGenericArguments();
+        ITypeAdapter[] GetGenericArguments();
     }
 }

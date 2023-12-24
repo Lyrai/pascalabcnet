@@ -13,7 +13,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters
         void SetCustomAttribute(IConstructorInfoAdapter con, byte[] binaryAttribute);
         void SetEntryPoint(IMethodBuilderAdapter method, PEFileKinds fileKind);
         void SetCustomAttribute(ICustomAttributeBuilderAdapter attribute);
-        TypeAdapter CreateInstance(string typeName);
+        ITypeAdapter CreateInstance(string typeName);
         void Save(string filename);
         void Save(string filename, PortableExecutableKinds peKind, ImageFileMachine imageFile);
     }

@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Text;
 using PascalABCCompiler.TreeConverter;
 using System.Linq;
-using PascalABCCompiler.NETGenerator.Adapters;
 
 namespace PascalABCCompiler.TreeRealization
 {
@@ -2869,12 +2868,12 @@ namespace PascalABCCompiler.TreeRealization
 	{
         public override string ToString() => PrintableName;
 
-        internal TypeAdapter _compiled_type;
+        internal System.Type _compiled_type;
 		protected compiled_type_node _base_type;
 
         //Если это не чистить, будет ошибка. Т.к. при следуйщей компиляции области видимости могут изменится.
-        internal static System.Collections.Generic.Dictionary<TypeAdapter, compiled_type_node> compiled_types =
-            new System.Collections.Generic.Dictionary<TypeAdapter, compiled_type_node>();
+        internal static System.Collections.Generic.Dictionary<System.Type, compiled_type_node> compiled_types =
+            new System.Collections.Generic.Dictionary<Type, compiled_type_node>();
 
         private NetHelper.NetTypeScope _net_type_scope;
 
@@ -2961,7 +2960,7 @@ namespace PascalABCCompiler.TreeRealization
                 {
                     return null;
                 }
-                return compiled_function_node.get_compiled_method(_compiled_type.DeclaringMethod);
+                return compiled_function_node.get_compiled_method(_compiled_type.DeclaringMethod as System.Reflection.MethodInfo);
             }
         }
 
@@ -2998,7 +2997,7 @@ namespace PascalABCCompiler.TreeRealization
                 if (_generic_params == null)
                 {
                     _generic_params = new List<compiled_type_node>();
-                    foreach (var t in _compiled_type.GetGenericArguments())
+                    foreach (Type t in _compiled_type.GetGenericArguments())
                     {
                         _generic_params.Add(compiled_type_node.get_type_node(t));
                     }
@@ -3021,13 +3020,13 @@ namespace PascalABCCompiler.TreeRealization
 				if (!_compiled_type.IsGenericType)
 				return _compiled_type.FullName;
 				StringBuilder sb = new StringBuilder();
-                var t = _compiled_type.GetGenericTypeDefinition();
+                Type t = _compiled_type.GetGenericTypeDefinition();
                 int ind = t.Name.IndexOf('`');
                 sb.Append(t.Namespace + "." + t.Name.Substring(0, ind != -1 ? ind : t.Name.Length));
 				if (!_compiled_type.IsGenericTypeDefinition)
 				{
 					sb.Append("{");
-					var tt = _compiled_type.GetGenericArguments();
+					Type[] tt = _compiled_type.GetGenericArguments();
 					for (int i=0; i<tt.Length; i++)
 					{
 						sb.Append(tt[i].FullName);
@@ -3048,8 +3047,8 @@ namespace PascalABCCompiler.TreeRealization
                 {
                     return null;
                 }
-                var orig = _compiled_type.GetGenericTypeDefinition();
-                if (!(orig is object))
+                Type orig = _compiled_type.GetGenericTypeDefinition();
+                if (orig == null)
                 {
                     return null;
                 }
@@ -3066,9 +3065,9 @@ namespace PascalABCCompiler.TreeRealization
                 {
                     return _instance_params;
                 }
-                var pars = _compiled_type.GetGenericArguments();
+                Type[] pars = _compiled_type.GetGenericArguments();
                 _instance_params = new List<type_node>(pars.Length);
-                foreach (var t in pars)
+                foreach (Type t in pars)
                 {
                     _instance_params.Add(compiled_type_node.get_type_node(t));
                 }
@@ -3092,7 +3091,7 @@ namespace PascalABCCompiler.TreeRealization
         	get
         	{
                 if (is_enum == 0)
-                    is_enum = (_compiled_type.IsEnum || compiled_type.BaseType is object && compiled_type.BaseType == NetHelper.NetHelper.EnumType)?1:-1;
+                    is_enum = (_compiled_type.IsEnum || compiled_type.BaseType != null && compiled_type.BaseType == NetHelper.NetHelper.EnumType)?1:-1;
                 return is_enum == 1;
             }
         }
@@ -3112,7 +3111,7 @@ namespace PascalABCCompiler.TreeRealization
             {
                 if (_implementing_interfaces == null)
                 {
-                    var interf = _compiled_type.GetInterfaces();
+                    Type[] interf = _compiled_type.GetInterfaces();
                     _implementing_interfaces = new List<SemanticTree.ITypeNode>(interf.Length);
                     for (int i = 0; i < interf.Length; i++)
                     {
@@ -3149,7 +3148,7 @@ namespace PascalABCCompiler.TreeRealization
         {
             int count = param_types.Count;
             bool all_compiled = true;
-            List<TypeAdapter> ts = new List<TypeAdapter>(count);
+            List<Type> ts = new List<Type>(count);
             int k = 0;
             while (k < count && all_compiled)
             {
@@ -3166,7 +3165,7 @@ namespace PascalABCCompiler.TreeRealization
             }
             if (all_compiled)
             {
-                var rez_t = _compiled_type.MakeGenericType(ts.ToArray());
+                Type rez_t = _compiled_type.MakeGenericType(ts.ToArray());
                 compiled_type_node rez = compiled_type_node.get_type_node(rez_t);
                 if (rez.scope == null)
                 {
@@ -3229,7 +3228,7 @@ namespace PascalABCCompiler.TreeRealization
             }
         }
 
-		private compiled_type_node(TypeAdapter st)
+		private compiled_type_node(System.Type st)
 		{
 			_compiled_type=st;
 			_ref_type = new ref_type_node(this);
@@ -3301,15 +3300,15 @@ namespace PascalABCCompiler.TreeRealization
 		{
             //if (ctors_inited) return;
             //ctors_inited = true;
-			var cons_arr=_compiled_type.GetConstructors();
-			var prot_consttr_arr = _compiled_type.GetConstructors(BindingFlags.FlattenHierarchy|BindingFlags.Instance|BindingFlags.Public | BindingFlags.NonPublic);
-			List<IConstructorInfoAdapter> cnstrs = new List<IConstructorInfoAdapter>();
+			System.Reflection.ConstructorInfo[] cons_arr=_compiled_type.GetConstructors();
+			System.Reflection.ConstructorInfo[] prot_consttr_arr = _compiled_type.GetConstructors(BindingFlags.FlattenHierarchy|BindingFlags.Instance|BindingFlags.Public | BindingFlags.NonPublic);
+			List<System.Reflection.ConstructorInfo> cnstrs = new List<System.Reflection.ConstructorInfo>();
 			cnstrs.AddRange(cons_arr);
 			for (int i=0; i<prot_consttr_arr.Length; i++)
 				if (!cnstrs.Contains(prot_consttr_arr[i]))
 				cnstrs.Add(prot_consttr_arr[i]);
 			cons_arr = cnstrs.ToArray();
-			foreach(var ci in cons_arr)
+			foreach(System.Reflection.ConstructorInfo ci in cons_arr)
 			{
 				//if (ci.IsPrivate || ci.IsAssembly) 
 				//	continue;
@@ -3322,7 +3321,7 @@ namespace PascalABCCompiler.TreeRealization
 		}
 
 
-        public static compiled_type_node get_type_node(TypeAdapter st, SymbolTable.TreeConverterSymbolTable tcst)
+        public static compiled_type_node get_type_node(System.Type st, SymbolTable.TreeConverterSymbolTable tcst)
         {
             compiled_type_node ctn = get_type_node(st);
             if (ctn.scope == null)
@@ -3339,7 +3338,7 @@ namespace PascalABCCompiler.TreeRealization
 
         private static void InitEnumOperations(compiled_type_node ctn)
         {
-            if (ctn.compiled_type.GetCustomAttributes(typeof(FlagsAttribute).GetAdapter(), true).Length == 0) return;
+            if (ctn.compiled_type.GetCustomAttributes(typeof(FlagsAttribute), true).Length == 0) return;
             basic_function_node _int_and = SystemLibrary.SystemLibrary.make_binary_operator(compiler_string_consts.and_name, ctn, SemanticTree.basic_function_type.iand);
             _int_and.compile_time_executor = SystemLibrary.static_executors.enum_and_executor;
             basic_function_node _int_or = SystemLibrary.SystemLibrary.make_binary_operator(compiler_string_consts.or_name, ctn, SemanticTree.basic_function_type.ior);
@@ -3376,13 +3375,13 @@ namespace PascalABCCompiler.TreeRealization
 		{
 			get
 			{
-                if (!(compiled_type.GetElementType() is object))
+                if (compiled_type.GetElementType() == null)
                     return null;
 				return compiled_type_node.get_type_node(compiled_type.GetElementType());
 			}
 		}
         
-        public static compiled_type_node get_type_node(TypeAdapter st)
+        public static compiled_type_node get_type_node(System.Type st)
 		{
             //(ssyy) Обрабатываем параметры generic-типов
             //Сделаю потом, если это понадобится.
@@ -3454,7 +3453,7 @@ namespace PascalABCCompiler.TreeRealization
         }
 
 		//TODO: неплохо было-бы закрыть от всех, кроме интерфейсов.
-		public TypeAdapter compiled_type
+		public System.Type compiled_type
 		{
 			get
 			{
@@ -3472,7 +3471,7 @@ namespace PascalABCCompiler.TreeRealization
                 {
                     _type_special_kind = SemanticTree.type_special_kind.array_kind;
                 }
-                else if (compiled_type.IsEnum || compiled_type.BaseType is object && compiled_type.BaseType == NetHelper.NetHelper.EnumType)
+                else if (compiled_type.IsEnum || compiled_type.BaseType != null && compiled_type.BaseType == NetHelper.NetHelper.EnumType)
                 {
                     _type_special_kind = SemanticTree.type_special_kind.enum_kind;
                 }
@@ -3503,8 +3502,8 @@ namespace PascalABCCompiler.TreeRealization
                 }
                 if (base_type_is_null)
                     return null;
-                TypeAdapter bn = _compiled_type.BaseType;
-                if (!(bn is object))
+                System.Type bn = _compiled_type.BaseType;
+                if (bn == null)
                 {
                     base_type_is_null = true;
                     return null;
@@ -3542,12 +3541,12 @@ namespace PascalABCCompiler.TreeRealization
                 {
                     return _default_property;
                 }
-                var def_members = _compiled_type.GetDefaultMembers();
+                System.Reflection.MemberInfo[] def_members = _compiled_type.GetDefaultMembers();
                 if ((def_members != null) && (def_members.Length > 0))
                 {
-                    foreach (var mi in def_members)
+                    foreach (System.Reflection.MemberInfo mi in def_members)
                     {
-                        var pi = mi as IPropertyInfoAdapter;
+                        System.Reflection.PropertyInfo pi = mi as System.Reflection.PropertyInfo;
                         if (pi != null)
                         {
                             _default_property = new compiled_property_node(pi);
@@ -3678,7 +3677,7 @@ namespace PascalABCCompiler.TreeRealization
                     compiled_type_node bas_type = base_type as compiled_type_node;
                     if (bas_type == null)
                     {
-                        bas_type = compiled_type_node.get_type_node(typeof(object).GetAdapter());
+                        bas_type = compiled_type_node.get_type_node(typeof(object));
                     }
                     while (bas_type != null && bas_type.scope != null)
                     {
@@ -4010,11 +4009,20 @@ namespace PascalABCCompiler.TreeRealization
             return fn;
         }
 
-        public override bool is_value => _compiled_type.IsValueType;
+        public override bool is_value
+        {
+            get
+            {
+                return (_compiled_type.IsValueType);
+            }
+        }
 
         public override bool is_class
         {
-            get => _compiled_type.IsClass;
+            get
+            {
+                return _compiled_type.IsClass;
+            }
             set
             {
                 
@@ -4027,9 +4035,9 @@ namespace PascalABCCompiler.TreeRealization
             {
                 if (_compiled_type.IsGenericType)
                 {
-                    var tpars = _compiled_type.GetGenericArguments();
+                    Type[] tpars = _compiled_type.GetGenericArguments();
                     List<type_node> ctypes = new List<type_node>(tpars.Length);
-                    foreach (var par in tpars)
+                    foreach (Type par in tpars)
                     {
                         ctypes.Add(compiled_type_node.get_type_node(par));
                     }
@@ -4049,7 +4057,7 @@ namespace PascalABCCompiler.TreeRealization
         {
             get
             {
-                var t = _compiled_type;
+                Type t = _compiled_type;
                 if (t.IsGenericType)
                     t = t.GetGenericTypeDefinition();
                 return t.FullName;
@@ -4917,7 +4925,7 @@ namespace PascalABCCompiler.TreeRealization
                         }
                     }
                 }
-            return compiled_type_node.get_type_node(typeof(Delegate).GetAdapter()).find(name);
+            return compiled_type_node.get_type_node(typeof(Delegate)).find(name);
             //return null;
         }
         public override List<SymbolInfo> find_in_type(string name, SymbolTable.Scope CurrentScope, type_node orig_generic_or_null = null, bool no_search_in_extension_methods = false)

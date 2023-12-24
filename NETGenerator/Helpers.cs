@@ -12,8 +12,8 @@ namespace PascalABCCompiler.NETGenerator {
 	public class HandlerFactory
 	{
 		public static IConstructorInfoAdapter ci;
-		public static TypeAdapter[] parameters;
-		public static TypeAdapter eventHandler;
+		public static ITypeAdapter[] parameters;
+		public static ITypeAdapter eventHandler;
 		
 		static HandlerFactory()
 		{
@@ -93,7 +93,7 @@ namespace PascalABCCompiler.NETGenerator {
 	
 	public class TypeInfo : NodeInfo
     {
-		private TypeAdapter _tp;
+		private ITypeAdapter _tp;
 		private bool _is_arr=false;//флаг массив ли это
 		public bool is_set=false;
 		public bool is_typed_file=false;
@@ -114,7 +114,7 @@ namespace PascalABCCompiler.NETGenerator {
 		
 		public TypeInfo() {}
 		
-		public TypeInfo(TypeAdapter tp)
+		public TypeInfo(ITypeAdapter tp)
 		{
 			_tp = tp;
 		}
@@ -124,7 +124,7 @@ namespace PascalABCCompiler.NETGenerator {
 			_tp = AdapterFactory.Type(tp);
 		}
 		
-		public TypeAdapter tp {
+		public ITypeAdapter tp {
 			get {
 				return _tp;
 			}
@@ -191,7 +191,7 @@ namespace PascalABCCompiler.NETGenerator {
 			}
 		}
 		
-        public virtual TypeAdapter field_type
+        public virtual ITypeAdapter field_type
         {
             get
             {
@@ -202,10 +202,10 @@ namespace PascalABCCompiler.NETGenerator {
 
     public class GenericFldInfo : FldInfo
     {
-        private TypeAdapter _field_type;
+        private ITypeAdapter _field_type;
         public IFieldInfoAdapter prev_fi; // передаю чтобы на третьем этапе в NegGenerator.cs (примерно 1586) можно было сконструировать правильный тип. Костыль для #1632
 
-        public override TypeAdapter field_type
+        public override ITypeAdapter field_type
         {
             get
             {
@@ -213,7 +213,7 @@ namespace PascalABCCompiler.NETGenerator {
             }
         }
 
-        public GenericFldInfo(IFieldInfoAdapter fi, TypeAdapter field_type, IFieldInfoAdapter prev_fi)
+        public GenericFldInfo(IFieldInfoAdapter fi, ITypeAdapter field_type, IFieldInfoAdapter prev_fi)
             : base(fi)
         {
             _field_type = field_type;
@@ -539,7 +539,7 @@ namespace PascalABCCompiler.NETGenerator {
 	
 	//Структура для записи активации процедуры
 	public class Frame {
-		public TypeBuilderAdapter tb; //класс - запись активации
+		public ITypeBuilderAdapter tb; //класс - запись активации
 		public IFieldBuilderAdapter parent; //поле-ссылка на род. запись активации
 		public IConstructorBuilderAdapter cb; //конструктор записи активации
 		public IMethodBuilderAdapter mb;
@@ -557,24 +557,24 @@ namespace PascalABCCompiler.NETGenerator {
 
 		public Helper() {}
 		
-		public void AddDummyMethod(TypeBuilderAdapter tb, IMethodBuilderAdapter mb)
+		public void AddDummyMethod(ITypeBuilderAdapter tb, IMethodBuilderAdapter mb)
         {
 			dummy_methods[tb] = mb;
         }
 
-		public IMethodBuilderAdapter GetDummyMethod(TypeBuilderAdapter tb)
+		public IMethodBuilderAdapter GetDummyMethod(ITypeBuilderAdapter tb)
         {
 			return dummy_methods[tb] as IMethodBuilderAdapter;
         }
 
-		public void AddPascalTypeReference(ITypeNode tn, TypeAdapter t)
+		public void AddPascalTypeReference(ITypeNode tn, ITypeAdapter t)
 		{
 			pas_defs[tn] = t;
 		}
 		
-		public TypeAdapter GetPascalTypeReference(ITypeNode tn)
+		public ITypeAdapter GetPascalTypeReference(ITypeNode tn)
 		{
-			return pas_defs[tn] as TypeAdapter;
+			return pas_defs[tn] as ITypeAdapter;
 		}
 		
 		public ConstInfo AddConstant(IConstantDefinitionNode cnst, IFieldBuilderAdapter fb)
@@ -748,7 +748,7 @@ namespace PascalABCCompiler.NETGenerator {
             return fi;
 		}
 		
-        public FldInfo AddGenericField(ICommonClassFieldNode f, IFieldInfoAdapter fb, TypeAdapter field_type, IFieldInfoAdapter prev_fi)
+        public FldInfo AddGenericField(ICommonClassFieldNode f, IFieldInfoAdapter fb, ITypeAdapter field_type, IFieldInfoAdapter prev_fi)
         {
             FldInfo fi = new GenericFldInfo(fb, field_type, prev_fi); // prev_fi - чтобы сконструировать на последнем этапе fi 
 #if DEBUG
@@ -785,21 +785,21 @@ namespace PascalABCCompiler.NETGenerator {
 		}
 		
         //добавление типа
-		public TypeInfo AddType(ITypeNode type, TypeBuilderAdapter tb)
+		public TypeInfo AddType(ITypeNode type, ITypeBuilderAdapter tb)
 		{
 			TypeInfo ti = new TypeInfo(tb);
 			defs[type] = ti;
 			return ti;
 		}
 		
-        public TypeInfo AddEnum(ITypeNode type, EnumBuilderAdapter emb)
+        public TypeInfo AddEnum(ITypeNode type, IEnumBuilderAdapter emb)
         {
             TypeInfo ti = new TypeInfo(emb);
             defs[type] = ti;
             return ti;
         }
 
-        public TypeInfo AddExistingType(ITypeNode type, TypeAdapter t)
+        public TypeInfo AddExistingType(ITypeNode type, ITypeAdapter t)
         {
             TypeInfo ti = new TypeInfo(t);
             defs[type] = ti;
@@ -824,7 +824,7 @@ namespace PascalABCCompiler.NETGenerator {
         	return null;
         }
 
-        private IConstructorInfoAdapter find_constructor(TypeAdapter tn)
+        private IConstructorInfoAdapter find_constructor(ITypeAdapter tn)
         {
             foreach (var cmn in tn.GetConstructors())
             {
@@ -842,7 +842,7 @@ namespace PascalABCCompiler.NETGenerator {
         	return null;
         }
 
-        private IConstructorInfoAdapter find_constructor_with_params(TypeAdapter t)
+        private IConstructorInfoAdapter find_constructor_with_params(ITypeAdapter t)
         {
             foreach (IConstructorInfoAdapter ci in t.GetConstructors())
             {
@@ -861,7 +861,7 @@ namespace PascalABCCompiler.NETGenerator {
         	return null;
         }
 
-        private IConstructorInfoAdapter find_constructor_with_one_param(TypeAdapter t)
+        private IConstructorInfoAdapter find_constructor_with_one_param(ITypeAdapter t)
         {
             foreach (IConstructorInfoAdapter ci in t.GetConstructors())
             {
@@ -871,12 +871,12 @@ namespace PascalABCCompiler.NETGenerator {
             return null;
         }
 
-        public bool IsConstructedGenericType(TypeAdapter t)
+        public bool IsConstructedGenericType(ITypeAdapter t)
         {
-            if (t is TypeBuilderAdapter || t is GenericTypeParameterBuilderAdapter || t is EnumBuilderAdapter || t.GetType().FullName == "System.Reflection.Emit.TypeBuilderInstantiation")
+            if (t is ITypeBuilderAdapter || t is IGenericTypeParameterBuilderAdapter || t is IEnumBuilderAdapter || t.GetType().FullName == "System.Reflection.Emit.TypeBuilderInstantiation")
                 return true;
             if (t.IsGenericType)
-                foreach (TypeAdapter gt in t.GetGenericArguments())
+                foreach (ITypeAdapter gt in t.GetGenericArguments())
                     if (IsConstructedGenericType(gt))
                         return true;
             if (t.IsArray)
@@ -884,14 +884,14 @@ namespace PascalABCCompiler.NETGenerator {
             return false;
         }
 
-        public bool IsNumericType(TypeAdapter t)
+        public bool IsNumericType(ITypeAdapter t)
         {
             return t == TypeFactory.ByteType || t == TypeFactory.SByteType || t == TypeFactory.Int16Type || t == TypeFactory.UInt16Type
                 || t == TypeFactory.Int32Type || t == TypeFactory.UInt32Type || t == TypeFactory.Int64Type || t == TypeFactory.UInt64Type
                 || t == TypeFactory.SingleType || t == TypeFactory.DoubleType;
         }
 
-        public ICommonTypeNode GetTypeNodeByITypeBuilderAdapter(TypeBuilderAdapter tb)
+        public ICommonTypeNode GetTypeNodeByITypeBuilderAdapter(ITypeBuilderAdapter tb)
         {
             foreach (object o in defs.Keys)
             {
@@ -901,10 +901,10 @@ namespace PascalABCCompiler.NETGenerator {
             return null;
         }
 
-        public IMethodInfoAdapter GetEnumeratorMethod(TypeAdapter t, out TypeAdapter[] generic_args)
+        public IMethodInfoAdapter GetEnumeratorMethod(ITypeAdapter t, out ITypeAdapter[] generic_args)
         {
             generic_args = null;
-            TypeAdapter generic_def = null;
+            ITypeAdapter generic_def = null;
             if (t.IsGenericType && !t.IsGenericTypeDefinition)
                 generic_def = t.GetGenericTypeDefinition();
             else
@@ -916,15 +916,15 @@ namespace PascalABCCompiler.NETGenerator {
             if (generic_def.IsArray)
             {
                 if (IsConstructedGenericType(generic_def.GetElementType()))
-                    return TypeBuilderAdapter.GetMethod(TypeFactory.IEnumerableGenericType.MakeGenericType(generic_def.GetElementType()), TypeFactory.IEnumerableGenericType.GetMethod("GetEnumerator"));
+                    return TypeBuilderStaticAdapter.GetMethod(TypeFactory.IEnumerableGenericType.MakeGenericType(generic_def.GetElementType()), TypeFactory.IEnumerableGenericType.GetMethod("GetEnumerator"));
                 else
                     return TypeFactory.IEnumerableGenericType.MakeGenericType(generic_def.GetElementType()).GetMethod("GetEnumerator");
             }
             else if (generic_def.IsGenericParameter)
             {
-                return TypeFactory.IEnumerableType.GetMethod("GetEnumerator", TypeAdapter.EmptyTypes);
+                return TypeFactory.IEnumerableType.GetMethod("GetEnumerator", TypeStaticAdapter.EmptyTypes);
             }
-            foreach (TypeAdapter interf in generic_def.GetInterfaces())
+            foreach (ITypeAdapter interf in generic_def.GetInterfaces())
             {
                 if (interf.IsGenericType && interf.GetGenericTypeDefinition() == TypeFactory.IEnumerableGenericType)
                 {
@@ -933,24 +933,24 @@ namespace PascalABCCompiler.NETGenerator {
                     {
                         if (t.GetGenericArguments().Length != interf.GetGenericTypeDefinition().GetGenericArguments().Length)
                             return null;
-                        TypeAdapter gt = interf.GetGenericTypeDefinition().MakeGenericType(t.GetGenericArguments());
+                        ITypeAdapter gt = interf.GetGenericTypeDefinition().MakeGenericType(t.GetGenericArguments());
                         if (IsConstructedGenericType(gt))
-                            return TypeBuilderAdapter.GetMethod(gt, mi);
+                            return TypeBuilderStaticAdapter.GetMethod(gt, mi);
                         else
                             return interf.GetGenericTypeDefinition().MakeGenericType(t.GetGenericArguments()).GetMethod("GetEnumerator");
                     }
                     else if (IsConstructedGenericType(interf))
                     {
-                        //return ITypeBuilderAdapter.GetMethod(TypeFactory.IEnumerableGenericType.MakeGenericType(interf.GetGenericArguments()), TypeFactory.IEnumerableGenericType.GetMethod("GetEnumerator"));
+                        //return TypeBuilderStaticAdapter.GetMethod(TypeFactory.IEnumerableGenericType.MakeGenericType(interf.GetGenericArguments()), TypeFactory.IEnumerableGenericType.GetMethod("GetEnumerator"));
                         //return TypeFactory.IEnumerableType.GetMethod("GetEnumerator", TypeAdapter.EmptyTypes);
                         generic_args = interf.GetGenericArguments();
-                        return TypeBuilderAdapter.GetMethod(interf, mi);
+                        return TypeBuilderStaticAdapter.GetMethod(interf, mi);
                     }
                     else
                         return interf.GetMethod("GetEnumerator");
                 }
             }
-            return TypeFactory.IEnumerableType.GetMethod("GetEnumerator", TypeAdapter.EmptyTypes);
+            return TypeFactory.IEnumerableType.GetMethod("GetEnumerator", TypeStaticAdapter.EmptyTypes);
         }
 
 		public void SetAsProcessing(ICommonTypeNode type)
@@ -1118,7 +1118,7 @@ namespace PascalABCCompiler.NETGenerator {
 		public IMethodInfoAdapter GetArrayInstance()
 		{
 			if (arr_mi != null) return arr_mi;
-			arr_mi = AdapterFactory.Type(typeof(System.Array)).GetMethod("CreateInstance",new TypeAdapter[2]{typeof(Type).GetAdapter(), typeof(int).GetAdapter()});
+			arr_mi = AdapterFactory.Type(typeof(System.Array)).GetMethod("CreateInstance",new ITypeAdapter[2]{typeof(Type).GetAdapter(), typeof(int).GetAdapter()});
 			return arr_mi;
 		}
 

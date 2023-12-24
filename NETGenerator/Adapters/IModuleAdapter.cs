@@ -2,6 +2,6 @@
 {
     public interface IModuleAdapter
     {
-        TypeAdapter GetType(string name);
+        ITypeAdapter GetType(string name);
     }
 }

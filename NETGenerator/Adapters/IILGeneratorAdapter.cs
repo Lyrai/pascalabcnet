@@ -16,18 +16,18 @@ namespace PascalABCCompiler.NETGenerator.Adapters
         void Emit(OpCode opcode, double arg);
         void Emit(OpCode opcode, IFieldInfoAdapter field);
         void Emit(OpCode opcode, IMethodInfoAdapter method);
-        void Emit(OpCode opcode, IConstructorInfoAdapter method);
-        void Emit(OpCode opcode, ILocalBuilderAdapter method);
-        void Emit(OpCode opcode, TypeAdapter type);
+        void Emit(OpCode opcode, IConstructorInfoAdapter constructor);
+        void Emit(OpCode opcode, ILocalBuilderAdapter local);
+        void Emit(OpCode opcode, ITypeAdapter type);
         void Emit(OpCode opcode, Label label);
         void Emit(OpCode opcode, Label[] label);
-        void EmitCall(OpCode opcode, IMethodInfoAdapter method, TypeAdapter[] parameterTypesOpt);
-        ILocalBuilderAdapter DeclareLocal(TypeAdapter type, bool pinned = false);
+        void EmitCall(OpCode opcode, IMethodInfoAdapter method, ITypeAdapter[] parameterTypesOpt);
+        ILocalBuilderAdapter DeclareLocal(ITypeAdapter type, bool pinned = false);
         void MarkSequencePoint(ISymbolDocumentWriter document, int startLine, int startColumn, int endLine, int endColumn);
         Label DefineLabel();
         void MarkLabel(Label label);
         Label BeginExceptionBlock();
-        void BeginCatchBlock(TypeAdapter type);
+        void BeginCatchBlock(ITypeAdapter type);
         void BeginFinallyBlock();
         void EndExceptionBlock();
     }

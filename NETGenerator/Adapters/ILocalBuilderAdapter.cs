@@ -2,7 +2,7 @@
 {
     public interface ILocalBuilderAdapter: ILocalInfoAdapter
     {
-        TypeAdapter LocalType { get; }
+        ITypeAdapter LocalType { get; }
 
         void SetLocalSymInfo(string name);
     }

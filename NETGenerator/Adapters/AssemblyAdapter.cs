@@ -1,18 +1,20 @@
-﻿namespace PascalABCCompiler.NETGenerator.Adapters
+﻿using System.Reflection;
+
+namespace PascalABCCompiler.NETGenerator.Adapters
 {
     public abstract class AssemblyAdapter
     {
-        public abstract TypeAdapter[] GetTypes();
-        public abstract TypeAdapter GetType(string name, bool throwOnError);
+        public abstract ITypeAdapter[] GetTypes();
+        public abstract ITypeAdapter GetType(string name, bool throwOnError);
 
         public static AssemblyAdapter Load(byte[] bytes)
         {
-            return null;
+            return Assembly.Load(bytes).GetAdapter();
         }
 
         public static AssemblyAdapter LoadFrom(string filename)
         {
-            return null;
+            return Assembly.LoadFrom(filename).GetAdapter();
         }
     }
 }

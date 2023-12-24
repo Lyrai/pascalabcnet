@@ -1,8 +1,8 @@
 ﻿namespace PascalABCCompiler.NETGenerator.Adapters
 {
-    public interface IFieldInfoAdapter
+    public interface IFieldInfoAdapter: IMemberInfoAdapter
     {
-        TypeAdapter FieldType { get; }
+        ITypeAdapter FieldType { get; }
         bool IsLiteral { get; }
 
         object GetRawConstantValue();

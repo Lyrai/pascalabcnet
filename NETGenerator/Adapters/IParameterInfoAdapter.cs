@@ -2,6 +2,6 @@
 {
     public interface IParameterInfoAdapter
     {
-        TypeAdapter ParameterType { get; }
+        ITypeAdapter ParameterType { get; }
     }
 }

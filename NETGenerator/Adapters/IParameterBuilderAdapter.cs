@@ -1,6 +1,6 @@
 ﻿namespace PascalABCCompiler.NETGenerator.Adapters
 {
-    public interface IParameterBuilderAdapter: IParameterInfoAdapter
+    public interface IParameterBuilderAdapter
     {
         int Position { get; }
         

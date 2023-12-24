@@ -8,12 +8,12 @@ namespace PascalABCCompiler.NETGenerator.Adapters
     public interface IModuleBuilderAdapter
     {
         ISymbolDocumentWriter DefineDocument(string url, Guid language, Guid languageVendor, Guid documentType);
-        TypeBuilderAdapter DefineType(string name, TypeAttributes attr, TypeAdapter parent);
-        TypeBuilderAdapter DefineType(string name, TypeAttributes attr);
-        TypeBuilderAdapter DefineType(string name, TypeAttributes attr, TypeAdapter parent, TypeAdapter[] types);
-        EnumBuilderAdapter DefineEnum(string name, TypeAttributes attr, TypeAdapter parent);
-        IMethodInfoAdapter GetArrayMethod (TypeAdapter arrayClass, string methodName, CallingConventions callingConvention, TypeAdapter returnType, TypeAdapter[] parameterTypes);
+        ITypeBuilderAdapter DefineType(string name, TypeAttributes attr, ITypeAdapter parent);
+        ITypeBuilderAdapter DefineType(string name, TypeAttributes attr);
+        ITypeBuilderAdapter DefineType(string name, TypeAttributes attr, ITypeAdapter parent, ITypeAdapter[] types);
+        IEnumBuilderAdapter DefineEnum(string name, TypeAttributes attr, ITypeAdapter parent);
+        IMethodInfoAdapter GetArrayMethod (ITypeAdapter arrayClass, string methodName, CallingConventions callingConvention, ITypeAdapter returnType, ITypeAdapter[] parameterTypes);
         void DefineManifestResource(string filename, FileStream stream, ResourceAttributes attributes);
-        TypeAdapter GetType(string name);
+        ITypeAdapter GetType(string name);
     }
 }

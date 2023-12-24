@@ -2,7 +2,7 @@
 // This code is distributed under the GNU LGPL (for details please see \doc\license.txt)
 using System;
 using System.Collections.Generic;
-using PascalABCCompiler.NETGenerator.Adapters;
+using System.Reflection;
 
 namespace PascalABCCompiler.SemanticTree
 {
@@ -448,7 +448,7 @@ namespace PascalABCCompiler.SemanticTree
 	public interface ICompiledTypeNode : ITypeNode
 	{
 		//Откомпилированный тип.
-		TypeAdapter compiled_type
+		Type compiled_type
 		{
 			get;
 		}
@@ -980,7 +980,7 @@ namespace PascalABCCompiler.SemanticTree
 	public interface ICompiledMethodNode : IFunctionNode, ICompiledClassMemberNode
 	{
 		//Откомпилированный метод.
-		IMethodInfoAdapter method_info
+		MethodInfo method_info
 		{
 			get;
 		}
@@ -994,7 +994,7 @@ namespace PascalABCCompiler.SemanticTree
 	//Вызов конструктора откомпилированного типа.
 	public interface ICompiledConstructorNode : IFunctionNode, ICompiledClassMemberNode
 	{
-		IConstructorInfoAdapter constructor_info
+		ConstructorInfo constructor_info
 		{
 			get;
 		}
@@ -1987,7 +1987,7 @@ namespace PascalABCCompiler.SemanticTree
 	//Переменная, определенная в откомпилированном классе.
 	public interface ICompiledClassFieldNode : IVAriableDefinitionNode, ICompiledClassMemberNode
 	{
-		IFieldInfoAdapter compiled_field
+		FieldInfo compiled_field
 		{
 			get;
 		}
@@ -2196,7 +2196,7 @@ namespace PascalABCCompiler.SemanticTree
 	public interface ICompiledPropertyNode : IPropertyNode, ICompiledClassMemberNode
 	{
 		//Свойство в сборке.
-		IPropertyInfoAdapter property_info
+		PropertyInfo property_info
 		{
 			get;
 		}
@@ -2401,7 +2401,7 @@ namespace PascalABCCompiler.SemanticTree
     
     public interface ICompiledEventNode : IEventNode
     {
-        IEventInfoAdapter CompiledEvent
+        EventInfo CompiledEvent
         {
             get;
         }

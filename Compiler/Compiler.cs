@@ -166,7 +166,7 @@ using PascalABCCompiler.SyntaxTreeConverters;
 using System.Text;
 using PascalABCCompiler.TreeRealization;
 using System.Linq;
-using NETGenerator.Adapters;
+using PascalABCCompiler.NETGenerator.Adapters;
 
 namespace PascalABCCompiler
 {
