@@ -7,7 +7,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
     public class FrameworkGenericTypeParameterBuilderAdapter: FrameworkTypeAdapter, IGenericTypeParameterBuilderAdapter
     {
-        public GenericTypeParameterBuilder Adaptee { get; }
+        public new GenericTypeParameterBuilder Adaptee { get; }
 
         public FrameworkGenericTypeParameterBuilderAdapter(GenericTypeParameterBuilder builder): base(builder)
         {

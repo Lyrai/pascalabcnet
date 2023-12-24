@@ -4,7 +4,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
     public class FrameworkEventBuilderAdapter: IEventBuilderAdapter
     {
-        private EventBuilder Adaptee { get; }
+        public EventBuilder Adaptee { get; }
 
         public FrameworkEventBuilderAdapter(EventBuilder builder)
         {
@@ -24,6 +24,21 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
         public void SetRaiseMethod(IMethodBuilderAdapter method)
         {
             Adaptee.SetRaiseMethod((method as FrameworkMethodBuilderAdapter).Adaptee);
+        }
+        
+        public override int GetHashCode()
+        {
+            return Adaptee.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is FrameworkEventBuilderAdapter adapter))
+            {
+                return false;
+            }
+
+            return Adaptee.Equals(adapter.Adaptee);
         }
     }
 }

@@ -134,25 +134,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 
         protected override IMemberInfoAdapter CreateMemberInfo(MemberInfo info)
         {
-            switch (info)
-            {
-                case PropertyBuilder propertyBuilder:
-                    return propertyBuilder.GetAdapter();
-                case PropertyInfo propertyInfo:
-                    return propertyInfo.GetAdapter();
-                case MethodInfo methodInfo:
-                    return methodInfo.GetAdapter();
-                case FieldBuilder fieldBuilder:
-                    return fieldBuilder.GetAdapter();
-                case FieldInfo fieldInfo:
-                    return fieldInfo.GetAdapter();
-                case ConstructorBuilder constructorBuilder:
-                    return constructorBuilder.GetAdapter();
-                case ConstructorInfo constructorInfo:
-                    return constructorInfo.GetAdapter();
-                default:
-                    throw new ArgumentException("Invalid member type");
-            }
+            throw new NotSupportedException("This code thought to be unreachable");
         }
 
         protected override IILGeneratorAdapter CreateILGenerator(ILGenerator generator)

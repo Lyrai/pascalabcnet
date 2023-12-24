@@ -3,7 +3,7 @@ using PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters;
 
 namespace PascalABCCompiler.NETGenerator.Adapters
 {
-    public class EnumAdapter
+    public class EnumAdapter: IAdapter
     {
         public static object ToObject(ITypeAdapter type, int value)
         {

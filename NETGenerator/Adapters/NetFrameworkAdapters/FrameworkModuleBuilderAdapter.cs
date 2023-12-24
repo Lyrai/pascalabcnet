@@ -7,11 +7,11 @@ using System.Reflection.Emit;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
-    public class FrameworkModuleBuilderAdapter: IModuleBuilderAdapter
+    public class FrameworkModuleBuilderAdapter: FrameworkModuleAdapter, IModuleBuilderAdapter
     {
         public ModuleBuilder Adaptee { get; }
 
-        public FrameworkModuleBuilderAdapter(ModuleBuilder builder)
+        public FrameworkModuleBuilderAdapter(ModuleBuilder builder): base(builder)
         {
             Adaptee = builder;
         }
@@ -53,11 +53,6 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
         public void DefineManifestResource(string filename, FileStream stream, ResourceAttributes attributes)
         {
             Adaptee.DefineManifestResource(filename, stream, attributes);
-        }
-
-        public ITypeAdapter GetType(string name)
-        {
-            return Adaptee.GetType(name).GetAdapter();
         }
     }
 }

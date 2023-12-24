@@ -7,7 +7,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
     {
         public bool IsStatic => Adaptee.IsStatic;
         
-        public FieldBuilder Adaptee { get; }
+        public new FieldBuilder Adaptee { get; }
         
         public FrameworkFieldBuilderAdapter(FieldBuilder builder): base(builder)
         {

@@ -34,5 +34,20 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
                 fields.Select(f => (f as FrameworkFieldInfoAdapter).Adaptee).ToArray(),
                 fieldValues);
         }
+        
+        public override int GetHashCode()
+        {
+            return Adaptee.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is FrameworkCustomAttributeBuilderAdapter adapter))
+            {
+                return false;
+            }
+
+            return Adaptee.Equals(adapter.Adaptee);
+        }
     }
 }

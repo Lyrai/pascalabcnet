@@ -16,5 +16,20 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
         {
             Adaptee.SetLocalSymInfo(name);
         }
+        
+        public override int GetHashCode()
+        {
+            return Adaptee.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is FrameworkLocalBuilderAdapter builder))
+            {
+                return false;
+            }
+
+            return Adaptee.Equals(builder.Adaptee);
+        }
     }
 }

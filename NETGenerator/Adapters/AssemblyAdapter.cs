@@ -2,7 +2,7 @@
 
 namespace PascalABCCompiler.NETGenerator.Adapters
 {
-    public abstract class AssemblyAdapter
+    public abstract class AssemblyAdapter: IAdapter
     {
         public abstract ITypeAdapter[] GetTypes();
         public abstract ITypeAdapter GetType(string name, bool throwOnError);

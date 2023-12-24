@@ -12,5 +12,20 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
         {
             Adaptee = info;
         }
+        
+        public override int GetHashCode()
+        {
+            return Adaptee.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is FrameworkParameterInfoAdapter info))
+            {
+                return false;
+            }
+
+            return Adaptee.Equals(info.Adaptee);
+        }
     }
 }

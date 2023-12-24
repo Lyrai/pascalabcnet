@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace PascalABCCompiler.NETGenerator.Adapters
 {
-    public interface IModuleBuilderAdapter
+    public interface IModuleBuilderAdapter: IModuleAdapter
     {
         ISymbolDocumentWriter DefineDocument(string url, Guid language, Guid languageVendor, Guid documentType);
         ITypeBuilderAdapter DefineType(string name, TypeAttributes attr, ITypeAdapter parent);

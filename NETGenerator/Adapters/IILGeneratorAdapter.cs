@@ -4,7 +4,7 @@ using System.Reflection.Emit;
 
 namespace PascalABCCompiler.NETGenerator.Adapters
 {
-    public interface IILGeneratorAdapter
+    public interface IILGeneratorAdapter: IAdapter
     {
         void Emit(OpCode opcode);
         void Emit(OpCode opcode, byte arg);

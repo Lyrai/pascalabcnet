@@ -5,7 +5,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
     public class FrameworkConstructorBuilderAdapter: FrameworkConstructorInfoAdapter, IConstructorBuilderAdapter
     {
-        public ConstructorBuilder Adaptee { get; }
+        public new ConstructorBuilder Adaptee { get; }
         
         public FrameworkConstructorBuilderAdapter(ConstructorBuilder builder) : base(builder)
         {

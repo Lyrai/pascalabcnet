@@ -4,11 +4,11 @@ using System.Reflection.Emit;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
-    public class FrameworkAssemblyBuilderAdapter: IAssemblyBuilderAdapter
+    public class FrameworkAssemblyBuilderAdapter: FrameworkAssemblyAdapter, IAssemblyBuilderAdapter
     {
-        public AssemblyBuilder Adaptee { get; }
+        public new AssemblyBuilder Adaptee { get; }
 
-        public FrameworkAssemblyBuilderAdapter(AssemblyBuilder builder)
+        public FrameworkAssemblyBuilderAdapter(AssemblyBuilder builder): base(builder)
         {
             Adaptee = builder;
         }

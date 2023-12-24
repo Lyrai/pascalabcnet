@@ -1,6 +1,6 @@
 ﻿namespace PascalABCCompiler.NETGenerator.Adapters
 {
-    public interface IModuleAdapter
+    public interface IModuleAdapter: IAdapter
     {
         ITypeAdapter GetType(string name);
     }

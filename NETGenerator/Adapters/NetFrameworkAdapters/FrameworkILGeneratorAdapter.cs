@@ -134,5 +134,20 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
         {
             Adaptee.EndExceptionBlock();
         }
+        
+        public override int GetHashCode()
+        {
+            return Adaptee.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is FrameworkILGeneratorAdapter generator))
+            {
+                return false;
+            }
+
+            return Adaptee.Equals(generator.Adaptee);
+        }
     }
 }

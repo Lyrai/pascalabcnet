@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
-    public class FrameworkMethodInfoAdapter: IMethodInfoAdapter
+    public class FrameworkMethodInfoAdapter: FrameworkMemberInfoAdapter, IMethodInfoAdapter
     {
         public ITypeAdapter ReturnType => Adaptee.ReturnType.GetAdapter();
         public ITypeAdapter DeclaringType => Adaptee.DeclaringType.GetAdapter();
@@ -13,9 +13,9 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
         public bool IsVirtual => Adaptee.IsVirtual;
         public bool IsAbstract => Adaptee.IsAbstract;
         public bool IsSpecialName => Adaptee.IsSpecialName;
-        public MethodInfo Adaptee { get; }
+        public new MethodInfo Adaptee { get; }
 
-        public FrameworkMethodInfoAdapter(MethodInfo info)
+        public FrameworkMethodInfoAdapter(MethodInfo info): base(info)
         {
             Adaptee = info;
         }

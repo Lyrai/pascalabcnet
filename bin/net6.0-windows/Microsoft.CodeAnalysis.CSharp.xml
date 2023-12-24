@@ -301,11 +301,6 @@
             Within <c>checked</c> expression/block.
             </summary>
         </member>
-        <member name="F:Microsoft.CodeAnalysis.CSharp.Binder.QueryTranslationState.nextInvokedMethodName">
-            <summary>
-            For debug assert only
-            </summary>
-        </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.Binder.RangeVariableMap">
             <summary>
             We represent the set of query variables in scope at a particular point by a RangeVariableMap.
@@ -1071,7 +1066,7 @@
             </summary>
             <remarks>
             If new checks are added to this method, they will also need to be added to
-            <see cref="M:Microsoft.CodeAnalysis.CSharp.Binder.MakeQueryInvocation(Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode,Microsoft.CodeAnalysis.CSharp.BoundExpression,System.String,Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax,Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithAnnotations,Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag,System.String)"/>.
+            <see cref="M:Microsoft.CodeAnalysis.CSharp.Binder.MakeQueryInvocation(Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode,Microsoft.CodeAnalysis.CSharp.BoundExpression,System.String,Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax,Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithAnnotations,Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag)"/>.
             </remarks>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Binder.MakeMemberAccessValue(Microsoft.CodeAnalysis.CSharp.BoundExpression,Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag)">
@@ -2526,12 +2521,6 @@
             <param name="result">Topologically sorted <see cref="T:Microsoft.CodeAnalysis.CSharp.DecisionDagBuilder.DagState"/> nodes.</param>
             <returns>True if the graph was acyclic.</returns>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.DecisionDagBuilder.DecisionDag.Dump">
-            <summary>
-            Starting with `this` state, produce a human-readable description of the state tables.
-            This is very useful for debugging and optimizing the dag state construction.
-            </summary>
-        </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.DecisionDagBuilder.DagState">
             <summary>
             The state at a given node of the decision finite state automaton. This is used during computation of the state
@@ -2855,16 +2844,6 @@
             A binder for a method body, which places the method's parameters in scope
             and notes if the method is an iterator method.
             Note: instances of this type can be re-used across different attempts at compiling the same method (caching by binder factory).
-            </summary>
-        </member>
-        <member name="F:Microsoft.CodeAnalysis.CSharp.InMethodBinder.IdentifierMap">
-            <summary>
-            This map is used by <see cref="M:Microsoft.CodeAnalysis.CSharp.MethodCompiler.BindMethodBody(Microsoft.CodeAnalysis.CSharp.Symbols.MethodSymbol,Microsoft.CodeAnalysis.CSharp.TypeCompilationState,Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag,System.Boolean,Microsoft.CodeAnalysis.CSharp.BoundNode,System.Boolean,Microsoft.CodeAnalysis.CSharp.ImportChain@,System.Boolean@,System.Boolean@,Microsoft.CodeAnalysis.CSharp.MethodBodySemanticModel.InitialState@)"/>
-            and <see cref="M:Microsoft.CodeAnalysis.CSharp.Binder.BindIdentifier(Microsoft.CodeAnalysis.CSharp.Syntax.SimpleNameSyntax,System.Boolean,System.Boolean,Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag)"/> to validate some assumptions around identifiers.
-            
-            Values in the dictionary are bit flags.
-            MethodCompiler.BindMethodBody adds keys with flag == 1 before binding a method body.
-            Binder.BindIdentifier adds or updates keys with flag == 2.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.InSubmissionClassBinder">
@@ -5020,12 +4999,6 @@
             and definite assignment) and permits us to simplify the generated code.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.BoundDecisionDag.Dump">
-            <summary>
-            Starting with `this` state, produce a human-readable description of the state tables.
-            This is very useful for debugging and optimizing the dag state construction.
-            </summary>
-        </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.BoundExpression.SuppressVirtualCalls">
             <summary>
             Returns true if calls and delegate invocations with this
@@ -5162,21 +5135,9 @@
             bit in the boundnode properties, which will break debugging. This allows the debugger to display the current value without setting the bit.
             </summary>
         </member>
-        <member name="P:Microsoft.CodeAnalysis.CSharp.BoundNode.WasConverted">
-            <summary>
-            WasConverted flag is used for debugging purposes only (not to direct the behavior of semantic analysis).
-            It is used on BoundLocal and BoundParameter to check that every such rvalue that has not been converted to
-            some type has been converted to its natural type.
-            </summary>
-        </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.BoundNode.WithHasErrors">
             <summary>
             Return a clone of the current node with the HasErrors flag set.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.BoundNode.DumpSource">
-            <summary>
-            Gives an approximate printout of a bound node as C# code.
             </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.BoundNode.Children">
@@ -8726,11 +8687,6 @@
             Currently used for dynamic call-sites and inferred delegate types whose signature doesn't match any of the well-known Func or Action types.
             </summary>
         </member>
-        <member name="F:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager._sourceLocationsSeen">
-            <summary>
-            Holds a collection of all the locations of anonymous types and delegates from source
-            </summary>
-        </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.ConstructAnonymousTypeImplementationSymbol(Microsoft.CodeAnalysis.CSharp.Symbols.AnonymousTypeManager.AnonymousTypePublicSymbol)">
             <summary>
             Given anonymous type provided constructs an implementation type symbol to be used in emit phase; 
@@ -9509,11 +9465,11 @@
             Otherwise returns -1
             </summary>
         </member>
-        <member name="T:Microsoft.CodeAnalysis.CSharp.Symbols.FunctionPointerTypeSymbolAdapter.FunctionPointerMethodSignature">
+        <member name="T:Microsoft.CodeAnalysis.CSharp.Symbols.FunctionPointerTypeSymbol.FunctionPointerMethodSignature">
             <summary>
             We need to be able to differentiate between a FunctionPointer used as a type and a function pointer used
             as a StandaloneMethodSig. To do this, we wrap the <see cref="T:Microsoft.CodeAnalysis.CSharp.Symbols.FunctionPointerMethodSymbol"/> in a
-            <see cref="T:Microsoft.CodeAnalysis.CSharp.Symbols.FunctionPointerTypeSymbolAdapter.FunctionPointerMethodSignature"/>, to hide its implementation of <see cref="T:Microsoft.CodeAnalysis.IMethodSymbol"/>.
+            <see cref="T:Microsoft.CodeAnalysis.CSharp.Symbols.FunctionPointerTypeSymbol.FunctionPointerMethodSignature"/>, to hide its implementation of <see cref="T:Microsoft.CodeAnalysis.IMethodSymbol"/>.
             </summary>
         </member>
         <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.FunctionPointerTypeSymbol.CreateFromPartsForTests(Microsoft.Cci.CallingConvention,Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithAnnotations,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.CustomModifier},Microsoft.CodeAnalysis.RefKind,System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.CSharp.Symbols.TypeWithAnnotations},System.Collections.Immutable.ImmutableArray{System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.CustomModifier}},System.Collections.Immutable.ImmutableArray{Microsoft.CodeAnalysis.RefKind},Microsoft.CodeAnalysis.CSharp.CSharpCompilation)">
@@ -10864,14 +10820,14 @@
             <param name="arity">Method arity</param>
             <param name="options">Lookup options</param>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.ParameterSymbolAdapter.Microsoft#Cci#IParameterDefinition#GetDefaultValue(Microsoft.CodeAnalysis.Emit.EmitContext)">
-            <summary>
-            Gets constant value to be stored in metadata Constant table.
-            </summary>
-        </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.Symbols.ParameterSymbol">
             <summary>
             Represents a parameter of a method or indexer.
+            </summary>
+        </member>
+        <member name="M:Microsoft.CodeAnalysis.CSharp.Symbols.ParameterSymbol.Microsoft#Cci#IParameterDefinition#GetDefaultValue(Microsoft.CodeAnalysis.Emit.EmitContext)">
+            <summary>
+            Gets constant value to be stored in metadata Constant table.
             </summary>
         </member>
         <member name="P:Microsoft.CodeAnalysis.CSharp.Symbols.ParameterSymbol.OriginalDefinition">
@@ -20924,11 +20880,6 @@
             True if this walker was created using an initial state.
             </summary>
         </member>
-        <member name="F:Microsoft.CodeAnalysis.CSharp.NullableWalker.s_skippedExpressions">
-            <summary>
-            Contains the expressions that should not be inserted into <see cref="F:Microsoft.CodeAnalysis.CSharp.NullableWalker._analyzedNullabilityMapOpt"/>.
-            </summary>
-        </member>
         <member name="F:Microsoft.CodeAnalysis.CSharp.NullableWalker._visitResult">
             <summary>
             The result and l-value type of the last visited expression.
@@ -21276,11 +21227,6 @@
             produce diagnostics and determine types.
             </summary>
         </member>
-        <member name="T:Microsoft.CodeAnalysis.CSharp.NullableWalker.DebugVerifier">
-            <summary>
-            Verifies that all BoundExpressions in a tree have been visited by the nullable walker and have recorded updated types and nullabilities for rewriting purposes.
-            </summary>
-        </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.NullableWalker.PlaceholderLocal">
             <summary>
             A symbol to be used as a placeholder for an instance being constructed by
@@ -21383,12 +21329,6 @@
             the containing method scope. The outermost scope may also contain variables for static fields.
             Each variable (parameter, local, or field of other variable) must be associated with the variables collection
             for that method where the parameter or local are declared, even if the variable is used in a nested scope.
-            </summary>
-        </member>
-        <member name="F:Microsoft.CodeAnalysis.CSharp.NullableWalker.Variables._nextIdOffset">
-            <summary>
-            Used to offset child ids to help catch cases where Variables
-            and LocalState instances are mismatched.
             </summary>
         </member>
         <member name="F:Microsoft.CodeAnalysis.CSharp.NullableWalker.Variables.Id">
@@ -22402,19 +22342,6 @@
             of a captured variable is to determine the lifetime of its capture environment.
             </summary>
         </member>
-        <member name="F:Microsoft.CodeAnalysis.CSharp.ClosureConversion.Analysis.ScopeTreeBuilder._freeVariables">
-            <summary>
-            Free variables are variables declared in expression statements that can then
-            be captured in nested lambdas. Normally, captured variables must lowered as
-            part of closure conversion, but expression tree variables are handled separately
-            by the expression tree rewriter and are considered free for the purposes of
-            closure conversion. For instance, an expression with a nested lambda, e.g.
-                x => y => x + y
-            contains an expression variable, x, that should not be treated as a captured
-            variable to be replaced by closure conversion. Instead, it should be left for
-            expression tree conversion.
-            </summary>
-        </member>
         <member name="F:Microsoft.CodeAnalysis.CSharp.ClosureConversion.Analysis.ScopeTreeBuilder._methodsConvertedToDelegates">
             <summary>
             If a local function is in the set, at some point in the code it is converted
@@ -23093,17 +23020,6 @@
         <member name="M:Microsoft.CodeAnalysis.CSharp.LocalRewriter.ShouldOptimizeOutInitializer(Microsoft.CodeAnalysis.CSharp.BoundStatement)">
             <summary>
             Returns true if the initializer is a field initializer which should be optimized out
-            </summary>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.CSharp.LocalRewriter.LocalRewritingValidator">
-            <summary>
-            Note: do not use a static/singleton instance of this type, as it holds state.
-            Consider generating this type from BoundNodes.xml for easier maintenance.
-            </summary>
-        </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.LocalRewriter.LocalRewritingValidator.Validate(Microsoft.CodeAnalysis.CSharp.BoundNode)">
-            <summary>
-            Asserts that no unexpected nodes survived local rewriting.
             </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.CSharp.LocalRewriter.DecisionDagRewriter">
@@ -24318,11 +24234,6 @@
             The number of the next generated resumable state (i.e. state that resumes execution of the state machine after await expression or yield return).
             </summary>
         </member>
-        <member name="F:Microsoft.CodeAnalysis.CSharp.ResumableStateMachineStateAllocator._matchedStates">
-            <summary>
-            EnC support: states in this state machine that were matched to states of the previous generation state machine.
-            </summary>
-        </member>
         <member name="F:Microsoft.CodeAnalysis.CSharp.ResumableStateMachineStateAllocator._matchedStateCount">
             <summary>
             EnC support: number of states in this state machine that match states of the previous generation state machine.
@@ -24516,7 +24427,7 @@
                   assumptions about array arguments and do not keep them or rely on their identity.
             </summary>
         </member>
-        <member name="M:Microsoft.CodeAnalysis.CSharp.SyntheticBoundNodeFactory.StoreToTemp(Microsoft.CodeAnalysis.CSharp.BoundExpression,Microsoft.CodeAnalysis.CSharp.BoundAssignmentOperator@,Microsoft.CodeAnalysis.RefKind,Microsoft.CodeAnalysis.SynthesizedLocalKind,System.Boolean,Microsoft.CodeAnalysis.SyntaxNode,System.Int32,System.String)">
+        <member name="M:Microsoft.CodeAnalysis.CSharp.SyntheticBoundNodeFactory.StoreToTemp(Microsoft.CodeAnalysis.CSharp.BoundExpression,Microsoft.CodeAnalysis.CSharp.BoundAssignmentOperator@,Microsoft.CodeAnalysis.RefKind,Microsoft.CodeAnalysis.SynthesizedLocalKind,System.Boolean,Microsoft.CodeAnalysis.SyntaxNode)">
             <summary>
             Takes an expression and returns the bound local expression "temp"
             and the bound assignment expression "temp = expr".

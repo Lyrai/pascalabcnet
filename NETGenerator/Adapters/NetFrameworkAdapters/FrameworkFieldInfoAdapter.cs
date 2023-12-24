@@ -6,9 +6,9 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
     {
         public ITypeAdapter FieldType => Adaptee.FieldType.GetAdapter();
         public bool IsLiteral => Adaptee.IsLiteral;
-        public FieldInfo Adaptee { get; }
+        public new FieldInfo Adaptee { get; }
 
-        public FrameworkFieldInfoAdapter(FieldInfo info)
+        public FrameworkFieldInfoAdapter(FieldInfo info): base(info)
         {
             Adaptee = info;
         }

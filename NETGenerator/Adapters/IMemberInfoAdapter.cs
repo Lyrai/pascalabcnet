@@ -1,6 +1,6 @@
 ﻿namespace PascalABCCompiler.NETGenerator.Adapters
 {
-    public interface IMemberInfoAdapter
+    public interface IMemberInfoAdapter: IAdapter
     {
         
     }

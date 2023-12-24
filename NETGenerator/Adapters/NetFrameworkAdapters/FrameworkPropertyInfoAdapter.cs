@@ -2,11 +2,11 @@
 
 namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
-    public class FrameworkPropertyInfoAdapter: IPropertyInfoAdapter
+    public class FrameworkPropertyInfoAdapter: FrameworkMemberInfoAdapter, IPropertyInfoAdapter
     {
-        public PropertyInfo Adaptee { get; }
+        public new PropertyInfo Adaptee { get; }
 
-        public FrameworkPropertyInfoAdapter(PropertyInfo info)
+        public FrameworkPropertyInfoAdapter(PropertyInfo info): base(info)
         {
             Adaptee = info;
         }

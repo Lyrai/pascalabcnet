@@ -4,7 +4,7 @@ using PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters;
 
 namespace PascalABCCompiler.NETGenerator.Adapters
 {
-    public interface ITypeAdapter
+    public interface ITypeAdapter: IAdapter
     {
          bool IsGenericType { get; }
          bool IsArray { get; }

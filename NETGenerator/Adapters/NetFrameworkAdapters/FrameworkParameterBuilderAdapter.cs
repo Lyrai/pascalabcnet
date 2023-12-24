@@ -27,5 +27,20 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
         {
             Adaptee.SetConstant(value);
         }
+        
+        public override int GetHashCode()
+        {
+            return Adaptee.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is FrameworkParameterBuilderAdapter builder))
+            {
+                return false;
+            }
+
+            return Adaptee.Equals(builder.Adaptee);
+        }
     }
 }

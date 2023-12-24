@@ -1,6 +1,6 @@
 ﻿namespace PascalABCCompiler.NETGenerator.Adapters
 {
-    public interface ICustomAttributeBuilderAdapter
+    public interface ICustomAttributeBuilderAdapter: IAdapter
     {
     }
 }

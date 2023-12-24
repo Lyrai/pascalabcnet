@@ -3,7 +3,7 @@ using System.Reflection.Emit;
 
 namespace PascalABCCompiler.NETGenerator.Adapters
 {
-    public interface IAssemblyBuilderAdapter
+    public interface IAssemblyBuilderAdapter: IAdapter
     {
         void DefineVersionInfoResource(string product, string productVersion, string company, string copyright, string trademark);
         void DefineUnmanagedResource(string path);

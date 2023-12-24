@@ -3,13 +3,13 @@ using System.Reflection;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
-    public class FrameworkConstructorInfoAdapter: IConstructorInfoAdapter
+    public class FrameworkConstructorInfoAdapter: FrameworkMemberInfoAdapter, IConstructorInfoAdapter
     {
         public ITypeAdapter DeclaringType => Adaptee.DeclaringType.GetAdapter();
         
-        public ConstructorInfo Adaptee { get; }
+        public new ConstructorInfo Adaptee { get; }
 
-        public FrameworkConstructorInfoAdapter(ConstructorInfo info)
+        public FrameworkConstructorInfoAdapter(ConstructorInfo info): base(info)
         {
             Adaptee = info;
         }

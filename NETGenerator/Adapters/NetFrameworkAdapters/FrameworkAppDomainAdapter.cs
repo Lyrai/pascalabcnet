@@ -6,16 +6,31 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
     public class FrameworkAppDomainAdapter: IAppDomainAdapter
     {
-        private AppDomain _adaptee;
+        public AppDomain Adaptee { get; }
 
         public FrameworkAppDomainAdapter(AppDomain adaptee)
         {
-            _adaptee = adaptee;
+            Adaptee = adaptee;
         }
         
         public IAssemblyBuilderAdapter DefineDynamicAssembly(AssemblyName name, string path)
         {
-            return _adaptee.DefineDynamicAssembly(name, AssemblyBuilderAccess.Save, path).GetAdapter();
+            return Adaptee.DefineDynamicAssembly(name, AssemblyBuilderAccess.Save, path).GetAdapter();
+        }
+        
+        public override int GetHashCode()
+        {
+            return Adaptee.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is FrameworkAppDomainAdapter adapter))
+            {
+                return false;
+            }
+
+            return Adaptee.Equals(adapter.Adaptee);
         }
     }
 }
