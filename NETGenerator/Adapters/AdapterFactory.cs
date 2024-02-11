@@ -182,7 +182,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters
 #if NET472
                 _instance = new FrameworkAdapterFactory();
 #else
-                _instance =  null;
+                _instance =  new RoslynAdapterFactory();
 #endif
             }
 
