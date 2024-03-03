@@ -1,15 +1,27 @@
-﻿namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
+﻿using System;
+using System.Reflection;
+using System.Reflection.Emit;
+
+namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 {
-    public class RoslynAssemblyAdapter: AssemblyAdapter
+    internal class RoslynAssemblyAdapter: AssemblyAdapter
     {
+        protected RoslynModuleBuilderAdapter _moduleBuilder;
+        
         public override ITypeAdapter[] GetTypes()
         {
-            throw new System.NotImplementedException();
+            return _moduleBuilder.GetTypes();
         }
 
         public override ITypeAdapter GetType(string name, bool throwOnError)
         {
-            throw new System.NotImplementedException();
+            var type = _moduleBuilder.GetType(name);
+            if (type is null && throwOnError)
+            {
+                throw new TypeLoadException();
+            }
+
+            return type;
         }
     }
 }

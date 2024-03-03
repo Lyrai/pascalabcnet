@@ -13,6 +13,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
         public bool IsVirtual => Adaptee.IsVirtual;
         public bool IsAbstract => Adaptee.IsAbstract;
         public bool IsSpecialName => Adaptee.IsSpecialName;
+        public bool IsPublic => Adaptee.IsPublic;
+        public bool IsPrivate => Adaptee.IsPrivate;
         public new MethodInfo Adaptee { get; }
 
         public FrameworkMethodInfoAdapter(MethodInfo info): base(info)

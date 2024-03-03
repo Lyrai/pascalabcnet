@@ -10,6 +10,8 @@
         bool IsVirtual { get; }
         bool IsAbstract { get; }
         bool IsSpecialName { get; }
+        bool IsPublic { get; }
+        bool IsPrivate { get; }
         
         IMethodInfoAdapter MakeGenericMethod(ITypeAdapter type);
         IMethodInfoAdapter MakeGenericMethod(ITypeAdapter[] types);

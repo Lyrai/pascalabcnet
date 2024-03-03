@@ -4,6 +4,8 @@
     {
         ITypeAdapter FieldType { get; }
         bool IsLiteral { get; }
+        bool IsStatic { get; }
+        string Name { get; }
 
         object GetRawConstantValue();
     }

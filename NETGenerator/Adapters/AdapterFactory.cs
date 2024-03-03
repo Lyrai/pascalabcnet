@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using Microsoft.CodeAnalysis.CSharp.Emit;
 using PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters;
 
 namespace PascalABCCompiler.NETGenerator.Adapters
 {
-    public abstract class AdapterFactory
+    internal abstract class AdapterFactory
     {
         private static AdapterFactory _instance = null;
         
@@ -144,6 +145,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters
         }
 
 
+
         protected abstract IAppDomainAdapter CreateAppDomain();
         protected abstract ITypeAdapter CreateType(Type type);
         protected abstract ITypeBuilderAdapter CreateTypeBuilder(TypeBuilder builder);
@@ -200,8 +202,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (type is null)
                 return null;
 
-            if (_adaptees.ContainsKey(type))
-                return _adaptees[type] as ITypeAdapter;
+            if (_adaptees.TryGetValue(type, out var adaptee))
+                return adaptee as ITypeAdapter;
 
             var typeName = type.GetType().Name.Replace("Runtime", "");
             var method = typeof(AdapterFactory).GetMethod(typeName, BindingFlags.Static | BindingFlags.Public) ?? typeof(AdapterFactory).GetMethod("Type", BindingFlags.Static | BindingFlags.Public);
@@ -216,8 +218,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (builder is null)
                 return null;
             
-            if (_adaptees.ContainsKey(builder)) 
-                return _adaptees[builder] as ITypeBuilderAdapter;
+            if (_adaptees.TryGetValue(builder, out var adaptee)) 
+                return adaptee as ITypeBuilderAdapter;
             
             var instance = AdapterFactory.TypeBuilder(builder);
             _adaptees.Add(builder, instance);
@@ -229,8 +231,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (builder is null)
                 return null;
             
-            if (_adaptees.ContainsKey(builder)) 
-                return _adaptees[builder] as IEnumBuilderAdapter;
+            if (_adaptees.TryGetValue(builder, out var adaptee)) 
+                return adaptee as IEnumBuilderAdapter;
             
             var instance = AdapterFactory.EnumBuilder(builder);
             _adaptees.Add(builder, instance);
@@ -242,8 +244,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (info is null)
                 return null;
 
-            if (_adaptees.ContainsKey(info)) 
-                return _adaptees[info] as IConstructorInfoAdapter;
+            if (_adaptees.TryGetValue(info, out var adaptee)) 
+                return adaptee as IConstructorInfoAdapter;
             
             var typeName = info.GetType().Name.Replace("Runtime", "");
             var method = typeof(AdapterFactory).GetMethod(typeName, BindingFlags.Static | BindingFlags.Public) ?? typeof(AdapterFactory).GetMethod("ConstructorInfo", BindingFlags.Static | BindingFlags.Public);
@@ -258,8 +260,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (builder is null)
                 return null;
             
-            if (_adaptees.ContainsKey(builder))
-                return _adaptees[builder] as IConstructorBuilderAdapter;
+            if (_adaptees.TryGetValue(builder, out var adaptee))
+                return adaptee as IConstructorBuilderAdapter;
 
             var instance = AdapterFactory.ConstructorBuilder(builder);
             _adaptees.Add(builder, instance);
@@ -271,8 +273,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (info is null)
                 return null;
             
-            if (_adaptees.ContainsKey(info)) 
-                return _adaptees[info] as IMethodInfoAdapter;
+            if (_adaptees.TryGetValue(info, out var adaptee)) 
+                return adaptee as IMethodInfoAdapter;
 
             var typeName = info.GetType().Name.Replace("Runtime", "");
             var method = typeof(AdapterFactory).GetMethod(typeName, BindingFlags.Static | BindingFlags.Public) ?? typeof(AdapterFactory).GetMethod("MethodInfo", BindingFlags.Static | BindingFlags.Public);
@@ -287,8 +289,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (builder is null)
                 return null;
             
-            if (_adaptees.ContainsKey(builder))
-                return _adaptees[builder] as IMethodBuilderAdapter;
+            if (_adaptees.TryGetValue(builder, out var adaptee))
+                return adaptee as IMethodBuilderAdapter;
 
             var instance = AdapterFactory.MethodBuilder(builder);
             _adaptees.Add(builder, instance);
@@ -300,8 +302,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (info is null)
                 return null;
             
-            if (_adaptees.ContainsKey(info)) 
-                return _adaptees[info] as IFieldInfoAdapter;
+            if (_adaptees.TryGetValue(info, out var adaptee)) 
+                return adaptee as IFieldInfoAdapter;
             
             var typeName = info.GetType().Name.Replace("Runtime", "");
             var method = typeof(AdapterFactory).GetMethod(typeName, BindingFlags.Static | BindingFlags.Public) ?? typeof(AdapterFactory).GetMethod("FieldInfo", BindingFlags.Static | BindingFlags.Public);
@@ -316,8 +318,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (info is null)
                 return null;
             
-            if (_adaptees.ContainsKey(info)) 
-                return _adaptees[info] as IPropertyInfoAdapter;
+            if (_adaptees.TryGetValue(info, out var adaptee)) 
+                return adaptee as IPropertyInfoAdapter;
             
             var typeName = info.GetType().Name.Replace("Runtime", "");
             var method = typeof(AdapterFactory).GetMethod(typeName, BindingFlags.Static | BindingFlags.Public) ?? typeof(AdapterFactory).GetMethod("PropertyInfo", BindingFlags.Static | BindingFlags.Public);
@@ -332,8 +334,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (info is null)
                 return null;
             
-            if (_adaptees.ContainsKey(info)) 
-                return _adaptees[info] as IMemberInfoAdapter;
+            if (_adaptees.TryGetValue(info, out var adaptee)) 
+                return adaptee as IMemberInfoAdapter;
             
             var typeName = info.GetType().Name.Replace("Runtime", "");
             var method = typeof(AdapterFactory).GetMethod(typeName, BindingFlags.Static | BindingFlags.Public) ?? typeof(AdapterFactory).GetMethod("MemberInfo", BindingFlags.Static | BindingFlags.Public);
@@ -348,8 +350,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (builder is null)
                 return null;
             
-            if (_adaptees.ContainsKey(builder))
-                return _adaptees[builder] as IParameterBuilderAdapter;
+            if (_adaptees.TryGetValue(builder, out var adaptee))
+                return adaptee as IParameterBuilderAdapter;
 
             var instance = AdapterFactory.ParameterBuilder(builder);
             _adaptees.Add(builder, instance);
@@ -361,8 +363,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (info is null)
                 return null;
             
-            if (_adaptees.ContainsKey(info))
-                return _adaptees[info] as IParameterInfoAdapter;
+            if (_adaptees.TryGetValue(info, out var adaptee))
+                return adaptee as IParameterInfoAdapter;
 
             var instance = AdapterFactory.ParameterInfo(info);
             _adaptees.Add(info, instance);
@@ -374,9 +376,9 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (builder is null)
                 return null;
             
-            if (_adaptees.ContainsKey(builder))
-                return _adaptees[builder] as IEventBuilderAdapter;
-
+            if (_adaptees.TryGetValue(builder, out var adaptee))
+                return adaptee as IEventBuilderAdapter;
+            
             var instance = AdapterFactory.EventBuilder(builder);
             _adaptees.Add(builder, instance);
             return instance;
@@ -387,8 +389,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (builder is null)
                 return null;
             
-            if (_adaptees.ContainsKey(builder))
-                return _adaptees[builder] as IGenericTypeParameterBuilderAdapter;
+            if (_adaptees.TryGetValue(builder, out var adaptee))
+                return adaptee as IGenericTypeParameterBuilderAdapter;
 
             var instance = AdapterFactory.GenericTypeParameterBuilder(builder);
             _adaptees.Add(builder, instance);
@@ -400,8 +402,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (builder is null)
                 return null;
             
-            if (_adaptees.ContainsKey(builder))
-                return _adaptees[builder] as IAssemblyBuilderAdapter;
+            if (_adaptees.TryGetValue(builder, out var adaptee))
+                return adaptee as IAssemblyBuilderAdapter;
 
             var instance = AdapterFactory.AssemblyBuilder(builder);
             _adaptees.Add(builder, instance);
@@ -413,8 +415,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (builder is null)
                 return null;
             
-            if (_adaptees.ContainsKey(builder))
-                return _adaptees[builder] as IModuleBuilderAdapter;
+            if (_adaptees.TryGetValue(builder, out var adaptee))
+                return adaptee as IModuleBuilderAdapter;
 
             var instance = AdapterFactory.ModuleBuilder(builder);
             _adaptees.Add(builder, instance);
@@ -426,8 +428,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (generator is null)
                 return null;
             
-            if (_adaptees.ContainsKey(generator))
-                return _adaptees[generator] as IILGeneratorAdapter;
+            if (_adaptees.TryGetValue(generator, out var adaptee))
+                return adaptee as IILGeneratorAdapter;
 
             var instance = AdapterFactory.ILGenerator(generator);
             _adaptees.Add(generator, instance);
@@ -439,8 +441,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (assembly is null)
                 return null;
             
-            if (_adaptees.ContainsKey(assembly))
-                return _adaptees[assembly] as AssemblyAdapter;
+            if (_adaptees.TryGetValue(assembly, out var adaptee))
+                return adaptee as AssemblyAdapter;
 
             var instance = AdapterFactory.Assembly(assembly);
             _adaptees.Add(assembly, instance);
@@ -452,8 +454,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (module is null)
                 return null;
             
-            if (_adaptees.ContainsKey(module))
-                return _adaptees[module] as IModuleAdapter;
+            if (_adaptees.TryGetValue(module, out var adaptee))
+                return adaptee as IModuleAdapter;
 
             var typeName = module.GetType().Name.Replace("Runtime", "");
             var method = typeof(AdapterFactory).GetMethod(typeName, BindingFlags.Static | BindingFlags.Public) ?? typeof(AdapterFactory).GetMethod("Module", BindingFlags.Static | BindingFlags.Public);
@@ -468,8 +470,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (builder is null)
                 return null;
             
-            if (_adaptees.ContainsKey(builder))
-                return _adaptees[builder] as IFieldBuilderAdapter;
+            if (_adaptees.TryGetValue(builder, out var adaptee))
+                return adaptee as IFieldBuilderAdapter;
 
             var instance = AdapterFactory.FieldBuilder(builder);
             _adaptees.Add(builder, instance);
@@ -481,8 +483,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (builder is null)
                 return null;
             
-            if (_adaptees.ContainsKey(builder))
-                return _adaptees[builder] as IPropertyBuilderAdapter;
+            if (_adaptees.TryGetValue(builder, out var adaptee))
+                return adaptee as IPropertyBuilderAdapter;
 
             var instance = AdapterFactory.PropertyBuilder(builder);
             _adaptees.Add(builder, instance);
@@ -494,8 +496,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (builder is null)
                 return null;
             
-            if (_adaptees.ContainsKey(builder))
-                return _adaptees[builder] as ILocalBuilderAdapter;
+            if (_adaptees.TryGetValue(builder, out var adaptee))
+                return adaptee as ILocalBuilderAdapter;
 
             var instance = AdapterFactory.LocalBuilder(builder);
             _adaptees.Add(builder, instance);

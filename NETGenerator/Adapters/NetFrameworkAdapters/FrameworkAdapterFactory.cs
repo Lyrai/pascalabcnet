@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading;
+using Microsoft.CodeAnalysis.CSharp.Emit;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
-    public class FrameworkAdapterFactory: AdapterFactory
+    internal class FrameworkAdapterFactory: AdapterFactory
     {
         protected override IAppDomainAdapter CreateAppDomain()
         {
