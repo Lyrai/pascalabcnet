@@ -1027,6 +1027,11 @@
           "SemanticTree.dll": {}
         }
       },
+      "StringConstants/1.0.0": {
+        "runtime": {
+          "StringConstants.dll": {}
+        }
+      },
       "SyntaxTree/1.0.0": {
         "runtime": {
           "SyntaxTree.dll": {}
@@ -1038,6 +1043,7 @@
           "Errors": "1.0.0",
           "Localization": "1.0.0",
           "SemanticTree": "1.0.0",
+          "StringConstants": "1.0.0",
           "SyntaxTree": "1.0.0",
           "YieldHelpers": "1.0.0"
         },
@@ -1590,6 +1596,11 @@
       "sha512": ""
     },
     "SemanticTree/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "StringConstants/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

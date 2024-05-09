@@ -11,6 +11,7 @@
           "Compiler": "1.0.0",
           "CompilerTools": "1.0.0",
           "Errors": "1.0.0",
+          "LanguageIntegrator": "1.0.0",
           "Localization": "1.0.0",
           "Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers": "0.4.421302",
           "ParserTools": "1.0.0",
@@ -940,6 +941,14 @@
           "LambdaAnySynToSemConverter.dll": {}
         }
       },
+      "LanguageIntegrator/1.0.0": {
+        "dependencies": {
+          "ParserTools": "1.0.0"
+        },
+        "runtime": {
+          "LanguageIntegrator.dll": {}
+        }
+      },
       "Localization/1.0.0": {
         "dependencies": {
           "Microsoft.Windows.Compatibility": "7.0.1"
@@ -1078,6 +1087,11 @@
           "SemanticTree.dll": {}
         }
       },
+      "StringConstants/1.0.0": {
+        "runtime": {
+          "StringConstants.dll": {}
+        }
+      },
       "SyntaxTree/1.0.0": {
         "runtime": {
           "SyntaxTree.dll": {}
@@ -1113,6 +1127,7 @@
           "Errors": "1.0.0",
           "Localization": "1.0.0",
           "SemanticTree": "1.0.0",
+          "StringConstants": "1.0.0",
           "SyntaxTree": "1.0.0",
           "YieldHelpers": "1.0.0"
         },
@@ -1670,6 +1685,11 @@
       "serviceable": false,
       "sha512": ""
     },
+    "LanguageIntegrator/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
     "Localization/1.0.0": {
       "type": "project",
       "serviceable": false,
@@ -1696,6 +1716,11 @@
       "sha512": ""
     },
     "SemanticTree/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "StringConstants/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

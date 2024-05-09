@@ -2208,7 +2208,7 @@ namespace PascalABCCompiler.NETGenerator
         {
             IMethodBuilderAdapter mb = helper.GetMethod(func).mi as IMethodBuilderAdapter;
             IAttributeNode[] attrs = func.Attributes;
-            List<CustomAttributeBuilder> returnValueAttrs = new List<CustomAttributeBuilder>();
+            List<ICustomAttributeBuilderAdapter> returnValueAttrs = new List<ICustomAttributeBuilderAdapter>();
             for (int i = 0; i < attrs.Length; i++)
             {
                 
@@ -2239,7 +2239,7 @@ namespace PascalABCCompiler.NETGenerator
             }
             if (returnValueAttrs.Count > 0)
             {
-                ParameterBuilder pb = mb.DefineParameter(0, ParameterAttributes.Retval, null);
+                IParameterBuilderAdapter pb = mb.DefineParameter(0, ParameterAttributes.Retval, null);
                 foreach (var attr in returnValueAttrs)
                     pb.SetCustomAttribute(attr);
             }

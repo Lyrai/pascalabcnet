@@ -30,6 +30,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>..\bin\</OutputPath>
@@ -131,6 +132,27 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compiler.cs" />
+    <Compile Include="Config\AssemblyInfo.cs" />
+    <Compile Include="ConsoleCompilerCommands.cs" />
+    <Compile Include="DocXml.cs" />
+    <Compile Include="ICompiler.cs" />
+    <Compile Include="IProjectInfo.cs" />
+    <Compile Include="ProjectInfo.cs" />
+    <Compile Include="RemoteCompiler.cs" />
+    <Compile Include="SemanticTreeConverters\ISemanticTreeConverter.cs" />
+    <Compile Include="SemanticTreeConverters\SemanticTreeConvertersController.cs" />
+    <Compile Include="Errors.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PCU\PCUFileFormatVersion.cs" />
+    <Compile Include="PCU\PCUWriter.cs" />
+    <Compile Include="PCU\PCUReader.cs" />
+    <Compile Include="PCU\PCUWrappers.cs" />
+    <Compile Include="..\Configuration\GlobalAssemblyInfo.cs">
+      <Link>Config\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="SyntaxTreeConvertersController\SyntaxTreeConvertersController.cs" />
     <Compile Include="..\Configuration\GlobalAssemblyInfo.cs">
       <Link>Config\GlobalAssemblyInfo.cs</Link>
     </Compile>

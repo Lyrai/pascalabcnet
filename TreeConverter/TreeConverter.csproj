@@ -221,6 +221,10 @@
       <Project>{613E0DDA-AA8A-437C-AC45-507B47429FF9}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
+    <ProjectReference Include="..\StringConstants\StringConstants.csproj">
+      <Project>{e8aefbf9-0113-4fa4-be45-6cda555498b7}</Project>
+      <Name>StringConstants</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SyntaxTree\SyntaxTree.csproj">
       <Name>SyntaxTree</Name>
       <Project>{C2CAC65A-B2AE-4CCC-B067-E6B8E75DF73A}</Project>
@@ -229,7 +233,16 @@
     <Compile Include="..\Configuration\GlobalAssemblyInfo.cs">
       <Link>Config\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <ProjectReference Include="..\Yield\YieldHelpers\YieldHelpers.csproj" />
+    <Compile Include="TreeConversion\CompilationWarnings.cs" />
+    <Compile Include="TreeConversion\CompilerDirectivesToSyntaxTreeNodesLinker.cs" />
+    <Compile Include="OpenMP\OpenMP.cs" />
+    <Compile Include="OpenMP\VarFinderSyntaxVisitor.cs" />
+    <Compile Include="TreeRealization\generics.cs" />
+    <Compile Include="TreeRealization\labels.cs" />
+    <ProjectReference Include="..\Yield\YieldHelpers\YieldHelpers.csproj">
+      <Project>{ce5c55c2-a11c-4e94-a9fa-3fc6ca3e4c09}</Project>
+      <Name>YieldHelpers</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

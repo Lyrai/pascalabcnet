@@ -11,13 +11,34 @@
   <component name="ChangeListManager">
     <list default="true" id="c7d8e511-b4d4-4b45-8aca-bb70e603e9e9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.pabcnetc/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.pabcnetc/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Compiler/Compiler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Compiler/Compiler.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Compiler/Compiler.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Compiler/Compiler.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/NETGenerator.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/NETGenerator.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanguageIntegrator/LanguageIntegrator.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/LanguageIntegrator/LanguageIntegrator.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/NETGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/NETGenerator.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Optimizer/Optimizer.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Optimizer/Optimizer.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ParserTools/ParserTools.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ParserTools/ParserTools.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Parsers/PascalABCParserNewSaushkin/PascalABCSaushkinParser.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Parsers/PascalABCParserNewSaushkin/PascalABCSaushkinParser.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StringConstants/StringConstants.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StringConstants/StringConstants.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SyntaxVisitors/SyntaxVisitors.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/SyntaxVisitors/SyntaxVisitors.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TreeConverter/TreeConverter.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/TreeConverter/TreeConverter.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net472/Microsoft.CodeAnalysis.CSharp.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net472/Microsoft.CodeAnalysis.CSharp.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net472/Microsoft.CodeAnalysis.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net472/Microsoft.CodeAnalysis.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net6.0-windows/PascalABCParser.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net6.0-windows/PascalABCParser.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net6.0/Microsoft.CodeAnalysis.CSharp.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net6.0/Microsoft.CodeAnalysis.CSharp.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net6.0/Microsoft.CodeAnalysis.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net6.0/Microsoft.CodeAnalysis.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net6.0/NETGenerator.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net6.0/NETGenerator.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net6.0/PABCNETC.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net6.0/PABCNETC.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net6.0/PABCNETC.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net6.0/PABCNETC.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net7.0-windows/YieldConversionSyntax.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net7.0-windows/YieldConversionSyntax.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net7.0-windows/YieldConversionSyntax.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net7.0-windows/YieldConversionSyntax.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net7.0/Microsoft.CodeAnalysis.CSharp.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net7.0/Microsoft.CodeAnalysis.CSharp.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net7.0/Microsoft.CodeAnalysis.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net7.0/Microsoft.CodeAnalysis.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net7.0/NETGenerator.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net7.0/NETGenerator.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net7.0/PABCNETC.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net7.0/PABCNETC.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net7.0/PABCNETC.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net7.0/PABCNETC.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Microsoft.CodeAnalysis.CSharp.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Microsoft.CodeAnalysis.CSharp.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Microsoft.CodeAnalysis.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Microsoft.CodeAnalysis.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/NETGenerator.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/NETGenerator.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/PABCNETC.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/PABCNETC.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/PABCNETC.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/PABCNETC.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pabcnetc.sln" beforeDir="false" afterPath="$PROJECT_DIR$/pabcnetc.sln" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -25,7 +46,11 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/3fa134a4f7024c6a9faff12697fb4fb9c8e8a0/8c/8a5db4a4/Activator.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/3fa134a4f7024c6a9faff12697fb4fb9c8e8a0/b4/a9c72e0c/CastCache.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/3fa134a4f7024c6a9faff12697fb4fb9c8e8a0/dd/069dba5d/RuntimeHelpers.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/NETGenerator/Adapters/AdapterFactory.cs" root0="FORCE_HIGHLIGHTING" />
@@ -44,6 +69,7 @@
     <setting file="file://$PROJECT_DIR$/TreeConverter/SystemLib/StaticSystemLib.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TreeConverter/TreeConversion/syntax_tree_visitor.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TreeConverter/TreeRealization/functions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TreeConverter/TreeRealization/generics.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TreeConverter/TreeRealization/types.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/artifacts/obj/NETGenerator/Debug/net472/.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -63,10 +89,12 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    ".NET Project.PABCNETC-NET8.executor": "Debug",
+    ".NET Project.PABCNETC.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "pascalabcnet-master",
+    "git-widget-placeholder": "master",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -83,7 +111,7 @@
     ]
   }
 }]]></component>
-  <component name="RunManager" selected=".NET Project.PABCNETC">
+  <component name="RunManager" selected=".NET Project.PABCNETC-NET8">
     <configuration name="CSharpSyntaxGenerator" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -102,10 +130,28 @@
         <option name="Build" />
       </method>
     </configuration>
-    <configuration name="PABCNETC" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="" />
+    <configuration name="PABCNETC-NET8" type="DotNetProject" factoryName=".NET Project">
+      <option name="EXE_PATH" value="$PROJECT_DIR$/bin/net8.0/PABCNETC.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/bin" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/pabcnetc/PABCNETC.csproj" />
+      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
+      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
+      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="0" />
+      <option name="PROJECT_KIND" value="DotNetCore" />
+      <option name="PROJECT_TFM" value="net8.0" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
+    <configuration name="PABCNETC" type="DotNetProject" factoryName=".NET Project">
+      <option name="EXE_PATH" value="$PROJECT_DIR$/bin/net7.0/PABCNETC.exe" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/bin/net7.0" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="USE_MONO" value="0" />
@@ -115,15 +161,15 @@
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
       <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
       <option name="PROJECT_KIND" value="DotNetCore" />
-      <option name="PROJECT_TFM" value="" />
+      <option name="PROJECT_TFM" value="net7.0" />
       <method v="2">
         <option name="Build" />
       </method>
     </configuration>
     <configuration name="PABCNETCclear" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/bin/net472/PABCNETCclear.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/bin/net472" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="USE_MONO" value="0" />
@@ -133,7 +179,7 @@
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
       <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
       <option name="PROJECT_KIND" value="DotNetCore" />
-      <option name="PROJECT_TFM" value="" />
+      <option name="PROJECT_TFM" value=".NETFramework,Version=v4.7.2" />
       <method v="2">
         <option name="Build" />
       </method>
@@ -142,6 +188,7 @@
       <item itemvalue=".NET Project.CSharpSyntaxGenerator" />
       <item itemvalue=".NET Project.PABCNETCclear" />
       <item itemvalue=".NET Project.PABCNETC" />
+      <item itemvalue=".NET Project.PABCNETC-NET8" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -170,43 +217,56 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TreeConverter/TreeRealization/types.cs</url>
-          <line>3416</line>
-          <properties documentPath="E:\Projects\pascalabcnet\TreeConverter\TreeRealization\types.cs" initialLine="3416" containingFunctionPresentation="Method 'get_type_node'">
+          <url>file://$PROJECT_DIR$/pabcnetc/ConsoleCompiler.cs</url>
+          <line>158</line>
+          <properties documentPath="E:\Projects\pascalabcnet\pabcnetc\ConsoleCompiler.cs" initialLine="158" containingFunctionPresentation="Method 'ExecuteCommand'">
             <startOffsets>
-              <option value="110195" />
+              <option value="6251" />
             </startOffsets>
             <endOffsets>
-              <option value="110326" />
+              <option value="6267" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="2" />
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TreeConverter/TreeRealization/types.cs</url>
-          <line>453</line>
-          <properties documentPath="E:\Projects\pascalabcnet\TreeConverter\TreeRealization\types.cs" initialLine="453" containingFunctionPresentation="Method 'add_internal_interface'">
+          <url>file://$PROJECT_DIR$/Compiler/Compiler.cs</url>
+          <line>3662</line>
+          <properties documentPath="E:\Projects\pascalabcnet\Compiler\Compiler.cs" initialLine="3662" containingFunctionPresentation="Method 'CompileUnit'">
             <startOffsets>
-              <option value="11514" />
+              <option value="163585" />
             </startOffsets>
             <endOffsets>
-              <option value="11625" />
+              <option value="163689" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="4" />
+          <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TreeConverter/SystemLib/StaticSystemLib.cs</url>
-          <line>1165</line>
-          <properties documentPath="E:\Projects\pascalabcnet\TreeConverter\SystemLib\StaticSystemLib.cs" initialLine="1169" containingFunctionPresentation="Method 'initialize_types'">
+          <url>file://$PROJECT_DIR$/ParserTools/ParsersController.cs</url>
+          <line>31</line>
+          <properties documentPath="E:\Projects\pascalabcnet\ParserTools\ParsersController.cs" initialLine="31" containingFunctionPresentation="Method 'LoadStandardParsers'">
             <startOffsets>
-              <option value="55650" />
+              <option value="1092" />
             </startOffsets>
             <endOffsets>
-              <option value="56008" />
+              <option value="1204" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="7" />
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/ParserTools/ParsersController.cs</url>
+          <line>61</line>
+          <properties documentPath="E:\Projects\pascalabcnet\ParserTools\ParsersController.cs" initialLine="61" containingFunctionPresentation="Method 'IntegrateParsersFromAssembly'">
+            <startOffsets>
+              <option value="2294" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2338" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="19" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

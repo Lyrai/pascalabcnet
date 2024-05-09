@@ -2272,7 +2272,7 @@ namespace PascalABCCompiler
                     else if (CompilerOptions.GenerateCode)
                     {
                         if (CompilerOptions.UseDllForSystemUnits)
-                            compilerOptions.RtlPABCSystemType = NetHelper.NetHelper.FindRtlType("PABCSystem.PABCSystem");
+                            compilerOptions.RtlPABCSystemType = NetHelper.NetHelper.FindRtlType("PABCSystem.PABCSystem").GetAdapter();
 
                         GenerateILCode(semanticTree, compilerOptions, resourceFiles);
                     }
