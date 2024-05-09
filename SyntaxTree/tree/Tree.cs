@@ -1,6 +1,6 @@
-
+// Copyright (c) Ivan Bondarev, Stanislav Mikhalkovich (for details please see \doc\copyright.txt)
+// This code is distributed under the GNU LGPL (for details please see \doc\license.txt)
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace PascalABCCompiler.SyntaxTree
@@ -55502,6 +55502,386 @@ namespace PascalABCCompiler.SyntaxTree
 			{
 				if(subnodes_count == 0 || ind < 0 || ind > subnodes_count-1)
 					throw new IndexOutOfRangeException();
+			}
+		}
+		///<summary>
+		///Метод для обхода дерева посетителем
+		///</summary>
+		///<param name="visitor">Объект-посетитель.</param>
+		///<returns>Return value is void</returns>
+		public override void visit(IVisitor visitor)
+		{
+			visitor.visit(this);
+		}
+
+	}
+
+
+	///<summary>
+	///Для конструкции refvar id := ref addrValue, которая не имеет аналога в языке и генерируется при развертывании кортежного присваивания в конструкции (a,a[i]) := (b,666);
+	///</summary>
+	[Serializable]
+	public partial class ref_var_def_statement : declaration
+	{
+
+		///<summary>
+		///Конструктор без параметров.
+		///</summary>
+		public ref_var_def_statement()
+		{
+
+		}
+
+		///<summary>
+		///Конструктор с параметрами.
+		///</summary>
+		public ref_var_def_statement(ident _var,addressed_value _initial_value)
+		{
+			this._var=_var;
+			this._initial_value=_initial_value;
+			FillParentsInDirectChilds();
+		}
+
+		///<summary>
+		///Конструктор с параметрами.
+		///</summary>
+		public ref_var_def_statement(ident _var,addressed_value _initial_value,SourceContext sc)
+		{
+			this._var=_var;
+			this._initial_value=_initial_value;
+			source_context = sc;
+			FillParentsInDirectChilds();
+		}
+		protected ident _var;
+		protected addressed_value _initial_value;
+
+		///<summary>
+		///ref var id := ref add_value
+		///</summary>
+		public ident var
+		{
+			get
+			{
+				return _var;
+			}
+			set
+			{
+				_var=value;
+				if (_var != null)
+					_var.Parent = this;
+			}
+		}
+
+		///<summary>
+		///
+		///</summary>
+		public addressed_value initial_value
+		{
+			get
+			{
+				return _initial_value;
+			}
+			set
+			{
+				_initial_value=value;
+				if (_initial_value != null)
+					_initial_value.Parent = this;
+			}
+		}
+
+
+		/// <summary> Создает копию узла </summary>
+		public override syntax_tree_node Clone()
+		{
+			ref_var_def_statement copy = new ref_var_def_statement();
+			copy.Parent = this.Parent;
+			if (source_context != null)
+				copy.source_context = new SourceContext(source_context);
+			if (attributes != null)
+			{
+				copy.attributes = (attribute_list)attributes.Clone();
+				copy.attributes.Parent = copy;
+			}
+			if (var != null)
+			{
+				copy.var = (ident)var.Clone();
+				copy.var.Parent = copy;
+			}
+			if (initial_value != null)
+			{
+				copy.initial_value = (addressed_value)initial_value.Clone();
+				copy.initial_value.Parent = copy;
+			}
+			return copy;
+		}
+
+		/// <summary> Получает копию данного узла корректного типа </summary>
+		public new ref_var_def_statement TypedClone()
+		{
+			return Clone() as ref_var_def_statement;
+		}
+
+		///<summary> Заполняет поля Parent в непосредственных дочерних узлах </summary>
+		public override void FillParentsInDirectChilds()
+		{
+			if (attributes != null)
+				attributes.Parent = this;
+			if (var != null)
+				var.Parent = this;
+			if (initial_value != null)
+				initial_value.Parent = this;
+		}
+
+		///<summary> Заполняет поля Parent во всем поддереве </summary>
+		public override void FillParentsInAllChilds()
+		{
+			FillParentsInDirectChilds();
+			attributes?.FillParentsInAllChilds();
+			var?.FillParentsInAllChilds();
+			initial_value?.FillParentsInAllChilds();
+		}
+
+		///<summary>
+		///Свойство для получения количества всех подузлов без элементов поля типа List
+		///</summary>
+		public override Int32 subnodes_without_list_elements_count
+		{
+			get
+			{
+				return 2;
+			}
+		}
+		///<summary>
+		///Свойство для получения количества всех подузлов. Подузлом также считается каждый элемент поля типа List
+		///</summary>
+		public override Int32 subnodes_count
+		{
+			get
+			{
+				return 2;
+			}
+		}
+		///<summary>
+		///Индексатор для получения всех подузлов
+		///</summary>
+		public override syntax_tree_node this[Int32 ind]
+		{
+			get
+			{
+				if(subnodes_count == 0 || ind < 0 || ind > subnodes_count-1)
+					throw new IndexOutOfRangeException();
+				switch(ind)
+				{
+					case 0:
+						return var;
+					case 1:
+						return initial_value;
+				}
+				return null;
+			}
+			set
+			{
+				if(subnodes_count == 0 || ind < 0 || ind > subnodes_count-1)
+					throw new IndexOutOfRangeException();
+				switch(ind)
+				{
+					case 0:
+						var = (ident)value;
+						break;
+					case 1:
+						initial_value = (addressed_value)value;
+						break;
+				}
+			}
+		}
+		///<summary>
+		///Метод для обхода дерева посетителем
+		///</summary>
+		///<param name="visitor">Объект-посетитель.</param>
+		///<returns>Return value is void</returns>
+		public override void visit(IVisitor visitor)
+		{
+			visitor.visit(this);
+		}
+
+	}
+
+
+	///<summary>
+	///
+	///</summary>
+	[Serializable]
+	public partial class let_var_expr : expression
+	{
+
+		///<summary>
+		///Конструктор без параметров.
+		///</summary>
+		public let_var_expr()
+		{
+
+		}
+
+		///<summary>
+		///Конструктор с параметрами.
+		///</summary>
+		public let_var_expr(ident _id,expression _ex)
+		{
+			this._id=_id;
+			this._ex=_ex;
+			FillParentsInDirectChilds();
+		}
+
+		///<summary>
+		///Конструктор с параметрами.
+		///</summary>
+		public let_var_expr(ident _id,expression _ex,SourceContext sc)
+		{
+			this._id=_id;
+			this._ex=_ex;
+			source_context = sc;
+			FillParentsInDirectChilds();
+		}
+		protected ident _id;
+		protected expression _ex;
+
+		///<summary>
+		///
+		///</summary>
+		public ident id
+		{
+			get
+			{
+				return _id;
+			}
+			set
+			{
+				_id=value;
+				if (_id != null)
+					_id.Parent = this;
+			}
+		}
+
+		///<summary>
+		///
+		///</summary>
+		public expression ex
+		{
+			get
+			{
+				return _ex;
+			}
+			set
+			{
+				_ex=value;
+				if (_ex != null)
+					_ex.Parent = this;
+			}
+		}
+
+
+		/// <summary> Создает копию узла </summary>
+		public override syntax_tree_node Clone()
+		{
+			let_var_expr copy = new let_var_expr();
+			copy.Parent = this.Parent;
+			if (source_context != null)
+				copy.source_context = new SourceContext(source_context);
+			if (attributes != null)
+			{
+				copy.attributes = (attribute_list)attributes.Clone();
+				copy.attributes.Parent = copy;
+			}
+			if (id != null)
+			{
+				copy.id = (ident)id.Clone();
+				copy.id.Parent = copy;
+			}
+			if (ex != null)
+			{
+				copy.ex = (expression)ex.Clone();
+				copy.ex.Parent = copy;
+			}
+			return copy;
+		}
+
+		/// <summary> Получает копию данного узла корректного типа </summary>
+		public new let_var_expr TypedClone()
+		{
+			return Clone() as let_var_expr;
+		}
+
+		///<summary> Заполняет поля Parent в непосредственных дочерних узлах </summary>
+		public override void FillParentsInDirectChilds()
+		{
+			if (attributes != null)
+				attributes.Parent = this;
+			if (id != null)
+				id.Parent = this;
+			if (ex != null)
+				ex.Parent = this;
+		}
+
+		///<summary> Заполняет поля Parent во всем поддереве </summary>
+		public override void FillParentsInAllChilds()
+		{
+			FillParentsInDirectChilds();
+			attributes?.FillParentsInAllChilds();
+			id?.FillParentsInAllChilds();
+			ex?.FillParentsInAllChilds();
+		}
+
+		///<summary>
+		///Свойство для получения количества всех подузлов без элементов поля типа List
+		///</summary>
+		public override Int32 subnodes_without_list_elements_count
+		{
+			get
+			{
+				return 2;
+			}
+		}
+		///<summary>
+		///Свойство для получения количества всех подузлов. Подузлом также считается каждый элемент поля типа List
+		///</summary>
+		public override Int32 subnodes_count
+		{
+			get
+			{
+				return 2;
+			}
+		}
+		///<summary>
+		///Индексатор для получения всех подузлов
+		///</summary>
+		public override syntax_tree_node this[Int32 ind]
+		{
+			get
+			{
+				if(subnodes_count == 0 || ind < 0 || ind > subnodes_count-1)
+					throw new IndexOutOfRangeException();
+				switch(ind)
+				{
+					case 0:
+						return id;
+					case 1:
+						return ex;
+				}
+				return null;
+			}
+			set
+			{
+				if(subnodes_count == 0 || ind < 0 || ind > subnodes_count-1)
+					throw new IndexOutOfRangeException();
+				switch(ind)
+				{
+					case 0:
+						id = (ident)value;
+						break;
+					case 1:
+						ex = (expression)value;
+						break;
+				}
 			}
 		}
 		///<summary>

@@ -1,13 +1,10 @@
 // Copyright (c) Ivan Bondarev, Stanislav Mikhalkovich (for details please see \doc\copyright.txt)
 // This code is distributed under the GNU LGPL (for details please see \doc\license.txt)
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 
 namespace PascalABCCompiler
 {
+
     public enum SourceFileOperation
     {
         GetText, GetLastWriteTime, Exists, FileEncoding
@@ -21,8 +18,8 @@ namespace PascalABCCompiler
             {
                 case SourceFileOperation.GetText:
                     if (!File.Exists(FileName)) return null;
-                    /*TextReader tr = new StreamReader(FileName, System.Text.Encoding.GetEncoding(1251));
-                    //TextReader tr = new StreamReader(FileName, System.Text.Encoding.);
+                    /*TextReader tr = new StreamReader(file_name, System.Text.Encoding.GetEncoding(1251));
+                    //TextReader tr = new StreamReader(file_name, System.Text.Encoding.);
                     string Text = tr.ReadToEnd();
                     tr.Close();*/
                     string Text = FileReader.ReadFileContent(FileName, null);

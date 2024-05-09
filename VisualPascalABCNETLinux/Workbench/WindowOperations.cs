@@ -9,6 +9,7 @@ using System.Windows.Forms;
 //using ICSharpCode.FormsDesigner;
 //using ICSharpCode.SharpDevelop.Gui;
 using ICSharpCode.TextEditor;
+using PascalABCCompiler;
 using VisualPascalABC.OptionsContent;
 using VisualPascalABCPlugins;
 using WeifenLuo.WinFormsUI.Docking;
@@ -257,7 +258,7 @@ namespace VisualPascalABC
             SetTabPageText(edit);
             edit.SetHighlightingStrategyForFile(FileName);
             OpenDocuments.Add(Tools.FileNameToLower(FileName), edit);
-            //this.codeCompletionParserController.SetAsChanged(FileName);
+            //this.codeCompletionParserController.SetAsChanged(file_name);
             //ivan
             AddBreakPointHandler(edit, FileName);
             var RunService = WorkbenchServiceFactory.RunService;
@@ -483,7 +484,7 @@ namespace VisualPascalABC
                 AddEditorHandlers(edit);
             }
             WorkbenchServiceFactory.CodeCompletionParserController.RegisterFileForParsing(tabName + ".pas");
-            //edit.FileName = FileName;
+            //edit.file_name = file_name;
             //SetTabPageText(edit);
         }
 
@@ -573,7 +574,7 @@ namespace VisualPascalABC
 
         public void AddTextToOutputWindowSync(string fileName, string text)
         {
-            //BeginInvoke(new SetFileNameAndTextDelegate(AddTextToOutputWindow), fileName, text);
+            //BeginInvoke(new SetFileNameAndTextDelegate(AddTextToOutputWindow), file_name, text);
             Invoke(new SetFileNameAndTextDelegate(AddTextToOutputWindow), fileName, text);
         }
 
