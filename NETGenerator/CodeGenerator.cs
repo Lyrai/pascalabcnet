@@ -27,7 +27,7 @@ namespace PascalABCCompiler.CodeGenerators
 		public void Compile(SemanticTree.IProgramNode ProgramTree,string TargetFileName,string SourceFileName ,
             NETGenerator.CompilerOptions options, Hashtable StandartDirectories, string[] ResourceFiles)
 		{
-            il_converter = new NETGenerator.ILConverter(StandartDirectories);
+            il_converter = new ILConverter(StandartDirectories);
 			il_converter.ConvertFromTree(ProgramTree, TargetFileName, SourceFileName, options, ResourceFiles);
 		}
 
