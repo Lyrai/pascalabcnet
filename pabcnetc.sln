@@ -57,6 +57,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.CodeAnalysis.CSha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpSyntaxGenerator", "roslyn-compilers\src\Tools\Source\CompilerGeneratorTools\Source\CSharpSyntaxGenerator\CSharpSyntaxGenerator.csproj", "{8E1DCE9E-5CAC-4081-9435-25960D3F072B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StringConstants", "StringConstants\StringConstants.csproj", "{E8AEFBF9-0113-4FA4-BE45-6CDA555498B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -303,6 +305,18 @@ Global
 		{8E1DCE9E-5CAC-4081-9435-25960D3F072B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8E1DCE9E-5CAC-4081-9435-25960D3F072B}.Release|x86.ActiveCfg = Release|Any CPU
 		{8E1DCE9E-5CAC-4081-9435-25960D3F072B}.Release|x86.Build.0 = Release|Any CPU
+		{E8AEFBF9-0113-4FA4-BE45-6CDA555498B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8AEFBF9-0113-4FA4-BE45-6CDA555498B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8AEFBF9-0113-4FA4-BE45-6CDA555498B7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E8AEFBF9-0113-4FA4-BE45-6CDA555498B7}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E8AEFBF9-0113-4FA4-BE45-6CDA555498B7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E8AEFBF9-0113-4FA4-BE45-6CDA555498B7}.Debug|x86.Build.0 = Debug|Any CPU
+		{E8AEFBF9-0113-4FA4-BE45-6CDA555498B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8AEFBF9-0113-4FA4-BE45-6CDA555498B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8AEFBF9-0113-4FA4-BE45-6CDA555498B7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E8AEFBF9-0113-4FA4-BE45-6CDA555498B7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E8AEFBF9-0113-4FA4-BE45-6CDA555498B7}.Release|x86.ActiveCfg = Release|Any CPU
+		{E8AEFBF9-0113-4FA4-BE45-6CDA555498B7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -331,6 +345,7 @@ Global
 		{6D096830-ABCB-4F7C-A0EA-7F579591AE50} = {F8CE2712-826B-450B-A72F-D32D80C99858}
 		{E72F2B92-F379-43B1-9780-1A10B04BE622} = {F8CE2712-826B-450B-A72F-D32D80C99858}
 		{8E1DCE9E-5CAC-4081-9435-25960D3F072B} = {F8CE2712-826B-450B-A72F-D32D80C99858}
+		{E8AEFBF9-0113-4FA4-BE45-6CDA555498B7} = {F8CE2712-826B-450B-A72F-D32D80C99858}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {761C7A47-891E-47CF-B674-0C2B53D2E48C}
