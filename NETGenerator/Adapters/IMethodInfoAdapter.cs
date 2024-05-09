@@ -1,6 +1,6 @@
 ﻿namespace PascalABCCompiler.NETGenerator.Adapters
 {
-    public interface IMethodInfoAdapter: IMemberInfoAdapter
+    public interface IMethodInfoAdapter: IMethodBaseAdapter
     {
         ITypeAdapter ReturnType { get; }
         ITypeAdapter DeclaringType { get; }
@@ -12,12 +12,14 @@
         bool IsSpecialName { get; }
         bool IsPublic { get; }
         bool IsPrivate { get; }
+        bool IsGenericMethod { get; }
+        bool IsGenericMethodDefinition { get; }
         
-        IMethodInfoAdapter MakeGenericMethod(ITypeAdapter type);
-        IMethodInfoAdapter MakeGenericMethod(ITypeAdapter[] types);
+        IMethodInfoAdapter MakeGenericMethod(params ITypeAdapter[] types);
         object[] GetCustomAttributes(ITypeAdapter type, bool inherit);
         IMethodInfoAdapter GetGenericMethodDefinition();
         IParameterInfoAdapter[] GetParameters();
         void Invoke(object obj, object[] parameters);
+        ITypeAdapter[] GetGenericArguments();
     }
 }

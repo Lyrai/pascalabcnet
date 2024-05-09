@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
@@ -7,29 +8,39 @@ using System.Reflection.Emit;
 using System.Runtime.ConstrainedExecution;
 using System.Threading;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeGen;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Emit;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
 using Microsoft.CodeAnalysis.Emit;
 using NETGenerator.Adapters.Utility;
+using Roslyn.Utilities;
 using BindingDiagnosticBag = Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag;
+using MethodBody = Microsoft.CodeAnalysis.CodeGen.MethodBody;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 {
     internal class RoslynAssemblyBuilderAdapter: RoslynAssemblyAdapter, IAssemblyBuilderAdapter
     {
+        public CSharpCompilation Compilation => _compilation;
+        
         private CSharpCompilation _compilation;
         private string _path;
         private PEModuleBuilder _moduleBuilderRaw;
         private IMethodBuilderAdapter _entryPoint = null;
+        private MethodSymbol _entryPointSymbol;
         
         public RoslynAssemblyBuilderAdapter(string assemblyName, string path)
         {
             _compilation = CSharpCompilation.Create(assemblyName).WithReferences(
                 MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
                 MetadataReference.CreateFromFile(Assembly.Load("System.Console").Location),
-                MetadataReference.CreateFromFile(Assembly.Load("System.Runtime").Location)
+                MetadataReference.CreateFromFile(Assembly.Load("System.Runtime").Location),
+                MetadataReference.CreateFromFile(Assembly.Load("System.Collections").Location),
+                MetadataReference.CreateFromFile(Assembly.Load("System.Runtime.Numerics").Location),
+                MetadataReference.CreateFromFile(Assembly.Load("System.Linq").Location)
             );
+            ResolveHelper.Init(_compilation.Assembly);
 
             _path = path;
         }
@@ -109,7 +120,10 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             var moduleBuilder = CreateModuleBuilder();
             CreateSymbols();
             RealizeMethods();
+            
+            moduleBuilder.SetPEEntryPoint(_entryPointSymbol, DiagnosticBag.GetInstance());
             moduleBuilder.CompilationFinished();
+            
             var peStreamProvider = new Compilation.SimpleEmitStreamProvider(File.Open(filename, FileMode.Create));
             var success = _compilation.SerializeToPeStream(
                 moduleBuilder,
@@ -135,11 +149,12 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             var configPath = Path.Combine(Directory.GetParent(path).FullName, Path.GetFileNameWithoutExtension(path) + ".runtimeconfig.json");
             using (var stream = new StreamWriter(configPath))
             {
-                var netCoreVersion = "6.0.0";
+                var netCoreVersion = Environment.Version;
+                var tfm = "net" + netCoreVersion.Major + "." + netCoreVersion.Minor;
                 stream.WriteLine(
 @"{
     ""runtimeOptions"": {
-        ""tfm"": ""net6.0"",
+        ""tfm"": """ + tfm + @""",
         ""framework"": {
             ""name"": ""Microsoft.NETCore.App"",
             ""version"": """ + netCoreVersion + @"""
@@ -151,7 +166,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         private PEModuleBuilder CreateModuleBuilder()
         {
-            return _moduleBuilderRaw = _compilation.CreateModuleBuilder(
+            _moduleBuilderRaw = _compilation.CreateModuleBuilder(
                 EmitOptions.Default,
                 null,
                 null,
@@ -161,6 +176,9 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
                 DiagnosticBag.GetInstance(),
                 CancellationToken.None
             ) as PEModuleBuilder;
+            ResolveHelper.Init(_compilation.Assembly);
+
+            return _moduleBuilderRaw;
         }
 
         private void CreateSymbols()
@@ -168,37 +186,113 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             var globalNamespaceMembers = CreateDeclarations();
             var globalNamespaceSymbol = CreateNamespaceSymbol("", globalNamespaceMembers);
             (_compilation.SourceModule as SourceModuleSymbol).SetGlobalNamespace(globalNamespaceSymbol);
+            
+            CreateTypes(globalNamespaceSymbol);
+        }
 
-            foreach (var type in GetTypes())
+        private void CreateTypes(NamespaceSymbol ns)
+        {
+            var nsMembers = ns.GetMembersUnordered();
+            foreach (var nested in nsMembers.OfType<NamespaceSymbol>())
             {
-                var typeSymbol = globalNamespaceSymbol.GetType(type);
-                var baseType = _compilation.Assembly.GetType(type.BaseType);
-                typeSymbol.SetBaseType(baseType);
+                CreateTypes(nested);
+            }
+            
+            foreach (var type in GetTypes().Where(t => t.Namespace == ns.QualifiedName))
+            {
+                var typeSymbol = ns.GetType(type);
+                typeSymbol.SetInterfaces(type.ImplementedInterfaces.Select(ResolveHelper.ResolveNamedType).ToImmutableArray());
+                
+                if(!type.IsInterface)
+                {
+                    var baseType = ResolveHelper.ResolveNamedType(type.BaseType);
+                    typeSymbol.SetBaseType(baseType);
+                }
+                if(type.IsGenericType)
+                {
+                    var types = new List<TypeParameterSymbol>();
+                    foreach (var genericArgument in type.GetGenericArguments())
+                    {
+                        var symbol =
+                            new PascalTypeParameterSymbol(genericArgument as RoslynGenericTypeParameterBuilderAdapter);
+                        symbol.SetContainingSymbol(typeSymbol);
+                        types.Add(symbol);
+                    }
+
+                    typeSymbol.SetTypeParameters(types.ToImmutableArray());
+                }
+
+                var members = new Dictionary<string, List<Symbol>>();
                 
                 foreach (var method in type.GetMethods())
                 {
                     var symbol = CreateMethodSymbol(method, typeSymbol);
+                    if (members.TryGetValue(method.Name, out var methods))
+                    {
+                        methods.Add(symbol);
+                    }
+                    else
+                    {
+                        members[method.Name] = new List<Symbol> { symbol };
+                    }
                 }
+                
+                foreach (var ctor in type.GetConstructors())
+                {
+                    var symbol = CreateConstructorSymbol(ctor, typeSymbol);
+                    if (members.TryGetValue(ctor.Name, out var ctors))
+                    {
+                        ctors.Add(symbol);
+                    }
+                    else
+                    {
+                        members[ctor.Name] = new List<Symbol> { symbol };
+                    }
+                }
+
+                foreach (var field in type.GetFields())
+                {
+                    var symbol = CreateFieldSymbol(field, typeSymbol);
+                    if (members.TryGetValue(field.Name, out var methods))
+                    {
+                        methods.Add(symbol);
+                    }
+                    else
+                    {
+                        members[field.Name] = new List<Symbol> { symbol };
+                    }
+                }
+
+                var membersDict = new Dictionary<string, ImmutableArray<Symbol>>();
+                foreach (var (key, value) in members)
+                {
+                    membersDict.Add(key, value.ToImmutableArray());
+                }
+                
+                typeSymbol.SetMembersDictionary(membersDict);
+            }
+            
+            foreach (var symbol in ns.GetMembersUnordered().OfType<SourceNamedTypeSymbol>())
+            {
+                symbol.ResetMembersAndInitializers();
+                symbol.GetMembersAndInitializers();
             }
         }
 
         private PascalMethodSymbol CreateMethodSymbol(IMethodInfoAdapter method, NamedTypeSymbol declaringType)
         {
-            var returnType = _compilation.Assembly.GetType(method.ReturnType);
-            var symbol = new PascalMethodSymbol(declaringType, false, returnType);
-            int paramCnt = 0;
-            var parameters = new List<ParameterSymbol>();
-            foreach (var param in method.GetParameters())
-            {
-                var type = _compilation.Assembly.GetType(param.ParameterType);
-                var paramSymbol = new PascalParameterSymbol(symbol, paramCnt, type);
-                parameters.Add(paramSymbol);
-                ++paramCnt;
-            }
-
-            symbol.SetParameters(parameters.ToImmutableArray());
-
-            return symbol;
+            return new PascalMethodSymbol(method, declaringType, false);
+        }
+        
+        private PascalConstructorSymbol CreateConstructorSymbol(IConstructorInfoAdapter method, NamedTypeSymbol declaringType)
+        {
+            return new PascalConstructorSymbol(method, declaringType);
+        }
+        
+        private PascalFieldSymbol CreateFieldSymbol(IFieldInfoAdapter field, SourceNamedTypeSymbol containingType)
+        {
+            var type = _compilation.Assembly.GetType(field.FieldType);
+            return new PascalFieldSymbol(field, containingType, field.Name, type);
         }
 
         private ImmutableArray<SingleNamespaceOrTypeDeclaration> CreateDeclarations()
@@ -222,7 +316,73 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         private void RealizeMethods()
         {
+            var bindingDiagnostics = new BindingDiagnosticBag(DiagnosticBag.GetInstance());
+            var embeddedTextsCompiler = new MethodCompiler(
+                _compilation,
+                _moduleBuilderRaw,
+                false,
+                false,
+                true,
+                bindingDiagnostics,
+                null,
+                null,
+                CancellationToken.None);
+            embeddedTextsCompiler.CompileSynthesizedMethods(_moduleBuilderRaw.GetEmbeddedTypes(bindingDiagnostics), bindingDiagnostics);
             
+            RealizeMethods((_compilation.SourceModule as SourceModuleSymbol).GlobalNamespace);
+        }
+        
+        private void RealizeMethods(NamespaceSymbol ns)
+        {
+            var members = ns.GetMembersUnordered();
+            foreach (var nested in members.OfType<NamespaceSymbol>())
+            {
+                RealizeMethods(nested);
+            }
+
+            foreach (var type in GetTypes().Where(t => t.Namespace == ns.QualifiedName && !t.IsInterface))
+            {
+                var typeSymbol = ns.GetMembers(type.Name).First() as NamedTypeSymbol;
+
+                foreach (var method in type.GetMethods().Concat<IMethodBaseAdapter>(type.GetConstructors()))
+                {
+                    var generator = (method as IMethodBuilderAdapter)?.GetILGenerator() ?? (method as IConstructorBuilderAdapter).GetILGenerator();
+                    var builder = generator as RoslynILGeneratorAdapter;
+                    var realizedBuilder = builder.Realize(_moduleBuilderRaw, OptimizationLevel.Release, Equals(method.ReturnType, typeof(void).GetAdapter()));
+                    var methodSymbol = ResolveHelper.ResolveMethodInType(typeSymbol, method);
+                    var methodBody = new MethodBody(
+                        realizedBuilder.RealizedIL,
+                        realizedBuilder.MaxStack,
+                        methodSymbol.GetCciAdapter(),
+                        new DebugId(0, _moduleBuilderRaw.CurrentGenerationOrdinal),
+                        realizedBuilder.LocalSlotManager.LocalsInOrder(),
+                        realizedBuilder.RealizedSequencePoints,
+                        null,
+                        realizedBuilder.RealizedExceptionHandlers,
+                        realizedBuilder.AreLocalsZeroed,
+                        false,
+                        realizedBuilder.GetAllScopes(),
+                        realizedBuilder.HasDynamicLocal,
+                        null,
+                        ImmutableArray<LambdaDebugInfo>.Empty,
+                        ImmutableArray<ClosureDebugInfo>.Empty,
+                        null,
+                        default,
+                        default,
+                        default,
+                        StateMachineStatesDebugInfo.Create(null, ImmutableArray<StateMachineStateDebugInfo>.Empty),
+                        null,
+                        ImmutableArray<SourceSpan>.Empty,
+                        methodSymbol is SynthesizedPrimaryConstructor
+                    );
+                    _moduleBuilderRaw.SetMethodBody(methodSymbol, methodBody);
+
+                    if (method.Equals(_entryPoint))
+                    {
+                        _entryPointSymbol = methodSymbol;
+                    }
+                }
+            }
         }
     }
 }

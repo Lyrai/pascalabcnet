@@ -4,6 +4,7 @@ using System.Reflection.Emit;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
+    #if !NETCOREAPP
     public class FrameworkAssemblyBuilderAdapter: FrameworkAssemblyAdapter, IAssemblyBuilderAdapter
     {
         public new AssemblyBuilder Adaptee { get; }
@@ -69,4 +70,5 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
             Adaptee.Save(filename, peKind, imageFile);
         }
     }
+#endif
 }

@@ -1,9 +1,9 @@
 ﻿namespace PascalABCCompiler.NETGenerator.Adapters
 {
-    public interface IConstructorInfoAdapter: IMemberInfoAdapter
+    public interface IConstructorInfoAdapter: IMethodBaseAdapter
     {
         ITypeAdapter DeclaringType { get; }
-        
-        IParameterInfoAdapter[] GetParameters();
+        bool IsPrivate { get; }
+        bool IsPublic { get; }
     }
 }

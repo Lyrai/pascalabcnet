@@ -12,6 +12,7 @@ namespace NETGenerator.Adapters.Utility
 {
     internal static class DeclarationsUtility
     {
+        private static int _counter = 0;
         public static ImmutableArray<SingleNamespaceOrTypeDeclaration> CreateDeclarations(IEnumerable<RoslynTypeBuilderAdapter> types)
         {
             var rootNamespace = new NamespaceNode("");
@@ -49,7 +50,7 @@ namespace NETGenerator.Adapters.Utility
                 false, 
                 false, 
                 null, 
-                null,
+                new RoslynSourceLocation(0, _counter++),
                 members, 
                 ImmutableArray<Diagnostic>.Empty
             );

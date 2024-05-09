@@ -8,6 +8,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 {
     internal class RoslynAdapterFactory: AdapterFactory
     {
+        private RoslynAssemblyBuilderAdapter _assembly;
+        
         protected override IAppDomainAdapter CreateAppDomain()
         {
             return new RoslynAppDomainAdapter();
@@ -15,7 +17,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         protected override ITypeAdapter CreateType(Type type)
         {
-            return new FrameworkTypeAdapter(type);
+            return type.IsGenericType ? new RoslynGenericTypeAdapter(_assembly.Compilation.Assembly, type) as ITypeAdapter : new FrameworkTypeAdapter(type) as ITypeAdapter;
         }
 
         protected override ITypeBuilderAdapter CreateTypeBuilder(TypeBuilder builder)
@@ -85,20 +87,26 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         protected override ICustomAttributeBuilderAdapter CreateCustomAttributeBuilder(IConstructorInfoAdapter constructor, object[] args)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("RoslynAdapterFactory.CreateCustomAttributeBuilder not implemented");
+            return null;
+            //throw new NotImplementedException();
         }
 
         protected override ICustomAttributeBuilderAdapter CreateCustomAttributeBuilder(IConstructorInfoAdapter constructor,
             object[] constructorArgs, IPropertyInfoAdapter[] namedProperties, object[] propertyValues)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("RoslynAdapterFactory.CreateCustomAttributeBuilder not implemented");
+            return null;
+            //throw new NotImplementedException();
         }
 
         protected override ICustomAttributeBuilderAdapter CreateCustomAttributeBuilder(IConstructorInfoAdapter constructor,
             object[] constructorArgs, IPropertyInfoAdapter[] namedProperties, object[] propertyValues,
             IFieldInfoAdapter[] fields, object[] fieldValues)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("RoslynAdapterFactory.CreateCustomAttributeBuilder not implemented");
+            return null;
+            //throw new NotImplementedException();
         }
 
         protected override IPropertyInfoAdapter CreatePropertyInfo(PropertyInfo info)
@@ -123,7 +131,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         protected override IMemberInfoAdapter CreateMemberInfo(MemberInfo info)
         {
-            return new FrameworkMemberInfoAdapter(info);
+            throw new NotSupportedException();
         }
 
         protected override IILGeneratorAdapter CreateILGenerator(ILGenerator generator)
@@ -139,6 +147,12 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         protected override IModuleAdapter CreateModule(Module module)
         {
             return new FrameworkModuleAdapter(module);
+        }
+
+        protected override IAssemblyBuilderAdapter CreateAssemblyBuilder(string assemblyName, string path)
+        {
+            _assembly = new RoslynAssemblyBuilderAdapter(assemblyName, path);
+            return _assembly;
         }
     }
 }

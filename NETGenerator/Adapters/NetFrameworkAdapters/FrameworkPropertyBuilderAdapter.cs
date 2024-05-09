@@ -3,6 +3,7 @@ using System.Reflection.Emit;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
+#if !NETCOREAPP
     public class FrameworkPropertyBuilderAdapter: FrameworkPropertyInfoAdapter, IPropertyBuilderAdapter
     {
         public new PropertyBuilder Adaptee { get; }
@@ -27,4 +28,5 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
             Adaptee.SetSetMethod((method as FrameworkMethodBuilderAdapter).Adaptee);
         }
     }
+#endif
 }

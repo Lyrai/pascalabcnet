@@ -419,7 +419,14 @@ namespace PascalABCCompiler.NetHelper
             }
             catch (Exception ex)
             {
-                a = System.Reflection.Assembly.LoadFrom(name);
+                if (name.Contains("System.Private.CoreLib"))
+                {
+                    a = Assembly.GetAssembly(typeof(object));
+                }
+                else
+                {
+                    a = System.Reflection.Assembly.LoadFrom(name);
+                }
             }
             ass_name_cache[name] = a;
             assm_full_paths[a] = name;

@@ -2,6 +2,7 @@
 
 namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
+#if !NETCOREAPP
     public class FrameworkLocalBuilderAdapter: ILocalBuilderAdapter
     {
         public ITypeAdapter LocalType => Adaptee.LocalType.GetAdapter();
@@ -32,4 +33,5 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
             return Adaptee.Equals(builder.Adaptee);
         }
     }
+#endif
 }

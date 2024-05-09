@@ -6,6 +6,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
     public class FrameworkParameterBuilderAdapter: IParameterBuilderAdapter
     {
         public int Position => Adaptee.Position;
+        public string Name => Adaptee.Name;
         public ParameterBuilder Adaptee { get; }
         
         public FrameworkParameterBuilderAdapter(ParameterBuilder builder)

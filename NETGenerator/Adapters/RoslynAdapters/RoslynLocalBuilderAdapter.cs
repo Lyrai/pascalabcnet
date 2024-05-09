@@ -1,9 +1,13 @@
-﻿namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
+﻿using System;
+using System.Reflection.Emit;
+
+namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 {
     public class RoslynLocalBuilderAdapter: ILocalBuilderAdapter
     {
         public ITypeAdapter LocalType { get; }
         public bool Pinned { get; }
+        public string Name { get; private set; }
 
         public RoslynLocalBuilderAdapter(ITypeAdapter localType, bool pinned)
         {
@@ -13,7 +17,7 @@
 
         public void SetLocalSymInfo(string name)
         {
-            throw new System.NotImplementedException();
+            Name = name;
         }
     }
 }

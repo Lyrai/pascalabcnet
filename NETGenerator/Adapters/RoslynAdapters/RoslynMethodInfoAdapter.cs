@@ -1,35 +1,36 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Symbols;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 {
     public class RoslynMethodInfoAdapter: RoslynMemberInfoAdapter, IMethodInfoAdapter
     {
         public ITypeAdapter ReturnType { get; protected set; }
-        public ITypeAdapter DeclaringType { get; }
-        public string Name { get; }
+        public ITypeAdapter DeclaringType { get; protected set; }
+        public override string Name { get; }
         public int MetadataToken { get; }
         public bool IsStatic { get; }
         public bool IsVirtual { get; }
         public bool IsAbstract { get; }
         public bool IsSpecialName { get; }
-        public bool IsPublic { get; }
-        public bool IsPrivate { get; }
-
-        protected List<IParameterInfoAdapter> _parameters;
-        protected List<IParameterBuilderAdapter> _parameterBuilders;
+        public override bool IsPublic { get; }
+        public override bool IsPrivate { get; }
+        public bool IsGenericMethod { get; protected set; }
+        public bool IsGenericMethodDefinition { get; protected set; }
+        public MethodAttributes Attributes { get; }
+        
+        protected List<RefKind> _parameterRefKinds;
 
         public RoslynMethodInfoAdapter(string name, MethodAttributes attributes, ITypeAdapter returnType,
             ITypeAdapter[] parameterTypes)
         {
             Name = name;
-            ReturnType = returnType;
-            _parameterBuilders = new List<IParameterBuilderAdapter>();
-            if(parameterTypes is object)
-            {
-                _parameters = new List<IParameterInfoAdapter>(parameterTypes.Select(paramType => new RoslynParameterInfoAdapter(paramType)));
-            }
+            ReturnType = returnType ?? typeof(void).GetAdapter();
+            Attributes = attributes;
             
             IsPublic = (attributes & MethodAttributes.Public) != 0;
             IsStatic = (attributes & MethodAttributes.Static) != 0;
@@ -37,16 +38,12 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             IsPrivate = (attributes & MethodAttributes.Private) != 0;
             IsAbstract = (attributes & MethodAttributes.Abstract) != 0;
             IsSpecialName = (attributes & MethodAttributes.SpecialName) != 0;
+            IsGenericMethod = false;
         }
 
-        public IMethodInfoAdapter MakeGenericMethod(ITypeAdapter type)
+        public virtual IMethodInfoAdapter MakeGenericMethod(params ITypeAdapter[] types)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public IMethodInfoAdapter MakeGenericMethod(ITypeAdapter[] types)
-        {
-            throw new System.NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public object[] GetCustomAttributes(ITypeAdapter type, bool inherit)
@@ -59,14 +56,25 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             throw new System.NotImplementedException();
         }
 
-        public IParameterInfoAdapter[] GetParameters()
+        public virtual IParameterInfoAdapter[] GetParameters()
         {
-            return _parameters.ToArray();
+            throw new NotSupportedException();
+        }
+
+        public override IMemberInfoAdapter Instantiate(Dictionary<ITypeAdapter, ITypeAdapter> typeArguments,
+            ITypeAdapter declaringType)
+        {
+            throw new NotSupportedException();
         }
 
         public void Invoke(object obj, object[] parameters)
         {
             throw new System.NotSupportedException();
+        }
+
+        public virtual ITypeAdapter[] GetGenericArguments()
+        {
+            throw new NotSupportedException();
         }
     }
 }

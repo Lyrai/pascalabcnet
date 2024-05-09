@@ -5,7 +5,9 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
     public class FrameworkParameterInfoAdapter: IParameterInfoAdapter
     {
         public ITypeAdapter ParameterType => Adaptee.ParameterType.GetAdapter();
-        
+        public string Name => Adaptee.Name;
+        public int Position => Adaptee.Position;
+
         public ParameterInfo Adaptee { get; }
 
         public FrameworkParameterInfoAdapter(ParameterInfo info)

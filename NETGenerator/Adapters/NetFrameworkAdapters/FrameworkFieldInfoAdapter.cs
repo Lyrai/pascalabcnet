@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
@@ -7,7 +8,11 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
         public ITypeAdapter FieldType => Adaptee.FieldType.GetAdapter();
         public bool IsLiteral => Adaptee.IsLiteral;
         public bool IsStatic => Adaptee.IsStatic;
-        public string Name => Adaptee.Name;
+        public override string Name => Adaptee.Name;
+        public override bool IsPrivate => Adaptee.IsPrivate;
+        public override bool IsPublic => Adaptee.IsPublic;
+        public ITypeAdapter DeclaringType => Adaptee.DeclaringType.GetAdapter();
+        public FieldAttributes Attributes => Adaptee.Attributes;
         public new FieldInfo Adaptee { get; }
 
         public FrameworkFieldInfoAdapter(FieldInfo info): base(info)

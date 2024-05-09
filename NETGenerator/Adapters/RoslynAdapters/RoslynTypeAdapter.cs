@@ -8,10 +8,10 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 {
     internal class RoslynTypeAdapter: ITypeAdapter
     {
-        public bool IsGenericType { get; }
-        public bool IsArray { get; }
-        public bool IsGenericTypeDefinition { get; }
-        public bool IsGenericParameter { get; }
+        public virtual bool IsGenericType { get; }
+        public virtual bool IsArray { get; protected set; }
+        public virtual bool IsGenericTypeDefinition { get; }
+        public virtual bool IsGenericParameter { get; }
         public bool IsValueType { get; }
         public bool IsPointer { get; }
         public bool IsEnum { get; }
@@ -33,24 +33,32 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         public ITypeAdapter BaseType { get; protected set; }
         public ITypeAdapter DeclaringType { get; }
         public IModuleAdapter Module { get; }
+        public TypeAttributes Attributes { get; }
+        public virtual IEnumerable<ITypeAdapter> ImplementedInterfaces => _interfaces;
 
         protected Dictionary<string, List<IMemberInfoAdapter>> _members = new Dictionary<string, List<IMemberInfoAdapter>>();
         protected Dictionary<string, ITypeAdapter> _netstedTypes = new Dictionary<string, ITypeAdapter>();
-        private List<ITypeAdapter> _interfaces;
+        protected List<ITypeAdapter> _interfaces;
 
-        public RoslynTypeAdapter(IModuleAdapter module, string name, TypeAttributes attr, ITypeAdapter parent, ITypeAdapter[] interfaces)
+        protected RoslynTypeAdapter(IModuleAdapter module, string name, TypeAttributes attr, ITypeAdapter parent, ITypeAdapter[] interfaces)
         {
+            if (name.Contains('`'))
+            {
+                name = name.Remove(name.IndexOf('`'));
+            }
             FullName = name;
             Name = name.Split('.').Last();
-            Namespace = name.Remove(name.LastIndexOf('.'));
+            Namespace = name.Contains('.') ? name.Remove(name.LastIndexOf('.')) : "";
             _interfaces = interfaces is object ? new List<ITypeAdapter>(interfaces) : new List<ITypeAdapter>();
             IsAbstract = (attr & TypeAttributes.Abstract) != 0;
             IsInterface = (attr & TypeAttributes.Interface) != 0;
             IsPublic = (attr & TypeAttributes.Public) != 0;
             IsNotPublic = !IsPublic;
-            BaseType = parent ?? typeof(object).GetAdapter();
+            BaseType = IsInterface ? parent : parent ?? typeof(object).GetAdapter();
             Module = module;
             Assembly = module.Assembly;
+            IsClass = true;
+            Attributes = attr;
         }
 
         protected RoslynTypeAdapter(ITypeBuilderAdapter declaringType, string name, TypeAttributes attr)
@@ -62,7 +70,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             Namespace = "";
         }
 
-        public IMethodInfoAdapter GetMethod(string name)
+        public virtual IMethodInfoAdapter GetMethod(string name)
         {
             if (!_members.ContainsKey(name))
             {
@@ -72,7 +80,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             return _members[name].First() as IMethodInfoAdapter;
         }
 
-        public IMethodInfoAdapter GetMethod(string name, ITypeAdapter[] parameterTypes)
+        public virtual IMethodInfoAdapter GetMethod(string name, ITypeAdapter[] parameterTypes)
         {
             if (!_members.ContainsKey(name))
             {
@@ -82,7 +90,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             return FindMethodBySignature(name, parameterTypes);
         }
 
-        public IMethodInfoAdapter GetMethod(string name, BindingFlags flags)
+        public virtual IMethodInfoAdapter GetMethod(string name, BindingFlags flags)
         {
             if (!_members.ContainsKey(name))
             {
@@ -113,29 +121,37 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             return null;
         }
 
-        public IMethodInfoAdapter[] GetMethods()
+        public virtual IMethodInfoAdapter[] GetMethods()
         {
             return _members
                 .Values
                 .Flatten()
-                .Where(member => member is IMethodInfoAdapter)
-                .Cast<IMethodInfoAdapter>()
+                .OfType<IMethodInfoAdapter>()
                 .ToArray();
         }
 
-        public IMethodInfoAdapter[] GetMethods(BindingFlags flags)
+        public virtual IMethodInfoAdapter[] GetMethods(BindingFlags flags)
         {
             throw new System.NotImplementedException();
         }
 
-        public IConstructorInfoAdapter GetConstructor(ITypeAdapter[] parameterTypes)
+        public virtual IConstructorInfoAdapter GetConstructor(ITypeAdapter[] parameterTypes)
         {
-            throw new System.NotImplementedException();
+            if (!_members.ContainsKey(".ctor") && !_members.ContainsKey(".cctor"))
+            {
+                return null;
+            }
+            
+            return FindConstructorBySignature(parameterTypes);
         }
 
-        public IConstructorInfoAdapter[] GetConstructors()
+        public virtual IConstructorInfoAdapter[] GetConstructors()
         {
-            throw new System.NotImplementedException();
+            return _members
+                .Values
+                .Flatten()
+                .OfType<IConstructorInfoAdapter>()
+                .ToArray();
         }
 
         public IConstructorInfoAdapter[] GetConstructors(BindingFlags flags)
@@ -143,14 +159,14 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             throw new System.NotImplementedException();
         }
 
-        public ITypeAdapter[] GetGenericArguments()
+        public virtual ITypeAdapter[] GetGenericArguments()
         {
             throw new System.NotImplementedException();
         }
 
-        public ITypeAdapter GetElementType()
+        public virtual ITypeAdapter GetElementType()
         {
-            throw new System.NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public ITypeAdapter GetGenericTypeDefinition()
@@ -195,7 +211,11 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         public IFieldInfoAdapter[] GetFields()
         {
-            throw new System.NotImplementedException();
+            return _members
+                .Values
+                .Flatten()
+                .OfType<IFieldInfoAdapter>()
+                .ToArray();
         }
 
         public IMemberInfoAdapter[] GetDefaultMembers()
@@ -213,19 +233,14 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             throw new System.NotImplementedException();
         }
 
-        public ITypeAdapter MakeGenericType(ITypeAdapter type)
+        public virtual ITypeAdapter MakeGenericType(params ITypeAdapter[] types)
         {
             throw new System.NotImplementedException();
         }
 
-        public ITypeAdapter MakeGenericType(ITypeAdapter[] types)
+        public virtual ITypeAdapter MakeArrayType()
         {
-            throw new System.NotImplementedException();
-        }
-
-        public ITypeAdapter MakeArrayType()
-        {
-            throw new System.NotImplementedException();
+            return new RoslynArrayTypeAdapter(this);
         }
 
         public ITypeAdapter MakeArrayType(int rank)
@@ -240,7 +255,9 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         public ITypeAdapter MakeByRefType()
         {
-            throw new System.NotImplementedException();
+            Console.WriteLine("RoslynTypeAdapter.MakeByRefType not implemented");
+            return this;
+            //throw new System.NotImplementedException();
         }
 
         public object[] GetCustomAttributes(ITypeAdapter attributeType, bool inherit)
@@ -278,7 +295,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             return _members[name]
                 .Where(meth => meth is IMethodInfoAdapter)
                 .Cast<IMethodInfoAdapter>()
-                .First(
+                .FirstOrDefault(
                     meth => meth
                         .GetParameters()
                         .Select(param => param.ParameterType)
@@ -288,25 +305,42 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         protected IConstructorInfoAdapter FindConstructorBySignature(ITypeAdapter[] parameterTypes)
         {
-            if (!_members.ContainsKey(".ctor"))
+            parameterTypes = parameterTypes ?? new ITypeAdapter[] { };
+
+            IConstructorInfoAdapter result = null;
+            
+            if (_members.TryGetValue(".ctor", out var instanceConstructors))
             {
-                return null;
+                result = instanceConstructors
+                    .Where(meth => meth is IConstructorInfoAdapter)
+                    .Cast<IConstructorInfoAdapter>()
+                    .FirstOrDefault(
+                        meth => meth
+                            .GetParameters()
+                            .Select(param => param.ParameterType)
+                            .SequenceEqual(parameterTypes)
+                    );
             }
 
-            if (parameterTypes is null)
+            if (result is object)
             {
-                parameterTypes = new ITypeAdapter[] { };
+                return result;
             }
             
-            return _members[".ctor"]
-                .Where(meth => meth is IConstructorInfoAdapter)
-                .Cast<IConstructorInfoAdapter>()
-                .First(
-                    meth => meth
-                        .GetParameters()
-                        .Select(param => param.ParameterType)
-                        .SequenceEqual(parameterTypes)
-                );
+            if (_members.TryGetValue(".cctor", out var staticConstructors))
+            {
+                result = staticConstructors
+                    .Where(meth => meth is IConstructorInfoAdapter)
+                    .Cast<IConstructorInfoAdapter>()
+                    .FirstOrDefault(
+                        meth => meth
+                            .GetParameters()
+                            .Select(param => param.ParameterType)
+                            .SequenceEqual(parameterTypes)
+                    );
+            }
+
+            return result;
         }
     }
 }

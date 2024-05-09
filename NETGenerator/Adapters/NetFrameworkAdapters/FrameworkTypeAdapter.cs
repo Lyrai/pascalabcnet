@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -30,6 +31,9 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
         public ITypeAdapter BaseType => Adaptee.BaseType.GetAdapter();
         public ITypeAdapter DeclaringType => Adaptee.DeclaringType.GetAdapter();
         public IModuleAdapter Module => Adaptee.Module.GetAdapter();
+        public TypeAttributes Attributes => Adaptee.Attributes;
+        public IEnumerable<ITypeAdapter> ImplementedInterfaces => Enumerable.Empty<ITypeAdapter>();
+
         public Type Adaptee { get; }
 
         public FrameworkTypeAdapter(Type adaptee)
@@ -147,12 +151,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
             return Adaptee.GetArrayRank();
         }
 
-        public ITypeAdapter MakeGenericType(ITypeAdapter type)
-        {
-            return Adaptee.MakeGenericType(GetAdaptee(type)).GetAdapter();
-        }
-
-        public ITypeAdapter MakeGenericType(ITypeAdapter[] types)
+        public ITypeAdapter MakeGenericType(params ITypeAdapter[] types)
         {
             return Adaptee.MakeGenericType(GetAdaptee(types)).GetAdapter();
         }

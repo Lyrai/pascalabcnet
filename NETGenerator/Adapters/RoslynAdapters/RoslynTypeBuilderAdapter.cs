@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Collections;
@@ -15,13 +17,52 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
     internal class RoslynTypeBuilderAdapter: RoslynTypeAdapter, ITypeBuilderAdapter
     {
         public SingleTypeDeclaration Declaration { get; private set; }
-        public RoslynTypeBuilderAdapter(IModuleAdapter module, string name, TypeAttributes attr, ITypeAdapter parent, ITypeAdapter[] interfaces) 
+        public override bool IsGenericType => _isGenericType;
+        public override bool IsGenericTypeDefinition => _isGenericTypeDefinition;
+
+        private ITypeAdapter[] _genericParameters;
+        private ITypeAdapter[] _genericArguments;
+        private bool _isGenericType;
+        private bool _isGenericTypeDefinition;
+        private ITypeAdapter _genericDefinition;
+        private Dictionary<ITypeAdapter, ITypeAdapter> _instantiationDict;
+
+        public RoslynTypeBuilderAdapter(IModuleAdapter module, string name, TypeAttributes attr, ITypeAdapter parent,
+            ITypeAdapter[] interfaces)
             : base(module, name, attr, parent, interfaces)
-        { }
+        {
+            _genericParameters = Array.Empty<ITypeAdapter>();
+            _genericArguments = Array.Empty<ITypeAdapter>();
+            _isGenericType = false;
+            _isGenericTypeDefinition = false;
+            _genericDefinition = null;
+        }
 
         private RoslynTypeBuilderAdapter(RoslynTypeBuilderAdapter declaringType, string name, TypeAttributes attr)
             : base(declaringType, name, attr)
-        { }
+        {
+            _genericParameters = Array.Empty<ITypeAdapter>();
+            _genericArguments = Array.Empty<ITypeAdapter>();
+            _isGenericType = false;
+            _isGenericTypeDefinition = false;
+            _genericDefinition = null;
+        }
+
+        private RoslynTypeBuilderAdapter(RoslynTypeBuilderAdapter genericDefinition, ITypeAdapter[] typeArguments)
+            : base(genericDefinition.Module, genericDefinition.FullName, genericDefinition.Attributes, genericDefinition.BaseType, genericDefinition._interfaces.ToArray())
+        {
+            _genericArguments = typeArguments;
+            _genericParameters = Array.Empty<ITypeAdapter>();
+            _isGenericType = true;
+            _isGenericTypeDefinition = false;
+            _genericDefinition = genericDefinition;
+            _members = genericDefinition._members;
+        }
+
+        public override ITypeAdapter MakeGenericType(params ITypeAdapter[] types)
+        {
+            return new RoslynTypeBuilderAdapter(this, types);
+        }
 
         public IConstructorBuilderAdapter DefineConstructor(MethodAttributes attributes, CallingConventions conventions,
             ITypeAdapter[] parameterTypes)
@@ -36,19 +77,19 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
                 parameterTypes = new ITypeAdapter[] { };
             }
 
-            if (FindConstructorBySignature(parameterTypes) is object)
+            if (FindConstructorBySignature(parameterTypes) is IConstructorBuilderAdapter cb)
             {
-                throw new InvalidOperationException("Constructor exists");
+                return cb;
             }
 
             var constructor = new RoslynConstructorBuilderAdapter(attributes, this, parameterTypes);
-            if(_members.TryGetValue(".ctor", out var members))
+            if(_members.TryGetValue(constructor.Name, out var members))
             {
                 members.Add(constructor);
             }
             else
             {
-                _members.Add(".ctor", new List<IMemberInfoAdapter> { constructor });
+                _members.Add(constructor.Name, new List<IMemberInfoAdapter> { constructor });
             }
 
             return constructor;
@@ -63,10 +104,10 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
             if (_members.TryGetValue(name, out var members) && members.Any(member => member is IFieldInfoAdapter))
             {
-                throw new InvalidOperationException("Field exists");
+                return members.First(member => member is IFieldInfoAdapter) as IFieldBuilderAdapter;
             }
 
-            var field = new RoslynFieldBuilderAdapter(name, type, attributes);
+            var field = new RoslynFieldBuilderAdapter(this, name, type, attributes);
             if (members is object)
             {
                 members.Add(field);
@@ -81,7 +122,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         public IConstructorBuilderAdapter DefineDefaultConstructor(MethodAttributes attributes)
         {
-            return DefineConstructor(attributes, CallingConventions.Any, null);
+            return DefineConstructor(attributes, CallingConventions.Standard, null);
         }
 
         public IMethodBuilderAdapter DefineMethod(string name, MethodAttributes attributes, ITypeAdapter returnType,
@@ -92,11 +133,12 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
                 throw new InvalidOperationException("Type has already been created");
             }
             
-            if (FindMethodBySignature(name, parameterTypes) is object)
+            /*if (FindMethodBySignature(name, parameterTypes) is object)
             {
                 throw new InvalidOperationException("Method exists");
-            }
-            var method = new RoslynMethodBuilderAdapter(name, attributes, returnType, parameterTypes);
+            }*/
+            
+            var method = new RoslynMethodBuilderAdapter(this, name, attributes, returnType, parameterTypes);
             if(_members.TryGetValue(name, out var members))
             {
                 members.Add(method);
@@ -116,7 +158,24 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         public IGenericTypeParameterBuilderAdapter[] DefineGenericParameters(string[] names)
         {
-            throw new System.NotImplementedException();
+            var genericParameters = names
+                .Select(name => new RoslynGenericTypeParameterBuilderAdapter(this, name))
+                .Cast<IGenericTypeParameterBuilderAdapter>()
+                .ToArray();
+
+            _genericParameters = genericParameters
+                .Cast<ITypeAdapter>()
+                .ToArray();
+
+            _isGenericType = true;
+            _isGenericTypeDefinition = true;
+            
+            return genericParameters;
+        }
+
+        public override ITypeAdapter[] GetGenericArguments()
+        {
+            return _genericArguments.Length > 0 ? _genericArguments : _genericParameters;
         }
 
         public IEventBuilderAdapter DefineEvent(string name, EventAttributes attributes, ITypeAdapter type)
@@ -177,22 +236,25 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         public void DefineMethodOverride(IMethodInfoAdapter methodBody, IMethodInfoAdapter methodInfo)
         {
-            throw new System.NotImplementedException();
+            Debug.Assert(methodBody is RoslynMethodBuilderAdapter);
+            ((RoslynMethodBuilderAdapter) methodBody).SetOverride(methodInfo);
         }
 
         public IConstructorBuilderAdapter DefineTypeInitializer()
         {
-            throw new System.NotImplementedException();
+            MethodAttributes attributes = MethodAttributes.Private | MethodAttributes.Static | MethodAttributes.SpecialName;
+            return DefineConstructor(attributes, CallingConventions.Standard, null);
         }
 
         public void AddInterfaceImplementation(ITypeAdapter type)
         {
-            throw new System.NotImplementedException();
+            _interfaces.Add(type);
         }
 
         public void SetCustomAttribute(IConstructorInfoAdapter constructor, byte[] attribute)
         {
-            throw new System.NotImplementedException();
+            Console.WriteLine("RoslynTypeBuilderAdapter.SetCustomAttribute not implemented");
+            //throw new System.NotImplementedException();
         }
 
         public void SetCustomAttribute(ICustomAttributeBuilderAdapter constructor)
@@ -203,6 +265,92 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         public void SetParent(ITypeAdapter type)
         {
             BaseType = type;
+        }
+
+        public override IMethodInfoAdapter GetMethod(string name)
+        {
+            if (IsGenericType && !IsGenericTypeDefinition && !IsGenericParameter)
+            {
+                var method = _genericDefinition.GetMethod(name);
+                return method.Instantiate(MakeInstantiationDict(), this) as IMethodInfoAdapter;
+            }
+
+            return base.GetMethod(name);
+        }
+
+        public override IMethodInfoAdapter GetMethod(string name, ITypeAdapter[] parameterTypes)
+        {
+            if (IsGenericType && !IsGenericTypeDefinition && !IsGenericParameter)
+            {
+                var method = _genericDefinition.GetMethod(name, parameterTypes);
+                return method.Instantiate(MakeInstantiationDict(), this) as IMethodInfoAdapter;
+            }
+
+            return base.GetMethod(name, parameterTypes);
+        }
+
+        public override IMethodInfoAdapter GetMethod(string name, BindingFlags flags)
+        {
+            if (IsGenericType && !IsGenericTypeDefinition && !IsGenericParameter)
+            {
+                var method = _genericDefinition.GetMethod(name, flags);
+                return method.Instantiate(MakeInstantiationDict(), this) as IMethodInfoAdapter;
+            }
+
+            return base.GetMethod(name, flags);
+        }
+
+        public override IConstructorInfoAdapter GetConstructor(ITypeAdapter[] parameterTypes)
+        {
+            if (IsGenericType && !IsGenericTypeDefinition && !IsGenericParameter)
+            {
+                var constructor = _genericDefinition.GetConstructor(parameterTypes);
+                return constructor.Instantiate(MakeInstantiationDict(), this) as IConstructorInfoAdapter;
+            }
+
+            return base.GetConstructor(parameterTypes);
+        }
+
+        public override IMethodInfoAdapter[] GetMethods()
+        {
+            if (IsGenericType && !IsGenericTypeDefinition && !IsGenericParameter)
+            {
+                var methods = _genericDefinition.GetMethods();
+                return methods
+                    .Select(method => method.Instantiate(MakeInstantiationDict(), this))
+                    .Cast<IMethodInfoAdapter>()
+                    .ToArray();
+            }
+            
+            return base.GetMethods();
+        }
+
+        public override IMethodInfoAdapter[] GetMethods(BindingFlags flags)
+        {
+            if (IsGenericType && !IsGenericTypeDefinition && !IsGenericParameter)
+            {
+                var methods = _genericDefinition.GetMethods(flags);
+                return methods
+                    .Select(method => method.Instantiate(MakeInstantiationDict(), this))
+                    .Cast<IMethodInfoAdapter>()
+                    .ToArray();
+            }
+            
+            return base.GetMethods(flags);
+        }
+
+        public override IConstructorInfoAdapter[] GetConstructors()
+        {
+            if (IsGenericType && !IsGenericTypeDefinition && !IsGenericParameter)
+            {
+                var constructors = _genericDefinition.GetConstructors();
+                return constructors
+                    .Select(method => method.Instantiate(MakeInstantiationDict(), this))
+                    .Cast<IConstructorInfoAdapter>()
+                    .ToArray();
+            }
+            
+            return base.GetConstructors();
         }
 
         public ITypeAdapter CreateType()
@@ -232,17 +380,17 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
             DeclarationKind declarationKind = DeclarationKind.Struct;
             if (IsClass) declarationKind = DeclarationKind.Class;
-            else if (IsInterface) declarationKind = DeclarationKind.Interface;
+            if (IsInterface) declarationKind = DeclarationKind.Interface;
             
             var nestedTypes = _netstedTypes
                 .Values
                 .Select(type => (type as RoslynTypeBuilderAdapter).CreateDeclaration())
                 .ToImmutableArray();
-            
+
             Declaration = new SingleTypeDeclaration(
                 declarationKind,
                 Name,
-                0,
+                _genericParameters.Length + _genericArguments.Length,
                 declarationModifiers,
                 typeDeclarationFlags,
                 null,
@@ -254,6 +402,22 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             );
 
             return Declaration;
+        }
+
+        private Dictionary<ITypeAdapter, ITypeAdapter> MakeInstantiationDict()
+        {
+            if (_instantiationDict is null)
+            {
+                _instantiationDict = new Dictionary<ITypeAdapter, ITypeAdapter>();
+                var parameters = _genericDefinition.GetGenericArguments();
+                Debug.Assert(parameters.Length == _genericArguments.Length);
+                for (int i = 0; i < parameters.Length; ++i)
+                {
+                    _instantiationDict.Add(parameters[i], _genericArguments[i]);
+                }
+            }
+
+            return _instantiationDict;
         }
     }
 }

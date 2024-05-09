@@ -19,7 +19,9 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         
         public ISymbolDocumentWriter DefineDocument(string url, Guid language, Guid languageVendor, Guid documentType)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("RoslynModuleBuilderAdapter.DefineDocument not implemented");
+            return null;
+            //throw new NotImplementedException();
         }
 
         public ITypeBuilderAdapter DefineType(string name, TypeAttributes attr, ITypeAdapter parent)

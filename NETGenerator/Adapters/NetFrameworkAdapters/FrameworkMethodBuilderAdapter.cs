@@ -5,6 +5,7 @@ using System.Reflection.Emit;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
+#if !NETCOREAPP
     public class FrameworkMethodBuilderAdapter: FrameworkMethodInfoAdapter, IMethodBuilderAdapter
     {
         public new MethodBuilder Adaptee { get; }
@@ -65,4 +66,5 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
             return Adaptee.GetGenericArguments().Select(t => t.GetAdapter()).ToArray();
         }
     }
+#endif
 }

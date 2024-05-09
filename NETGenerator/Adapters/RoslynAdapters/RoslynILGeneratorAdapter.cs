@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.SymbolStore;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -127,10 +128,10 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             return builder;
         }
 
-        public void MarkSequencePoint(ISymbolDocumentWriter document, int startLine, int startColumn, int endLine,
-            int endColumn)
+        public void MarkSequencePoint(ISymbolDocumentWriter document, int startLine, int startColumn, int endLine, int endColumn)
         {
             _instructions.Add(Instruction.MarkSequencePoint);
+            _arguments.Add(null);
         }
 
         public Label DefineLabel()
@@ -150,7 +151,9 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         public Label BeginExceptionBlock()
         {
             _instructions.Add(Instruction.BeginExceptionBlock);
-            return CreateLabel();
+            var label = CreateLabel();
+            _arguments.Add(label);
+            return label;
         }
 
         public void BeginCatchBlock(ITypeAdapter type)
@@ -162,18 +165,21 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         public void BeginFinallyBlock()
         {
             _instructions.Add(Instruction.BeginFinallyBlock);
+            _arguments.Add(null);
         }
 
         public void EndExceptionBlock()
         {
             _instructions.Add(Instruction.EndExceptionBlock);
+            _arguments.Add(null);
         }
 
-        internal ILBuilder Realize(PEModuleBuilder moduleBuilder, OptimizationLevel optimizationLevel)
+        internal ILBuilder Realize(PEModuleBuilder moduleBuilder, OptimizationLevel optimizationLevel, bool isVoid)
         {
+            Debug.Assert(_instructions.Count == _arguments.Count);
             var converter = new ILConverter(_instructions, _arguments);
 
-            return converter.Realize(moduleBuilder, optimizationLevel);
+            return converter.Realize(moduleBuilder, optimizationLevel, isVoid);
         }
 
         private Label CreateLabel()

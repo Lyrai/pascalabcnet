@@ -2,6 +2,7 @@
 
 namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
+#if !NETCOREAPP
     public class FrameworkEventBuilderAdapter: IEventBuilderAdapter
     {
         public EventBuilder Adaptee { get; }
@@ -41,4 +42,5 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
             return Adaptee.Equals(adapter.Adaptee);
         }
     }
+#endif
 }

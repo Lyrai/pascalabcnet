@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Reflection.Emit;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
@@ -10,11 +11,15 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         public bool IsIn { get; }
         public bool IsOut { get; }
         public bool IsOptional { get; }
+        public ITypeAdapter ParameterType { get; }
+        public ParameterAttributes Attributes { get; }
 
-        public RoslynParameterBuilderAdapter(string name, ParameterAttributes attributes, int position)
+        public RoslynParameterBuilderAdapter(string name, ParameterAttributes attributes, int position, ITypeAdapter type)
         {
             Name = name;
             Position = position;
+            ParameterType = type;
+            Attributes = attributes;
             if ((attributes & ParameterAttributes.In) != 0)
             {
                 IsIn = true;
@@ -38,12 +43,24 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         public void SetCustomAttribute(IConstructorInfoAdapter constructor, byte[] binaryAttribute)
         {
-            throw new System.NotImplementedException();
+            Console.WriteLine("RoslynParameterBuilderAdapter.SetCustomAttribute not implemented");
+            //throw new System.NotImplementedException();
         }
 
         public void SetConstant(object value)
         {
-            throw new System.NotImplementedException();
+            Console.WriteLine("RoslynParameterBuilderAdapter.SetConstant not implemented");
+            //throw new System.NotImplementedException();
+        }
+
+        public IParameterInfoAdapter GetInfo()
+        {
+            return new RoslynParameterInfoAdapter(this);
+        }
+
+        public IParameterBuilderAdapter WithTypeSubstituted(ITypeAdapter type)
+        {
+            return new RoslynParameterBuilderAdapter(Name, Attributes, Position, type);
         }
     }
 }

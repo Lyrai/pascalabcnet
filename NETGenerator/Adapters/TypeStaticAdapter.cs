@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection.Emit;
 using PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters;
+using PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters;
 
 namespace PascalABCCompiler.NETGenerator.Adapters
 {
@@ -10,10 +11,15 @@ namespace PascalABCCompiler.NETGenerator.Adapters
         
         public static TypeCode GetTypeCode(ITypeAdapter type)
         {
-#if NET472
+#if !NETCOREAPP
             return Type.GetTypeCode((type as FrameworkTypeAdapter)?.Adaptee);
 #else
-            return TypeCode.Boolean;
+            if (type is FrameworkTypeAdapter framework)
+            {
+                return Type.GetTypeCode(framework.Adaptee);
+            }
+
+            return TypeCode.Object;
 #endif
         }
 

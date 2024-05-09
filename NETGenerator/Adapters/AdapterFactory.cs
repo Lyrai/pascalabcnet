@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using Microsoft.CodeAnalysis.CSharp.Emit;
 using PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters;
+using PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters;
 
 namespace PascalABCCompiler.NETGenerator.Adapters
 {
@@ -39,11 +40,6 @@ namespace PascalABCCompiler.NETGenerator.Adapters
         public static IMethodBuilderAdapter MethodBuilder(MethodBuilder builder)
         {
             return Instance().CreateMethodBuilder(builder);
-        }
-        
-        public static IMemberInfoAdapter MemberInfo(MemberInfo info)
-        {
-            return Instance().CreateMemberInfo(info);
         }
         
         public static IFieldInfoAdapter FieldInfo(FieldInfo info)
@@ -144,6 +140,11 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             return Instance().CreateGenericTypeParameterBuilder(builder);
         }
 
+        public static IAssemblyBuilderAdapter AssemblyBuilder(string assemblyName, string path)
+        {
+            return Instance().CreateAssemblyBuilder(assemblyName, path);
+        }
+
 
 
         protected abstract IAppDomainAdapter CreateAppDomain();
@@ -175,16 +176,19 @@ namespace PascalABCCompiler.NETGenerator.Adapters
         protected abstract IILGeneratorAdapter CreateILGenerator(ILGenerator generator);
         protected abstract AssemblyAdapter CreateAssembly(Assembly assembly);
         protected abstract IModuleAdapter CreateModule(Module module);
+        protected abstract IAssemblyBuilderAdapter CreateAssemblyBuilder(string assemblyName, string path);
 
 
         private static AdapterFactory Instance()
         {
             if (!(_instance is object))
             {
-#if NET472
+#if !NETCOREAPP
                 _instance = new FrameworkAdapterFactory();
+                System.Console.WriteLine("Using framework");
 #else
                 _instance =  new RoslynAdapterFactory();
+                Console.WriteLine("Using roslyn");
 #endif
             }
 

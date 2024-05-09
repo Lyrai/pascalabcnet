@@ -3,6 +3,15 @@ using System.Reflection.Emit;
 
 namespace PascalABCCompiler.NETGenerator.Adapters
 {
+    #if NETCOREAPP
+    public enum PEFileKinds
+    {
+        ConsoleApplication,
+        WindowApplication,
+        Dll
+    }
+    #endif
+    
     public interface IAssemblyBuilderAdapter: IAdapter
     {
         void DefineVersionInfoResource(string product, string productVersion, string company, string copyright, string trademark);

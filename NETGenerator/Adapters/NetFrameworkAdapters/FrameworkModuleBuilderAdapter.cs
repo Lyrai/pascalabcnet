@@ -7,6 +7,7 @@ using System.Reflection.Emit;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
+#if !NETCOREAPP
     public class FrameworkModuleBuilderAdapter: FrameworkModuleAdapter, IModuleBuilderAdapter
     {
         public ModuleBuilder Adaptee { get; }
@@ -55,4 +56,5 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
             Adaptee.DefineManifestResource(filename, stream, attributes);
         }
     }
+#endif
 }

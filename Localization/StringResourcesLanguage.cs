@@ -53,6 +53,7 @@ namespace PascalABCCompiler
             	string name = Path.Combine(di.FullName, ".LanguageName");
                 if (File.Exists(name))
                 {
+                    Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
                     using (StreamReader sr = new StreamReader(name, System.Text.Encoding.GetEncoding(1251)))
                     { 
                         string lname = sr.ReadLine();

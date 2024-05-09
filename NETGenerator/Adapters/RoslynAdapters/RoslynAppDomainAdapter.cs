@@ -6,7 +6,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
     {
         public IAssemblyBuilderAdapter DefineDynamicAssembly(AssemblyName name, string path)
         {
-            return new RoslynAssemblyBuilderAdapter(name.Name, path);
+            return AdapterFactory.AssemblyBuilder(name.Name, path);
         }
     }
 }

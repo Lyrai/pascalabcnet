@@ -5,6 +5,7 @@ using System.Reflection.Emit;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
+#if !NETCOREAPP
     public class FrameworkILGeneratorAdapter: IILGeneratorAdapter
     {
         public ILGenerator Adaptee { get; }
@@ -150,4 +151,5 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
             return Adaptee.Equals(generator.Adaptee);
         }
     }
+#endif
 }

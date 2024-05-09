@@ -16,6 +16,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         public RoslynModuleAdapter(AssemblyAdapter assembly)
         {
             Assembly = assembly;
+            _members = new Dictionary<string, ITypeAdapter>();
         }
         
         public ITypeAdapter GetType(string name)

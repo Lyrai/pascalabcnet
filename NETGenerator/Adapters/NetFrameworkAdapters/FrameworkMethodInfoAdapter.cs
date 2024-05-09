@@ -7,14 +7,17 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
     {
         public ITypeAdapter ReturnType => Adaptee.ReturnType.GetAdapter();
         public ITypeAdapter DeclaringType => Adaptee.DeclaringType.GetAdapter();
-        public string Name => Adaptee.Name;
+        public override string Name => Adaptee.Name;
         public int MetadataToken => Adaptee.MetadataToken;
         public bool IsStatic => Adaptee.IsStatic;
         public bool IsVirtual => Adaptee.IsVirtual;
         public bool IsAbstract => Adaptee.IsAbstract;
         public bool IsSpecialName => Adaptee.IsSpecialName;
-        public bool IsPublic => Adaptee.IsPublic;
-        public bool IsPrivate => Adaptee.IsPrivate;
+        public override bool IsPublic => Adaptee.IsPublic;
+        public override bool IsPrivate => Adaptee.IsPrivate;
+        public bool IsGenericMethod => Adaptee.IsGenericMethod;
+        public bool IsGenericMethodDefinition => Adaptee.IsGenericMethodDefinition;
+        public MethodAttributes Attributes => Adaptee.Attributes;
         public new MethodInfo Adaptee { get; }
 
         public FrameworkMethodInfoAdapter(MethodInfo info): base(info)
@@ -51,6 +54,11 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
         public void Invoke(object obj, object[] parameters)
         {
             Adaptee.Invoke(obj, parameters);
+        }
+
+        public ITypeAdapter[] GetGenericArguments()
+        {
+            return Adaptee.GetGenericArguments().Select(elem => elem.GetAdapter()).ToArray();
         }
     }
 }

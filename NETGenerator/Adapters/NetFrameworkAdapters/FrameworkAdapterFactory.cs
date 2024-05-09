@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis.CSharp.Emit;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
+#if !NETCOREAPP
     internal class FrameworkAdapterFactory: AdapterFactory
     {
         protected override IAppDomainAdapter CreateAppDomain()
@@ -90,6 +91,11 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
             return new FrameworkModuleAdapter(module);
         }
 
+        protected override IAssemblyBuilderAdapter CreateAssemblyBuilder(string assemblyName, string path)
+        {
+            throw new NotSupportedException();
+        }
+
         protected override IModuleBuilderAdapter CreateModuleBuilder(ModuleBuilder builder)
         {
             return new FrameworkModuleBuilderAdapter(builder);
@@ -143,4 +149,5 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
             return new FrameworkILGeneratorAdapter(generator);
         }
     }
+#endif
 }

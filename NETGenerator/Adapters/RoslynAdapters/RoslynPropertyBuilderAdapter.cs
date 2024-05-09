@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Reflection.Emit;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
@@ -21,6 +23,12 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         public void SetSetMethod(IMethodBuilderAdapter method)
         {
             _setMethod = method;
+        }
+
+        public override IMemberInfoAdapter Instantiate(Dictionary<ITypeAdapter, ITypeAdapter> typeArguments,
+            ITypeAdapter declaringType)
+        {
+            throw new NotImplementedException();
         }
     }
 }

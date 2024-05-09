@@ -1,9 +1,14 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
-    public class FrameworkMemberInfoAdapter: IMemberInfoAdapter
+    public abstract class FrameworkMemberInfoAdapter: IMemberInfoAdapter
     {
+        public abstract string Name { get; }
+        public abstract bool IsPublic { get; }
+        public abstract bool IsPrivate { get; }
         public  MemberInfo Adaptee { get; }
 
         public FrameworkMemberInfoAdapter(MemberInfo info)
@@ -24,6 +29,12 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
             }
 
             return Adaptee.Equals(info.Adaptee);
+        }
+
+        public IMemberInfoAdapter Instantiate(Dictionary<ITypeAdapter, ITypeAdapter> typeArguments,
+            ITypeAdapter declaringType)
+        {
+            throw new NotSupportedException();
         }
     }
 }

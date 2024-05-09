@@ -3,6 +3,15 @@ using System.Reflection.Emit;
 
 namespace PascalABCCompiler.NETGenerator.Adapters
 {
+    #if NETCOREAPP
+    public class UnmanagedMarshal
+    {
+        public static UnmanagedMarshal DefineUnmanagedMarshal(object obj)
+        {
+            return new UnmanagedMarshal();
+        }
+    }
+    #endif
     public interface IMethodBuilderAdapter: IMethodInfoAdapter
     {
         IILGeneratorAdapter GetILGenerator();
