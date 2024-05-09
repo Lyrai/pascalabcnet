@@ -80,12 +80,30 @@
     <Reference Update="System.Xml">
       <Name>System.XML</Name>
     </Reference>
-    <ProjectReference Include="..\CompilerTools\CompilerTools.csproj" />
-    <ProjectReference Include="..\Errors\Errors.csproj" />
-    <ProjectReference Include="..\SemanticTree\SemanticTree.csproj" />
-    <ProjectReference Include="..\TreeConverter\TreeConverter.csproj" />
     <ProjectReference Include="..\roslyn-compilers\src\Compilers\Core\Portable\Microsoft.CodeAnalysis.csproj" />
     <ProjectReference Include="..\roslyn-compilers\src\Compilers\CSharp\Portable\Microsoft.CodeAnalysis.CSharp.csproj" />
+    <ProjectReference Include="..\CompilerTools\CompilerTools.csproj">
+      <Project>{A25D26FB-3043-4BCF-833E-E3F4C3BE795E}</Project>
+      <Name>CompilerTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Errors\Errors.csproj">
+      <Project>{44A01F9E-DCE7-470C-AAE5-C3DE0CCBEE3B}</Project>
+      <Name>Errors</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SemanticTree\SemanticTree.csproj">
+      <Name>SemanticTree</Name>
+      <Project>{613E0DDA-AA8A-437C-AC45-507B47429FF9}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\StringConstants\StringConstants.csproj">
+      <Project>{e8aefbf9-0113-4fa4-be45-6cda555498b7}</Project>
+      <Name>StringConstants</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TreeConverter\TreeConverter.csproj">
+      <Project>{1C9C945A-586D-42A2-A06B-65D84FA7FF78}</Project>
+      <Name>TreeConverter</Name>
+    </ProjectReference>
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <!--<Import Project="..\roslyn-compilers\src\Compilers\CSharp\csc\CscCommandLine.projitems" Label="Shared" />-->
   <ItemGroup>

@@ -2085,6 +2085,22 @@ namespace PascalABCCompiler.SyntaxTree
 		{
 		}
 
+		public virtual void pre_do_visit(ref_var_def_statement _ref_var_def_statement)
+		{
+		}
+
+		public virtual void post_do_visit(ref_var_def_statement _ref_var_def_statement)
+		{
+		}
+
+		public virtual void pre_do_visit(let_var_expr _let_var_expr)
+		{
+		}
+
+		public virtual void post_do_visit(let_var_expr _let_var_expr)
+		{
+		}
+
 		public override void visit(expression _expression)
 		{
 			DefaultVisit(_expression);
@@ -4307,6 +4323,24 @@ namespace PascalABCCompiler.SyntaxTree
 			DefaultVisit(_lambda_any_type_node_syntax);
 			pre_do_visit(_lambda_any_type_node_syntax);
 			post_do_visit(_lambda_any_type_node_syntax);
+		}
+
+		public override void visit(ref_var_def_statement _ref_var_def_statement)
+		{
+			DefaultVisit(_ref_var_def_statement);
+			pre_do_visit(_ref_var_def_statement);
+			visit(ref_var_def_statement.var);
+			visit(ref_var_def_statement.initial_value);
+			post_do_visit(_ref_var_def_statement);
+		}
+
+		public override void visit(let_var_expr _let_var_expr)
+		{
+			DefaultVisit(_let_var_expr);
+			pre_do_visit(_let_var_expr);
+			visit(let_var_expr.id);
+			visit(let_var_expr.ex);
+			post_do_visit(_let_var_expr);
 		}
 	}
 

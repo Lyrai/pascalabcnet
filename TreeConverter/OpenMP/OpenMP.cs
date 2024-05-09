@@ -943,10 +943,10 @@ namespace PascalABCCompiler.TreeConverter
                 VarFinderSyntaxVisitor VFvis = new VarFinderSyntaxVisitor(syntax_body, syntax_tree_visitor.context, true);
                 SyntaxTree.compiler_directive dir = syntax_tree_visitor.DirectivesToNodesLinks[for_node];
                 //if (DirInfosTable[dir].ErrorName == "WARNING_IN_CLAUSE_PARAMETERS_REPEATED_VARS")
-                //    syntax_tree_visitor.AddWarning(new Errors.CommonWarning(StringResources.Get(DirInfosTable[dir].ErrorName), for_node.source_context.FileName, DirInfosTable[dir].SC.begin_position.line_num, DirInfosTable[dir].SC.begin_position.column_num));
+                //    syntax_tree_visitor.AddWarning(new Errors.CommonWarning(StringResources.Get(DirInfosTable[dir].ErrorName), for_node.source_context.file_name, DirInfosTable[dir].SC.begin_position.line_num, DirInfosTable[dir].SC.begin_position.column_num));
                 //else if (DirInfosTable[dir].ErrorName == "ERROR_IN_CLAUSE_PARAMETERS")
                 //{
-                //    syntax_tree_visitor.AddWarning(new Errors.CommonWarning(StringResources.Get(DirInfosTable[dir].ErrorName), for_node.source_context.FileName, DirInfosTable[dir].SC.begin_position.line_num, DirInfosTable[dir].SC.begin_position.column_num));
+                //    syntax_tree_visitor.AddWarning(new Errors.CommonWarning(StringResources.Get(DirInfosTable[dir].ErrorName), for_node.source_context.file_name, DirInfosTable[dir].SC.begin_position.line_num, DirInfosTable[dir].SC.begin_position.column_num));
                 //}
                 //else
                
@@ -1057,10 +1057,10 @@ namespace PascalABCCompiler.TreeConverter
                     SyntaxTree.compiler_directive dir = syntax_tree_visitor.DirectivesToNodesLinks[syntax_stmts];
                     
                     //if (DirInfosTable[dir].ErrorName == "WARNING_IN_CLAUSE_PARAMETERS_REPEATED_VARS")
-                    //    syntax_tree_visitor.AddWarning(new Errors.CommonWarning(StringResources.Get(DirInfosTable[dir].ErrorName), syntax_stmts.source_context.FileName, DirInfosTable[dir].SC.begin_position.line_num, DirInfosTable[dir].SC.begin_position.column_num));
+                    //    syntax_tree_visitor.AddWarning(new Errors.CommonWarning(StringResources.Get(DirInfosTable[dir].ErrorName), syntax_stmts.source_context.file_name, DirInfosTable[dir].SC.begin_position.line_num, DirInfosTable[dir].SC.begin_position.column_num));
                     //else if (DirInfosTable[dir].ErrorName == "ERROR_IN_CLAUSE_PARAMETERS")
                     //{
-                    //    syntax_tree_visitor.AddWarning(new Errors.CommonWarning(StringResources.Get(DirInfosTable[dir].ErrorName), syntax_stmts.source_context.FileName, DirInfosTable[dir].SC.begin_position.line_num, DirInfosTable[dir].SC.begin_position.column_num));
+                    //    syntax_tree_visitor.AddWarning(new Errors.CommonWarning(StringResources.Get(DirInfosTable[dir].ErrorName), syntax_stmts.source_context.file_name, DirInfosTable[dir].SC.begin_position.line_num, DirInfosTable[dir].SC.begin_position.column_num));
                     //}
                     //else
                     if (DirInfosTable[dir].ErrorName != null)
@@ -1205,6 +1205,7 @@ namespace PascalABCCompiler.TreeConverter
             }
             return null;
         }
+
         private static SyntaxTree.type_definition get_diapason(type_node sem_type)
         {
             if (sem_type is compiled_type_node)
@@ -1223,6 +1224,7 @@ namespace PascalABCCompiler.TreeConverter
             }
             return null;
         }
+
         /// <summary>
         /// Возвращает по семантическому типу соответсвующий ему синтаксический тип
         /// </summary>
@@ -2060,7 +2062,7 @@ namespace PascalABCCompiler.TreeConverter
             SyntaxTree.if_node result = new PascalABCCompiler.SyntaxTree.if_node();
             SyntaxTree.un_expr ue = new PascalABCCompiler.SyntaxTree.un_expr();
             ue.operation_type = PascalABCCompiler.SyntaxTree.Operators.LogicalNOT;
-            ue.subnode = new SyntaxTree.ident(TreeConverter.compiler_string_consts.OMP_NESTED);
+            ue.subnode = new SyntaxTree.ident(StringConstants.OMP_NESTED);
             result.condition = ue;
 
             SyntaxTree.assign AssignInParVar = new PascalABCCompiler.SyntaxTree.assign();

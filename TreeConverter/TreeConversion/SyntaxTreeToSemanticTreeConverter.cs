@@ -8,15 +8,19 @@
  *
  ***************************************************************************/
 
+using PascalABCCompiler.TreeRealization;
 using System;
 using System.Collections.Generic;
+using PascalABCCompiler.TreeConverter;
+using System.IO;
 
 namespace PascalABCCompiler.TreeConverter
 {
 	public class SyntaxTreeToSemanticTreeConverter 
 	{
-        private PascalABCCompiler.TreeConverter.syntax_tree_visitor stv=new PascalABCCompiler.TreeConverter.syntax_tree_visitor();
-
+        private PascalABCCompiler.TreeConverter.syntax_tree_visitor stv = new syntax_tree_visitor();
+        private PascalABCCompiler.TreeConverter.TreeConversion.SyntaxTreeVisitorsController stvController = 
+            new PascalABCCompiler.TreeConverter.TreeConversion.SyntaxTreeVisitorsController();
         public SyntaxTreeToSemanticTreeConverter()
         {
             //(ssyy) запоминаем visitor
@@ -24,7 +28,7 @@ namespace PascalABCCompiler.TreeConverter
         }
 
         //TODO: Разобраться, где использутеся.
-		public SymbolTable.TreeConverterSymbolTable SymbolTable
+        public SymbolTable.TreeConverterSymbolTable SymbolTable
 		{
 			get
 			{
@@ -75,15 +79,16 @@ namespace PascalABCCompiler.TreeConverter
             PascalABCCompiler.TreeRealization.unit_node_list UsedUnits, List<Errors.Error> ErrorsList, List<Errors.CompilerWarning> WarningsList, PascalABCCompiler.Errors.SyntaxError parser_error,
             System.Collections.Hashtable bad_nodes, TreeRealization.using_namespace_list namespaces, Dictionary<SyntaxTree.syntax_tree_node,string> docs, bool debug, bool debugging, bool for_intellisense, List<TreeRealization.var_definition_node> CompiledVariables)
 		{
+            stv = stvController.SelectVisitor(Path.GetExtension(SyntaxUnit.file_name));
             //convertion_data_and_alghoritms.__i = 0;
-			stv.parser_error=parser_error;
+            stv.parser_error=parser_error;
             stv.bad_nodes_in_syntax_tree = bad_nodes;
 			stv.referenced_units=UsedUnits;
 			//stv.comp_units=UsedUnits;
 			//stv.visit(SyntaxUnit
             //stv.interface_using_list = namespaces;
-            stv.using_list.clear();
-            stv.interface_using_list.clear();
+            stv.using_list.Clear();
+            stv.interface_using_list.Clear();
             stv.using_list.AddRange(namespaces);
             stv.current_document = new TreeRealization.document(SyntaxUnit.file_name);
             stv.ErrorsList = ErrorsList;
@@ -95,14 +100,15 @@ namespace PascalABCCompiler.TreeConverter
             stv.for_intellisense = for_intellisense;
 			SystemLibrary.SystemLibrary.syn_visitor = stv;
             SetSemanticRules(SyntaxUnit);
-            
+
 
             foreach (SyntaxTree.compiler_directive cd in SyntaxUnit.compiler_directives)
-                cd.visit(stv);
+                stv.ProcessNode(cd);
 
             stv.DirectivesToNodesLinks = CompilerDirectivesToSyntaxTreeNodesLinker.BuildLinks(SyntaxUnit, ErrorsList);  //MikhailoMMX добавил передачу списка ошибок (02.10.10)
 
-            SyntaxUnit.visit(stv);
+            stv.ProcessNode(SyntaxUnit);
+            
             CompiledVariables.AddRange(stv.CompiledVariables);
             /*SyntaxTree.program_module pmod=SyntaxUnit as SyntaxTree.program_module;
 			if (pmod!=null)
@@ -128,12 +134,13 @@ namespace PascalABCCompiler.TreeConverter
             PascalABCCompiler.Errors.SyntaxError parser_error, System.Collections.Hashtable bad_nodes, TreeRealization.using_namespace_list interface_namespaces, TreeRealization.using_namespace_list imlementation_namespaces,
            Dictionary<SyntaxTree.syntax_tree_node,string> docs, bool debug, bool debugging, bool for_intellisense, List<TreeRealization.var_definition_node> CompiledVariables)
 		{
-			//if (ErrorsList.Count>0) throw ErrorsList[0];
-			stv.parser_error=parser_error;
+            stv = stvController.SelectVisitor(Path.GetExtension(SyntaxUnit.file_name));
+            //if (ErrorsList.Count>0) throw ErrorsList[0];
+            stv.parser_error=parser_error;
             stv.bad_nodes_in_syntax_tree = bad_nodes;
             stv.referenced_units = UsedUnits;
 
-            stv.using_list.clear();
+            stv.using_list.Clear();
             stv.using_list.AddRange(interface_namespaces);
             stv.interface_using_list.AddRange(interface_namespaces);
             stv.using_list.AddRange(imlementation_namespaces);
@@ -153,8 +160,8 @@ namespace PascalABCCompiler.TreeConverter
 			{
                 throw new PascalABCCompiler.TreeConverter.CompilerInternalError("Program has not implementation part");
 			}
-            //TODO: Переделать, чтобы Сашин код работал с common_unit_node.
-			stv.compiled_unit=(PascalABCCompiler.TreeRealization.common_unit_node)SemanticUnit;
+
+			stv.compiled_unit = SemanticUnit;
             stv.current_document = new TreeRealization.document(SyntaxUnit.file_name);
 
             foreach (SyntaxTree.compiler_directive cd in umod.compiler_directives)
@@ -165,6 +172,7 @@ namespace PascalABCCompiler.TreeConverter
 			//stv.visit(SyntaxUnit);
 			//return stv.compiled_unit;
 		}
+
 		public void Reset()
 		{
 			stv.reset();

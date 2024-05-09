@@ -123,8 +123,13 @@
   </ItemGroup>
   <PropertyGroup />
   <ItemGroup>
-    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.421302">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+    <ProjectReference Include="..\Compiler\Compiler.csproj">
+      <Project>{1e42361a-eda3-4872-88af-a3aaf600d36d}</Project>
+      <Name>Compiler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LanguageIntegrator\LanguageIntegrator.csproj">
+      <Project>{a48d9069-d569-4110-9252-a10f139b669b}</Project>
+      <Name>LanguageIntegrator</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

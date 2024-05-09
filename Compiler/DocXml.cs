@@ -24,7 +24,7 @@ namespace PascalABCCompiler
             try
             {
                 this.cu = cu;
-                is_assembly = cu.SyntaxTree is SyntaxTree.program_module || Compiler.is_dll(cu.SyntaxTree);
+                is_assembly = cu.SyntaxTree is SyntaxTree.program_module || Compiler.IsDll(cu.SyntaxTree);
                 XmlWriterSettings settings = new XmlWriterSettings();
                 settings.Encoding = Encoding.UTF8;
                 settings.Indent = true;
@@ -364,7 +364,7 @@ namespace PascalABCCompiler
 		
 		private string get_delegate_name(common_type_node ctn)
 		{
-			common_method_node cmn = ctn.find_first_in_type(compiler_string_consts.invoke_method_name).sym_info as common_method_node;
+			common_method_node cmn = ctn.find_first_in_type(StringConstants.invoke_method_name).sym_info as common_method_node;
 			StringBuilder sb = new StringBuilder();
 			if (cmn.return_value_type != null)
 				sb.Append("@function");
