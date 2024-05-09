@@ -53,6 +53,7 @@ namespace PascalABCCompiler
             	string name = Path.Combine(di.FullName, ".LanguageName");
                 if (File.Exists(name))
                 {
+                    Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
                     using (StreamReader sr = new StreamReader(name, System.Text.Encoding.GetEncoding(1251)))
                     { 
                         string lname = sr.ReadLine();
@@ -99,18 +100,29 @@ namespace PascalABCCompiler
 
         public static void LoadDefaultConfig()
         {
-        	ConfigDirectory = Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().ManifestModule.FullyQualifiedName),"Lng");
-            if (AccessibleLanguages.Count > 0)
-                if (DefaultLanguage != null)
-            	{
-                    CurrentLanguageName = DefaultLanguage;
-                    CurrentTwoLetterISO = DefaultTwoLetterISO;
-            	}
-                else
-                {
-                    CurrentLanguageName = AccessibleLanguages[0];
-                    CurrentTwoLetterISO = twoLetterISOLanguages[0];
-                }
+            var baseDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().ManifestModule.FullyQualifiedName);
+            var directory = Path.Combine(baseDirectory, "Lng");
+            if (!Directory.Exists(directory))
+            {
+                directory = Path.Combine(Directory.GetParent(baseDirectory).FullName, "Lng");
+            }
+
+            ConfigDirectory = directory;
+            if (AccessibleLanguages.Count == 0)
+            {
+                return;
+            }
+
+            if (DefaultLanguage != null)
+            {
+                CurrentLanguageName = DefaultLanguage;
+                CurrentTwoLetterISO = DefaultTwoLetterISO;
+            }
+            else
+            {
+                CurrentLanguageName = AccessibleLanguages[0];
+                CurrentTwoLetterISO = twoLetterISOLanguages[0];
+            }
         }
 
         private static string currentLanguageName = null;

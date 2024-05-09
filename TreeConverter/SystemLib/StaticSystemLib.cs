@@ -1172,6 +1172,7 @@ namespace PascalABCCompiler.SystemLibrary
 
             _uint64_type = compiled_type_node.get_type_node(typeof(ulong), symtab);
             _uint64_type.SetName(compiler_string_consts.ulong_type_name);
+            
 
             _icloneable_interface = compiled_type_node.get_type_node(typeof(ICloneable), symtab);
             _ilist_interface = compiled_type_node.get_type_node(typeof(IList), symtab);
@@ -1184,9 +1185,6 @@ namespace PascalABCCompiler.SystemLibrary
             _icollection1_interface = compiled_type_node.get_type_node(typeof(ICollection<>));
             _ienumerable1_interface = compiled_type_node.get_type_node(typeof(IEnumerable<>));
             _assert_method = compiled_function_node.get_compiled_method(typeof(System.Diagnostics.Debug).GetMethod("Assert",new Type[1]{typeof(bool)}));
-            _decimal_type = compiled_type_node.get_type_node(typeof(decimal), symtab);
-            //_decimal_type.SetName(compiler_string_consts.decimal_type_name);
-            make_assign_operator(_decimal_type, SemanticTree.basic_function_type.objassign);
 
             _bool_type = compiled_type_node.get_type_node(typeof(bool), symtab);
             _bool_type.SetName(compiler_string_consts.bool_type_name);
@@ -1281,10 +1279,10 @@ namespace PascalABCCompiler.SystemLibrary
             //_int_div = make_common_binary_operation(compiler_string_consts.div_name, _integer_type, _integer_type, _integer_type,
             //    SemanticTree.basic_function_type.ddiv, _real_type);
             //Опрерации сравнения.
-            _int_gr=make_binary_operator(compiler_string_consts.gr_name, _integer_type, SemanticTree.basic_function_type.igr, _bool_type);
             _int_greq=make_binary_operator(compiler_string_consts.greq_name, _integer_type, SemanticTree.basic_function_type.igreq, _bool_type);
-            _int_sm=make_binary_operator(compiler_string_consts.sm_name, _integer_type, SemanticTree.basic_function_type.ism, _bool_type);
             _int_smeq=make_binary_operator(compiler_string_consts.smeq_name, _integer_type, SemanticTree.basic_function_type.ismeq, _bool_type);
+            _int_gr=make_binary_operator(compiler_string_consts.gr_name, _integer_type, SemanticTree.basic_function_type.igr, _bool_type);
+            _int_sm=make_binary_operator(compiler_string_consts.sm_name, _integer_type, SemanticTree.basic_function_type.ism, _bool_type);
             _int_eq=make_binary_operator(compiler_string_consts.eq_name, _integer_type, SemanticTree.basic_function_type.ieq, _bool_type);
             _int_noteq=make_binary_operator(compiler_string_consts.noteq_name, _integer_type, SemanticTree.basic_function_type.inoteq, _bool_type);
             //Логические опреции.
@@ -2001,12 +1999,15 @@ namespace PascalABCCompiler.SystemLibrary
             _double_divassign = make_binary_operator(compiler_string_consts.divassign_name, _double_type);
 
 
-
-
+            
             mark_type_as_ordinal(_integer_type, SemanticTree.basic_function_type.iinc, SemanticTree.basic_function_type.idec,
                 SemanticTree.basic_function_type.isinc, SemanticTree.basic_function_type.isdec,
                 new int_const_node(int.MinValue,null), new int_const_node(int.MaxValue,null), create_emty_function(_integer_type,null), int_to_int);
-			
+            
+            _decimal_type = compiled_type_node.get_type_node(typeof(decimal), symtab);
+            //_decimal_type.SetName(compiler_string_consts.decimal_type_name);
+            make_assign_operator(_decimal_type, SemanticTree.basic_function_type.objassign);
+            
             mark_type_as_ordinal(_uint_type, SemanticTree.basic_function_type.uiinc, SemanticTree.basic_function_type.uidec,
                 SemanticTree.basic_function_type.uisinc, SemanticTree.basic_function_type.uisdec,
                 new uint_const_node(uint.MinValue, null), new uint_const_node(uint.MaxValue, null), _uint_to_int, uint_to_int);
