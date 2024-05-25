@@ -8,6 +8,7 @@ using System.Reflection.Metadata;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeGen;
 using Microsoft.CodeAnalysis.CSharp.Emit;
+using Microsoft.CodeAnalysis.CSharp.Symbols;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 {
@@ -85,6 +86,10 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         public void Emit(OpCode opcode, IConstructorInfoAdapter constructor)
         {
+            if (constructor.DeclaringType is RoslynGenericTypeAdapter generic && generic.Adaptee.IsUnboundGenericType)
+            {
+                Console.WriteLine("Here");
+            }
             _instructions.Add(Instruction.Emit);
             _arguments.Add(new EmitInstruction(opcode, constructor));
         }
@@ -174,10 +179,10 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             _arguments.Add(null);
         }
 
-        internal ILBuilder Realize(PEModuleBuilder moduleBuilder, OptimizationLevel optimizationLevel, bool isVoid)
+        internal ILBuilder Realize(PEModuleBuilder moduleBuilder, MethodSymbol method, OptimizationLevel optimizationLevel, bool isVoid)
         {
             Debug.Assert(_instructions.Count == _arguments.Count);
-            var converter = new ILConverter(_instructions, _arguments);
+            var converter = new ILConverter(_instructions, _arguments, method);
 
             return converter.Realize(moduleBuilder, optimizationLevel, isVoid);
         }

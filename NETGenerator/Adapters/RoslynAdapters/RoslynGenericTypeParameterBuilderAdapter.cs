@@ -10,6 +10,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         public override bool IsGenericType => !IsArray;
         public override bool IsGenericParameter => !IsArray;
 
+        private RoslynGenericTypeParameterBuilderAdapter _byRefType;
+
         public RoslynGenericTypeParameterBuilderAdapter(ITypeAdapter declaringType, string name): base(declaringType.Module, name, TypeAttributes.Class, null, null)
         {
         }
@@ -20,6 +22,20 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         protected RoslynGenericTypeParameterBuilderAdapter(ITypeBuilderAdapter declaringType, string name, TypeAttributes attr) : base(declaringType, name, attr)
         {
+        }
+        
+        public override ITypeAdapter MakeByRefType()
+        {
+            if (_byRefType is null)
+            {
+                _byRefType = new RoslynGenericTypeParameterBuilderAdapter(Module, Name + "&", Attributes, BaseType, _interfaces.ToArray());
+                if (!(Symbol is null))
+                {
+                    _byRefType.SetSymbol(Symbol);
+                }
+            }
+
+            return _byRefType;
         }
 
         public void SetInterfaceConstraints(ITypeAdapter[] interfaces)
@@ -43,6 +59,10 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         public void SetSymbol(TypeSymbol symbol)
         {
             Symbol = symbol;
+            if (!(_byRefType is null))
+            {
+                _byRefType.SetSymbol(Symbol);
+            }
         }
     }
 }

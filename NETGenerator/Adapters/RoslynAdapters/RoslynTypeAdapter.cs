@@ -20,7 +20,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         public bool IsPrimitive { get; }
         public bool IsSealed { get; }
         public bool IsAbstract { get; }
-        public bool IsByRef { get; }
+        public bool IsByRef => Name.EndsWith("&");
         public bool IsNotPublic { get; }
         public bool IsPublic { get; }
         public IMethodInfoAdapter DeclaringMethod { get; }
@@ -130,6 +130,15 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
                 .ToArray();
         }
 
+        public virtual IPropertyInfoAdapter[] GetProperties()
+        {
+            return _members
+                .Values
+                .Flatten()
+                .OfType<IPropertyInfoAdapter>()
+                .ToArray();
+        }
+
         public virtual IMethodInfoAdapter[] GetMethods(BindingFlags flags)
         {
             throw new System.NotImplementedException();
@@ -184,9 +193,35 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             throw new System.NotImplementedException();
         }
 
-        public IFieldInfoAdapter GetField(string name, BindingFlags flags)
+        public virtual IFieldInfoAdapter GetField(string name, BindingFlags flags)
         {
-            throw new System.NotImplementedException();
+            if (!_members.ContainsKey(name))
+            {
+                return null;
+            }
+
+            foreach (var field in _members[name].Where(member => member is IFieldInfoAdapter).Cast<IFieldInfoAdapter>())
+            {
+                if ((flags & BindingFlags.Public) != 0 && !field.IsPublic)
+                {
+                    continue;
+                }
+
+                if ((flags & BindingFlags.Static) != 0 && !field.IsStatic)
+                {
+                    continue;
+                }
+
+                if ((flags & BindingFlags.NonPublic) != 0 && field.IsPublic)
+                {
+                    continue;
+                }
+
+                return field;
+            }
+
+
+            return null;
         }
 
         public ITypeAdapter GetInterface(string name)
@@ -253,11 +288,9 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             throw new System.NotImplementedException();
         }
 
-        public ITypeAdapter MakeByRefType()
+        public virtual ITypeAdapter MakeByRefType()
         {
-            Console.WriteLine("RoslynTypeAdapter.MakeByRefType not implemented");
-            return this;
-            //throw new System.NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public object[] GetCustomAttributes(ITypeAdapter attributeType, bool inherit)

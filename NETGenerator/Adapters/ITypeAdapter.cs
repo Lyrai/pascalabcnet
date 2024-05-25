@@ -46,6 +46,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters
          ITypeAdapter GetGenericTypeDefinition();
          IPropertyInfoAdapter GetProperty(string name);
          IPropertyInfoAdapter GetProperty(string name, BindingFlags flags);
+         IPropertyInfoAdapter[] GetProperties();
          IFieldInfoAdapter GetField(string name, BindingFlags flags);
          ITypeAdapter GetInterface(string name);
          ITypeAdapter[] GetInterfaces();

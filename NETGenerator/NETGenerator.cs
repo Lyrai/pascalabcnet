@@ -8759,7 +8759,7 @@ namespace PascalABCCompiler.NETGenerator
                 for (int i = 0; i < value.indices.Length; i++)
                     value.indices[i].visit(this);
             }
-            if (elem_type.IsValueType && !TypeFactory.IsStandType(elem_type) && !TypeIsEnum(elem_type) || to.type.is_nullable_type)
+            if (to.type.is_nullable_type || elem_type.IsValueType && !TypeFactory.IsStandType(elem_type) && !TypeIsEnum(elem_type))
             {
                 if (value.indices == null)
                     il.Emit(OpCodes.Ldelema, elem_type);

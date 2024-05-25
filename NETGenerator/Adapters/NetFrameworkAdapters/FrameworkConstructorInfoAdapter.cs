@@ -5,9 +5,13 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
 {
     public class FrameworkConstructorInfoAdapter: FrameworkMemberInfoAdapter, IConstructorInfoAdapter
     {
-        public ITypeAdapter DeclaringType => Adaptee.DeclaringType.GetAdapter();
+        public virtual ITypeAdapter DeclaringType => Adaptee.DeclaringType.GetAdapter();
         public override bool IsPrivate => Adaptee.IsPrivate;
+        public override bool IsAssembly => Adaptee.IsAssembly;
+        public override bool IsFamily => Adaptee.IsFamily;
         public override bool IsPublic => Adaptee.IsPublic;
+        public override bool IsFamilyAndAssembly => Adaptee.IsFamilyAndAssembly;
+        public override bool IsFamilyOrAssembly => Adaptee.IsFamilyOrAssembly;
         public override string Name => Adaptee.Name;
         public bool IsStatic => Adaptee.IsStatic;
         public ITypeAdapter ReturnType => Adaptee.DeclaringType.GetAdapter();

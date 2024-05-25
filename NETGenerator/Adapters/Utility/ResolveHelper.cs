@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
 using PascalABCCompiler.NETGenerator.Adapters;
+using PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters;
 using Roslyn.Utilities;
 
 namespace NETGenerator.Adapters.Utility
@@ -27,20 +28,27 @@ namespace NETGenerator.Adapters.Utility
             return _assembly.GetNamedType(type);
         }
 
-        public static MethodSymbol ResolveMethod(IMethodBaseAdapter methodInfo)
+        public static MethodSymbol ResolveMethod(IMethodBaseAdapter methodInfo, TypeSymbol declaringType = null)
         {
             var argumentTypes = GetParameterTypes(methodInfo);
-            
-            var declaringType = methodInfo.DeclaringType;
             var methodName = methodInfo.Name;
-
-            var typeSymbol = ResolveType(declaringType);
+            
+            if(declaringType is null)
+            {
+                declaringType = ResolveType(methodInfo.DeclaringType);
+            }
+            
+            if (declaringType.IsUnboundGenericType())
+            {
+                declaringType = declaringType.ConstructedFrom() as TypeSymbol;
+            }
+            
             MethodSymbol methodSymbol;
 
             do
             {
-                methodSymbol = FindMethodInType(typeSymbol, methodName, argumentTypes);
-                typeSymbol = typeSymbol.BaseTypeNoUseSiteDiagnostics;
+                methodSymbol = FindMethodInType(declaringType, methodName, argumentTypes);
+                declaringType = declaringType.BaseTypeNoUseSiteDiagnostics;
             } while (methodSymbol is null);
 
             if (!methodSymbol.IsGenericMethod)
@@ -62,9 +70,9 @@ namespace NETGenerator.Adapters.Utility
             return FindMethodInType(declaringType, method.Name, GetParameterTypes(method));
         }
 
-        public static FieldSymbol ResolveField(IFieldInfoAdapter field)
+        public static FieldSymbol ResolveField(IFieldInfoAdapter field, TypeSymbol declaringType = null)
         {
-            var netType = ResolveType(field.DeclaringType);
+            var netType = declaringType ?? ResolveType(field.DeclaringType);
             return netType.GetMembers(field.Name).OfType<FieldSymbol>().First();
         }
         
@@ -95,6 +103,11 @@ namespace NETGenerator.Adapters.Utility
 
         private static MethodSymbol FindMethodInType(TypeSymbol type, string methodName, ITypeAdapter[] argumentTypes)
         {
+            /*if (type.IsUnboundGenericType())
+            {
+                type = type.ConstructedFrom() as TypeSymbol;
+            }*/
+            
             var members = type
                 .GetMembers(methodName)
                 .Where(symbol => symbol.GetParameters().Length == argumentTypes.Length)

@@ -77,8 +77,6 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             var result = new RoslynMethodBuilderAdapter(declaringType, Name, Attributes, ReturnType, null);
             result._parameterBuilders = instantiatedParameters;
 
-            // TODO Probably need to instantiate IL builder
-
             return result;
         }
 

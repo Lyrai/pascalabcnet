@@ -32,6 +32,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         
         public RoslynAssemblyBuilderAdapter(string assemblyName, string path)
         {
+            RoslynTest.Test();
             _compilation = CSharpCompilation.Create(assemblyName).WithReferences(
                 MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
                 MetadataReference.CreateFromFile(Assembly.Load("System.Console").Location),
@@ -150,11 +151,10 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             using (var stream = new StreamWriter(configPath))
             {
                 var netCoreVersion = Environment.Version;
-                var tfm = "net" + netCoreVersion.Major + "." + netCoreVersion.Minor;
                 stream.WriteLine(
 @"{
     ""runtimeOptions"": {
-        ""tfm"": """ + tfm + @""",
+        ""tfm"": ""net" +netCoreVersion.Major + "." + netCoreVersion.Minor + @""",
         ""framework"": {
             ""name"": ""Microsoft.NETCore.App"",
             ""version"": """ + netCoreVersion + @"""
@@ -263,6 +263,22 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
                     }
                 }
 
+                foreach (var property in type.GetProperties())
+                {
+                    var getMethod = property.GetGetMethod() is null ? null : members[property.GetGetMethod().Name][0];
+                    var setMethod = property.GetSetMethod() is null ? null : members[property.GetSetMethod().Name][0];
+                    
+                    var symbol = CreatePropertySymbol(property, typeSymbol, getMethod, setMethod);
+                    if (members.TryGetValue(property.Name, out var properties))
+                    {
+                        properties.Add(symbol);
+                    }
+                    else
+                    {
+                        members[property.Name] = new List<Symbol> { symbol };
+                    }
+                }
+
                 var membersDict = new Dictionary<string, ImmutableArray<Symbol>>();
                 foreach (var (key, value) in members)
                 {
@@ -277,6 +293,11 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
                 symbol.ResetMembersAndInitializers();
                 symbol.GetMembersAndInitializers();
             }
+        }
+
+        private PascalPropertySymbol CreatePropertySymbol(IPropertyInfoAdapter property, NamedTypeSymbol declaringType, Symbol getMethod, Symbol setMethod)
+        {
+            return new PascalPropertySymbol(property, declaringType, getMethod, setMethod);
         }
 
         private PascalMethodSymbol CreateMethodSymbol(IMethodInfoAdapter method, NamedTypeSymbol declaringType)
@@ -348,8 +369,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
                 {
                     var generator = (method as IMethodBuilderAdapter)?.GetILGenerator() ?? (method as IConstructorBuilderAdapter).GetILGenerator();
                     var builder = generator as RoslynILGeneratorAdapter;
-                    var realizedBuilder = builder.Realize(_moduleBuilderRaw, OptimizationLevel.Release, Equals(method.ReturnType, typeof(void).GetAdapter()));
                     var methodSymbol = ResolveHelper.ResolveMethodInType(typeSymbol, method);
+                    var realizedBuilder = builder.Realize(_moduleBuilderRaw, methodSymbol, OptimizationLevel.Release, Equals(method.ReturnType, typeof(void).GetAdapter()));
                     var methodBody = new MethodBody(
                         realizedBuilder.RealizedIL,
                         realizedBuilder.MaxStack,

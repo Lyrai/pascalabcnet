@@ -19,6 +19,10 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         public bool IsSpecialName { get; }
         public override bool IsPublic { get; }
         public override bool IsPrivate { get; }
+        public override bool IsAssembly { get; }
+        public override bool IsFamily { get; }
+        public override bool IsFamilyAndAssembly { get; }
+        public override bool IsFamilyOrAssembly { get; }
         public bool IsGenericMethod { get; protected set; }
         public bool IsGenericMethodDefinition { get; protected set; }
         public MethodAttributes Attributes { get; }
@@ -32,12 +36,16 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             ReturnType = returnType ?? typeof(void).GetAdapter();
             Attributes = attributes;
             
-            IsPublic = (attributes & MethodAttributes.Public) != 0;
+            IsPublic = (attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.Public;
             IsStatic = (attributes & MethodAttributes.Static) != 0;
             IsVirtual = (attributes & MethodAttributes.Virtual) != 0;
-            IsPrivate = (attributes & MethodAttributes.Private) != 0;
+            IsPrivate = (attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.Private;
             IsAbstract = (attributes & MethodAttributes.Abstract) != 0;
             IsSpecialName = (attributes & MethodAttributes.SpecialName) != 0;
+            IsFamily = (attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.Family;
+            IsAssembly = (attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.Assembly;
+            IsFamilyAndAssembly = (attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.FamANDAssem;
+            IsFamilyOrAssembly = (attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.FamORAssem;
             IsGenericMethod = false;
         }
 

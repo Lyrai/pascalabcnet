@@ -33,7 +33,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters
 
     internal abstract class PascalMethodBaseSymbol : SourceMemberMethodSymbol
     {
-        public override TypeWithAnnotations ReturnTypeWithAnnotations { get; }
+        public override TypeWithAnnotations ReturnTypeWithAnnotations => _returnTypeWithAnnotations;
         public override ImmutableArray<ParameterSymbol> Parameters => _parameterSymbols;
         public override string Name { get; }
         public override bool IsVararg => false;
@@ -43,19 +43,24 @@ namespace PascalABCCompiler.NETGenerator.Adapters
 
         private ImmutableArray<ParameterSymbol> _parameterSymbols;
         private LexicalSortKey _sortKey;
+        protected TypeWithAnnotations _returnTypeWithAnnotations;
         
         public PascalMethodBaseSymbol(IMethodBaseAdapter method, NamedTypeSymbol containingType, bool isIterator)
             : base(containingType, null, NoLocation.Singleton, isIterator)
         {
             Name = method.Name;
-            ReturnTypeWithAnnotations = TypeWithAnnotations.Create(ResolveHelper.ResolveType(method.ReturnType));
+            _returnTypeWithAnnotations = TypeWithAnnotations.Create(ResolveHelper.ResolveType(method.ReturnType));
             _sortKey = new LexicalSortKey(0, LexicalSortCounter.Counter++);
             
             DeclarationModifiers = DeclarationModifiers.None;
             
-            if ((method.Attributes & MethodAttributes.Public) != 0) DeclarationModifiers |= DeclarationModifiers.Public;
-            else if ((method.Attributes & MethodAttributes.Private) != 0) DeclarationModifiers |= DeclarationModifiers.Private;
-            else DeclarationModifiers |= DeclarationModifiers.Protected;
+            if (method.IsPublic) DeclarationModifiers |= DeclarationModifiers.Public;
+            else if (method.IsPrivate) DeclarationModifiers |= DeclarationModifiers.Private;
+            else if (method.IsFamily) DeclarationModifiers |= DeclarationModifiers.Protected;
+            else if (method.IsAssembly) DeclarationModifiers |= DeclarationModifiers.Internal;
+            else if (method.IsFamilyAndAssembly) DeclarationModifiers |= DeclarationModifiers.PrivateProtected;
+            else if (method.IsFamilyOrAssembly) DeclarationModifiers |= DeclarationModifiers.ProtectedInternal;
+            else DeclarationModifiers |= DeclarationModifiers.Private;
 
             if (method.IsStatic)
             {
@@ -118,9 +123,11 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             CreateTypeParameters(method);
             CreateParameters(method);
 
+            _returnTypeWithAnnotations = TypeWithAnnotations.Create(ResolveHelper.ResolveType(method.ReturnType));
+
             IsGenericMethod = method.IsGenericMethod;
             MethodChecksLockObject = new object();
-            
+
             if (method.IsAbstract)
             {
                 DeclarationModifiers |= DeclarationModifiers.Abstract;
@@ -203,6 +210,66 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             MakeFlags(ctor.IsStatic ? MethodKind.StaticConstructor : MethodKind.Constructor, DeclarationModifiers, false, false, false);
         }
     }
+    
+    internal class PascalPropertySymbol: PropertySymbol
+    {
+        public override Symbol ContainingSymbol { get; }
+        public override ImmutableArray<Location> Locations => ImmutableArray<Location>.Empty;
+        public override ImmutableArray<SyntaxReference> DeclaringSyntaxReferences =>
+            ImmutableArray<SyntaxReference>.Empty;
+        public override Accessibility DeclaredAccessibility { get; }
+        internal override ObsoleteAttributeData ObsoleteAttributeData => ObsoleteAttributeData.Uninitialized;
+        public override bool IsStatic { get; }
+        public override bool IsVirtual { get; }
+        public override bool IsOverride { get; }
+        public override bool IsAbstract { get; }
+        public override bool IsSealed { get; }
+        public override bool IsExtern { get; }
+        public override RefKind RefKind { get; }
+        public override TypeWithAnnotations TypeWithAnnotations { get; }
+        public override ImmutableArray<CustomModifier> RefCustomModifiers => ImmutableArray<CustomModifier>.Empty;
+        public override ImmutableArray<ParameterSymbol> Parameters => ImmutableArray<ParameterSymbol>.Empty;
+        public override bool IsIndexer { get; }
+        internal override bool IsRequired { get; }
+        internal override bool HasSpecialName { get; }
+        public override MethodSymbol GetMethod { get; }
+        public override MethodSymbol SetMethod { get; }
+        internal override CallingConvention CallingConvention { get; }
+        internal override bool MustCallMethodsDirectly { get; }
+        internal override bool HasUnscopedRefAttribute { get; }
+        public override string Name { get; }
+        public override ImmutableArray<PropertySymbol> ExplicitInterfaceImplementations =>
+            ImmutableArray<PropertySymbol>.Empty;
+        private LexicalSortKey _sortKey;
+        
+        public PascalPropertySymbol(IPropertyInfoAdapter property, TypeSymbol containing, Symbol getMethod, Symbol setMethod)
+        {
+            ContainingSymbol = containing;
+            CallingConvention = CallingConvention.HasThis;
+
+            GetMethod = getMethod as MethodSymbol;
+            SetMethod = setMethod as MethodSymbol;
+            Name = property.Name;
+
+            TypeWithAnnotations = TypeWithAnnotations.Create(ResolveHelper.ResolveType(property.PropertyType));
+            
+            if (property.IsPublic) DeclaredAccessibility = Accessibility.Public;
+            else if (property.IsPrivate) DeclaredAccessibility = Accessibility.Private;
+            else if (property.IsAssembly) DeclaredAccessibility = Accessibility.Internal;
+            else if (property.IsFamily) DeclaredAccessibility = Accessibility.Protected;
+            else if (property.IsFamilyAndAssembly) DeclaredAccessibility = Accessibility.ProtectedAndInternal;
+            else if (property.IsFamilyOrAssembly) DeclaredAccessibility = Accessibility.ProtectedOrInternal;
+            else DeclaredAccessibility = Accessibility.Private;
+            
+            
+            _sortKey = new LexicalSortKey(0, LexicalSortCounter.Counter++);
+        }
+        
+        internal override LexicalSortKey GetLexicalSortKey()
+        {
+            return _sortKey;
+        }
+    }
 
     class PascalParameterSymbol : ParameterSymbol
     {
@@ -254,9 +321,13 @@ namespace PascalABCCompiler.NETGenerator.Adapters
 
             _modifiers = DeclarationModifiers.None;
 
-            if ((field.Attributes & FieldAttributes.Public) != 0) _modifiers |= DeclarationModifiers.Public;
-            else if ((field.Attributes & FieldAttributes.Private) != 0) _modifiers |= DeclarationModifiers.Private;
-            else _modifiers |= DeclarationModifiers.Protected;
+            if (field.IsPublic) _modifiers |= DeclarationModifiers.Public;
+            else if (field.IsPrivate) _modifiers |= DeclarationModifiers.Private;
+            else if (field.IsFamily) _modifiers |= DeclarationModifiers.Protected;
+            else if (field.IsAssembly) _modifiers |= DeclarationModifiers.Internal;
+            else if (field.IsFamilyAndAssembly) _modifiers |= DeclarationModifiers.PrivateProtected;
+            else if (field.IsFamilyOrAssembly) _modifiers |= DeclarationModifiers.ProtectedInternal;
+            else _modifiers |= DeclarationModifiers.Private;
 
             if (field.IsStatic)
             {
@@ -397,6 +468,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (type is RoslynGenericTypeAdapter generic)
             {
                 return generic.Adaptee;
+                //return generic.Adaptee.IsUnboundGenericType ? generic.Adaptee.ConstructedFrom : generic.Adaptee;
             }
 
             string name = "";
@@ -438,7 +510,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters
                 currentNamespace = namespaces.Aggregate(currentNamespace, (current, ns) => current.GetMembers(ns).OfType<SourceNamespaceSymbol>().First());
             }
                 
-            return currentNamespace.GetMembers(type.Name).First() as SourceNamedTypeSymbol;
+            return currentNamespace.GetMembers(type.Name).FirstOrDefault() as SourceNamedTypeSymbol;
         }
     }
 }

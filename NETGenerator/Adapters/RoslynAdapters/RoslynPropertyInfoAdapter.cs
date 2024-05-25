@@ -8,8 +8,13 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
     {
         public override string Name { get; }
         public override bool IsPublic => true;
-        public override bool IsPrivate => true;
+        public override bool IsPrivate => false;
+        public override bool IsAssembly => false;
+        public override bool IsFamily => false;
+        public override bool IsFamilyAndAssembly => false;
+        public override bool IsFamilyOrAssembly => false;
         public PropertyAttributes Attributes { get; }
+        public ITypeAdapter PropertyType { get; protected set; }
         
         protected IMethodInfoAdapter _getMethod = null;
         protected IMethodInfoAdapter _setMethod = null;
@@ -19,12 +24,17 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             Name = name;
             Attributes = attributes;
         }
-
+        
         public IMethodInfoAdapter GetGetMethod()
         {
             return _getMethod;
         }
-        
+
+        public IMethodInfoAdapter GetSetMethod()
+        {
+            return _setMethod;
+        }
+
         public override IMemberInfoAdapter Instantiate(Dictionary<ITypeAdapter, ITypeAdapter> typeArguments,
             ITypeAdapter declaringType)
         {

@@ -28,11 +28,14 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             private Dictionary<ILocalBuilderAdapter, LocalDefinition> _localsByBuilder;
             private Dictionary<int, LocalDefinition> _localsByIndex;
             private PEModuleBuilder _moduleBuilder;
+            private MethodSymbol _method;
 
-            public ILConverter(List<Instruction> instructions, List<object> arguments)
+            public ILConverter(List<Instruction> instructions, List<object> arguments, MethodSymbol method)
             {
                 _instructions = instructions;
                 _arguments = arguments;
+                _method = method;
+                
                 _labels = new Dictionary<int, object>();
                 _localsByBuilder = new Dictionary<ILocalBuilderAdapter, LocalDefinition>();
                 _localsByIndex = new Dictionary<int, LocalDefinition>();
@@ -167,6 +170,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
                 
                 builder.Realize();
                 builder.FreeBasicBlocks();
+                argument.Dispose();
                 return builder;
             }
 
@@ -265,7 +269,10 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
             private void EmitMethod(ILBuilder builder, ILOpCode opcode, IMethodBaseAdapter method)
             {
-                var symbol = ResolveHelper.ResolveMethod(method);
+                var type = ResolveHelper.ResolveType(method.DeclaringType);
+                type = FixGenericTypeArgumentsIfNeeded(method.DeclaringType, type);
+                var symbol = ResolveHelper.ResolveMethod(method, type);
+                //var symbol = ResolveHelper.ResolveMethod(method);
                 var stackAdjustment = 0;
                 if (opcode == ILOpCode.Newobj)
                 {
@@ -318,12 +325,51 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             private ITypeReference GetToken(ITypeAdapter type)
             {
                 var symbol = ResolveHelper.ResolveType(type);
+                symbol = FixGenericTypeArgumentsIfNeeded(type, symbol);
                 return _moduleBuilder.Translate(symbol, null, DiagnosticBag.GetInstance());
+            }
+
+            private TypeSymbol FixGenericTypeArgumentsIfNeeded(ITypeAdapter type, TypeSymbol symbol)
+            {
+                if (type is RoslynGenericTypeAdapter generic && !generic.Adaptee.IsUnboundGenericType)
+                {
+                    var types = new List<TypeWithAnnotations>();
+                    bool flag = false;
+                    foreach (var typeArg in generic.Adaptee.TypeArgumentsWithAnnotationsNoUseSiteDiagnostics)
+                    {
+                        if (typeArg.Type is PascalTypeParameterSymbol param && param.ContainingSymbol is null)
+                        {
+                            var methodParameter = _method
+                                .TypeParameters
+                                .First(methParam => methParam.Name == param.Name);
+
+                            if (!(methodParameter is null))
+                            {
+                                flag = true;
+                            }
+                            
+                            types.Add(TypeWithAnnotations.Create(methodParameter));
+                        }
+                        else
+                        {
+                            types.Add(typeArg);
+                        }
+                    }
+
+                    if(flag)
+                    {
+                        symbol = (symbol.ConstructedFrom() as NamedTypeSymbol).ConstructIfGeneric(types.ToImmutableArray());
+                    }
+                }
+
+                return symbol;
             }
     
             private IFieldReference GetToken(IFieldInfoAdapter field)
             {
-                var symbol = ResolveHelper.ResolveField(field);
+                var type = ResolveHelper.ResolveType(field.DeclaringType);
+                type = FixGenericTypeArgumentsIfNeeded(field.DeclaringType, type);
+                var symbol = ResolveHelper.ResolveField(field, type);
                 return _moduleBuilder.Translate(symbol, null, DiagnosticBag.GetInstance());
             }
 

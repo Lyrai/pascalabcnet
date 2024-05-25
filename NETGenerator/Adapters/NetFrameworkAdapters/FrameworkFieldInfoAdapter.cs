@@ -10,7 +10,11 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
         public bool IsStatic => Adaptee.IsStatic;
         public override string Name => Adaptee.Name;
         public override bool IsPrivate => Adaptee.IsPrivate;
+        public override bool IsAssembly => Adaptee.IsAssembly;
+        public override bool IsFamily => Adaptee.IsFamily;
         public override bool IsPublic => Adaptee.IsPublic;
+        public override bool IsFamilyAndAssembly => Adaptee.IsFamilyAndAssembly;
+        public override bool IsFamilyOrAssembly => Adaptee.IsFamilyOrAssembly;
         public ITypeAdapter DeclaringType => Adaptee.DeclaringType.GetAdapter();
         public FieldAttributes Attributes => Adaptee.Attributes;
         public new FieldInfo Adaptee { get; }

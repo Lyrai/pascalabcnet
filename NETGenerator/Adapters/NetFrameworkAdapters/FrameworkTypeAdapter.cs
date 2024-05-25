@@ -106,6 +106,11 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
             return Adaptee.GetProperty(name, flags).GetAdapter();
         }
 
+        public IPropertyInfoAdapter[] GetProperties()
+        {
+            return Adaptee.GetProperties().Select(property => property.GetAdapter()).ToArray();
+        }
+
         public IFieldInfoAdapter GetField(string name, BindingFlags flags)
         {
             return Adaptee.GetField(name, flags).GetAdapter();

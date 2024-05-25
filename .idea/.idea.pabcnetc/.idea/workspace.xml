@@ -11,35 +11,36 @@
   <component name="ChangeListManager">
     <list default="true" id="c7d8e511-b4d4-4b45-8aca-bb70e603e9e9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.pabcnetc/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.pabcnetc/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Compiler/Compiler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Compiler/Compiler.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Compiler/Compiler.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Compiler/Compiler.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LanguageIntegrator/LanguageIntegrator.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/LanguageIntegrator/LanguageIntegrator.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/IMemberInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/IMemberInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/IPropertyInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/IPropertyInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/ITypeAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/ITypeAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkConstructorInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkConstructorInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkFieldInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkFieldInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkMemberInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkMemberInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkMethodInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkMethodInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkPropertyInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkPropertyInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkTypeAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkTypeAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynAssemblyBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynAssemblyBuilderAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynConstructorInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynConstructorInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynFieldInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynFieldInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynGenericTypeAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynGenericTypeAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynGenericTypeParameterBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynGenericTypeParameterBuilderAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynILGeneratorAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynILGeneratorAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynMemberInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynMemberInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynMethodBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynMethodBuilderAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynMethodInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynMethodInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynPropertyBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynPropertyBuilderAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynPropertyInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynPropertyInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynTypeAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynTypeAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynTypeBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynTypeBuilderAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/TypeBuilderStaticAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/TypeBuilderStaticAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/ILConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/ILConverter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/ResolveHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/ResolveHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/RoslynSymbols.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/RoslynSymbols.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NETGenerator/NETGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/NETGenerator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Optimizer/Optimizer.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Optimizer/Optimizer.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Parsers/PascalABCParserNewSaushkin/PascalABCSaushkinParser.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Parsers/PascalABCParserNewSaushkin/PascalABCSaushkinParser.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SyntaxVisitors/SyntaxVisitors.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/SyntaxVisitors/SyntaxVisitors.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TreeConverter/TreeConverter.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/TreeConverter/TreeConverter.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/net472/Microsoft.CodeAnalysis.CSharp.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net472/Microsoft.CodeAnalysis.CSharp.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/net472/Microsoft.CodeAnalysis.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net472/Microsoft.CodeAnalysis.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/net6.0-windows/PascalABCParser.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net6.0-windows/PascalABCParser.deps.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/net6.0/Microsoft.CodeAnalysis.CSharp.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net6.0/Microsoft.CodeAnalysis.CSharp.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/net6.0/Microsoft.CodeAnalysis.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net6.0/Microsoft.CodeAnalysis.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/net6.0/NETGenerator.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net6.0/NETGenerator.deps.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/net6.0/PABCNETC.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net6.0/PABCNETC.deps.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/net6.0/PABCNETC.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net6.0/PABCNETC.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/net7.0-windows/YieldConversionSyntax.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net7.0-windows/YieldConversionSyntax.deps.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/net7.0-windows/YieldConversionSyntax.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net7.0-windows/YieldConversionSyntax.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/net7.0/Microsoft.CodeAnalysis.CSharp.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net7.0/Microsoft.CodeAnalysis.CSharp.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/net7.0/Microsoft.CodeAnalysis.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net7.0/Microsoft.CodeAnalysis.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/net7.0/NETGenerator.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net7.0/NETGenerator.deps.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/net7.0/PABCNETC.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net7.0/PABCNETC.deps.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/net7.0/PABCNETC.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net7.0/PABCNETC.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/net8.0/Microsoft.CodeAnalysis.CSharp.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Microsoft.CodeAnalysis.CSharp.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/net8.0/Microsoft.CodeAnalysis.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Microsoft.CodeAnalysis.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/net8.0/NETGenerator.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/NETGenerator.deps.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/net8.0/PABCNETC.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/PABCNETC.deps.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/net8.0/PABCNETC.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/PABCNETC.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pabcnetc.sln" beforeDir="false" afterPath="$PROJECT_DIR$/pabcnetc.sln" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,9 +51,28 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/3fa134a4f7024c6a9faff12697fb4fb9c8e8a0/8c/8a5db4a4/Activator.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/3fa134a4f7024c6a9faff12697fb4fb9c8e8a0/b4/a9c72e0c/CastCache.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/3fa134a4f7024c6a9faff12697fb4fb9c8e8a0/dd/069dba5d/RuntimeHelpers.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/LambdaAnySynToSemConverter/Properties/AssemblyInfo.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/NETGenerator/Adapters/AdapterFactory.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkParameterInfoAdapter.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynAdapterFactory.cs" root0="FORCE_HIGHLIGHTING" />
@@ -89,7 +109,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Project.PABCNETC-NET8.executor": "Debug",
+    ".NET Project.PABCNETC-NET8.executor": "Run",
     ".NET Project.PABCNETC.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -217,56 +237,73 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/pabcnetc/ConsoleCompiler.cs</url>
-          <line>158</line>
-          <properties documentPath="E:\Projects\pascalabcnet\pabcnetc\ConsoleCompiler.cs" initialLine="158" containingFunctionPresentation="Method 'ExecuteCommand'">
+          <condition expression="!types.ContainsKey(t)" language="C#" />
+          <url>file://$PROJECT_DIR$/NETGenerator/NETGenegratorTools.cs</url>
+          <line>136</line>
+          <properties documentPath="E:\Projects\pascalabcnet\NETGenerator\NETGenegratorTools.cs" initialLine="136" containingFunctionPresentation="Method 'IsStandType'">
             <startOffsets>
-              <option value="6251" />
+              <option value="8335" />
             </startOffsets>
             <endOffsets>
-              <option value="6267" />
+              <option value="8359" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="16" />
+          <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Compiler/Compiler.cs</url>
-          <line>3662</line>
-          <properties documentPath="E:\Projects\pascalabcnet\Compiler\Compiler.cs" initialLine="3662" containingFunctionPresentation="Method 'CompileUnit'">
+          <condition expression="_assembly is null" language="C#" />
+          <url>file://$PROJECT_DIR$/TreeConverter/NetWrappers/NetHelper.cs</url>
+          <line>447</line>
+          <properties documentPath="E:\Projects\pascalabcnet\TreeConverter\NetWrappers\NetHelper.cs" initialLine="447" containingFunctionPresentation="Method 'init_namespaces'">
             <startOffsets>
-              <option value="163585" />
+              <option value="15105" />
             </startOffsets>
             <endOffsets>
-              <option value="163689" />
+              <option value="15157" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="17" />
+          <option name="timeStamp" value="21" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ParserTools/ParsersController.cs</url>
-          <line>31</line>
-          <properties documentPath="E:\Projects\pascalabcnet\ParserTools\ParsersController.cs" initialLine="31" containingFunctionPresentation="Method 'LoadStandardParsers'">
+          <condition expression="info.Name == &quot;sw&quot;" language="C#" />
+          <url>file://$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkFieldInfoAdapter.cs</url>
+          <line>23</line>
+          <properties documentPath="E:\Projects\pascalabcnet\NETGenerator\Adapters\NetFrameworkAdapters\FrameworkFieldInfoAdapter.cs" initialLine="19" containingFunctionPresentation="Constructor 'FrameworkFieldInfoAdapter'">
             <startOffsets>
-              <option value="1092" />
+              <option value="1123" />
             </startOffsets>
             <endOffsets>
-              <option value="1204" />
+              <option value="1138" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="18" />
+          <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ParserTools/ParsersController.cs</url>
-          <line>61</line>
-          <properties documentPath="E:\Projects\pascalabcnet\ParserTools\ParsersController.cs" initialLine="61" containingFunctionPresentation="Method 'IntegrateParsersFromAssembly'">
+          <url>file://$PROJECT_DIR$/roslyn-compilers/src/Compilers/CSharp/Portable/Emitter/Model/PEModuleBuilder.cs</url>
+          <line>1255</line>
+          <properties documentPath="E:\Projects\pascalabcnet\roslyn-compilers\src\Compilers\CSharp\Portable\Emitter\Model\PEModuleBuilder.cs" initialLine="1255" containingFunctionPresentation="Method 'MemberVisibility'">
             <startOffsets>
-              <option value="2294" />
+              <option value="54039" />
             </startOffsets>
             <endOffsets>
-              <option value="2338" />
+              <option value="54110" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="19" />
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <condition expression="DeclaredAccessibility == Accessibility.NotApplicable" language="C#" />
+          <url>file://$PROJECT_DIR$/NETGenerator/Adapters/Utility/RoslynSymbols.cs</url>
+          <line>67</line>
+          <properties documentPath="E:\Projects\pascalabcnet\NETGenerator\Adapters\Utility\RoslynSymbols.cs" initialLine="66" containingFunctionPresentation="Constructor 'PascalMethodBaseSymbol'">
+            <startOffsets>
+              <option value="3331" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3332" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="30" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -120,6 +120,11 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             return field;
         }
 
+        public override ITypeAdapter MakeByRefType()
+        {
+            return new RoslynTypeBuilderAdapter(Module, FullName + "&", Attributes, BaseType, _interfaces.ToArray());
+        }
+
         public IConstructorBuilderAdapter DefineDefaultConstructor(MethodAttributes attributes)
         {
             return DefineConstructor(attributes, CallingConventions.Standard, null);
@@ -132,11 +137,6 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             {
                 throw new InvalidOperationException("Type has already been created");
             }
-            
-            /*if (FindMethodBySignature(name, parameterTypes) is object)
-            {
-                throw new InvalidOperationException("Method exists");
-            }*/
             
             var method = new RoslynMethodBuilderAdapter(this, name, attributes, returnType, parameterTypes);
             if(_members.TryGetValue(name, out var members))
@@ -267,6 +267,17 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             BaseType = type;
         }
 
+        public override IFieldInfoAdapter GetField(string name, BindingFlags flags)
+        {
+            if (IsGenericType && !IsGenericTypeDefinition && !IsGenericParameter)
+            {
+                var field = _genericDefinition.GetField(name, flags);
+                return field.Instantiate(MakeInstantiationDict(), this) as IFieldInfoAdapter;
+            }
+
+            return base.GetField(name, flags);
+        }
+
         public override IMethodInfoAdapter GetMethod(string name)
         {
             if (IsGenericType && !IsGenericTypeDefinition && !IsGenericParameter)
@@ -323,6 +334,20 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             }
             
             return base.GetMethods();
+        }
+        
+        public override IPropertyInfoAdapter[] GetProperties()
+        {
+            if (IsGenericType && !IsGenericTypeDefinition && !IsGenericParameter)
+            {
+                var properties = _genericDefinition.GetProperties();
+                return properties
+                    .Select(property => property.Instantiate(MakeInstantiationDict(), this))
+                    .Cast<IPropertyInfoAdapter>()
+                    .ToArray();
+            }
+            
+            return base.GetProperties();
         }
 
         public override IMethodInfoAdapter[] GetMethods(BindingFlags flags)

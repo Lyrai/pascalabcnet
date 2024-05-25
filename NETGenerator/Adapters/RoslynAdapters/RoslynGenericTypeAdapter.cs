@@ -8,12 +8,14 @@ using System.Reflection.Emit;
 using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
+using NETGenerator.Adapters.Utility;
+using PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 {
     internal class RoslynGenericTypeAdapter: ITypeAdapter
     {
-        public bool IsGenericType { get; }
+        public bool IsGenericType => true;
         public bool IsArray => Adaptee.IsArray();
         public bool IsGenericTypeDefinition { get; }
         public bool IsGenericParameter { get; }
@@ -25,7 +27,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         public bool IsPrimitive { get; }
         public bool IsSealed => Adaptee.IsSealed;
         public bool IsAbstract => Adaptee.IsAbstract;
-        public bool IsByRef => Adaptee.IsReferenceType;
+        public bool IsByRef => ConstructedFrom.IsByRef;
         public bool IsNotPublic { get; }
         public IMethodInfoAdapter DeclaringMethod => null;
         public string FullName => Adaptee.ContainingNamespace.QualifiedName + "." + Adaptee.MetadataName;
@@ -39,36 +41,104 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         public IModuleAdapter Module { get; }
         public TypeAttributes Attributes { get; }
         public Type ConstructedFrom { get; }
-        public NamedTypeSymbol Adaptee { get; }
+
+        public NamedTypeSymbol Adaptee
+        {
+            get
+            {
+                if (_instantiated)
+                {
+                    return _adaptee;
+                }
+
+                if (_argumentTypes is null || _argumentTypes.Length == 0)
+                {
+                    return _adaptee;
+                }
+
+                foreach (var typeParameter in _argumentTypes.Where(arg => arg is RoslynGenericTypeParameterBuilderAdapter builder && builder.Symbol is null))
+                {
+                    var _ = new PascalTypeParameterSymbol((RoslynGenericTypeParameterBuilderAdapter) typeParameter);
+                }
+                
+                var symbols = _argumentTypes.Select(ResolveHelper.ResolveType).ToArray();
+                if (symbols.Any(symbol => symbol is null))
+                {
+                    return _adaptee;
+                }
+                
+                var types = symbols.Select(symbol => TypeWithAnnotations.Create(symbol)).ToImmutableArray();
+                _adaptee = _adaptee.ConstructedFrom.ConstructIfGeneric(types);
+                _instantiated = true;
+                
+                return _adaptee;
+            }
+        }
+
         public IEnumerable<ITypeAdapter> ImplementedInterfaces => Enumerable.Empty<ITypeAdapter>();
+
+        private ITypeAdapter[] _argumentTypes;
+        private bool _instantiated;
+        private NamedTypeSymbol _adaptee;
+        private RoslynGenericTypeAdapter _constructedFromAdapter;
 
         public RoslynGenericTypeAdapter(AssemblySymbol assembly, Type type)
         {
-            Adaptee = assembly.GetTypeByMetadataName(type.Namespace + "." + type.Name, true, false, out _);
+            _adaptee = assembly.GetTypeByMetadataName(type.Namespace + "." + type.Name, true, false, out _);
             if (type.GenericTypeArguments.Length > 0)
             {
                 var arguments = type.GenericTypeArguments
-                        .Select(param => assembly.GetTypeByMetadataName(param.Namespace + "." + param.Name, true, false, out _) as TypeSymbol)
+                        .Select(param =>
+                        {
+                            if (param.IsGenericParameter)
+                            {
+                                return new PascalTypeParameterSymbol(
+                                    new RoslynGenericTypeParameterBuilderAdapter(param.GetAdapter(), param.Name));
+                            }
+
+                            return assembly.GetTypeByMetadataName(param.Namespace + "." + param.Name, true, false, out _)
+                                as TypeSymbol;
+                        })
                         .Select(param => TypeWithAnnotations.Create(param))
                         .ToImmutableArray();
                 
-                Adaptee = Adaptee.ConstructIfGeneric(arguments);
+                _adaptee = _adaptee.ConstructIfGeneric(arguments);
+                IsGenericTypeDefinition = false;
+                _instantiated = true;
             } 
             else
             {
-                Adaptee = Adaptee.ConstructUnboundGenericType();
+                _adaptee = _adaptee.ConstructUnboundGenericType();
+                IsGenericTypeDefinition = true;
+                _instantiated = false;
             }
             
             Debug.Assert(Adaptee is object);
             ConstructedFrom = type;
             Attributes = type.Attributes;
             BaseType = type.BaseType.GetAdapter();
+
+            _constructedFromAdapter = this;
         }
 
         private RoslynGenericTypeAdapter(RoslynGenericTypeAdapter source, ITypeAdapter[] genericTypes)
         {
             ConstructedFrom = source.ConstructedFrom;
-            Adaptee = source.Adaptee;
+            _adaptee = source._adaptee;
+            _argumentTypes = genericTypes;
+            _constructedFromAdapter = source;
+            
+            /*var symbols = genericTypes
+                .Select(ResolveHelper.ResolveType)
+                .Select(symbol => TypeWithAnnotations.Create(symbol))
+                .ToImmutableArray();
+
+            Adaptee = !ReferenceEquals(Adaptee, Adaptee.ConstructedFrom) 
+                ? Adaptee.ConstructedFrom.ConstructIfGeneric(symbols) 
+                : Adaptee.ConstructIfGeneric(symbols);*/
+            
+            IsGenericTypeDefinition = false;
+            _instantiated = false;
         }
         
         public IMethodInfoAdapter GetMethod(string name)
@@ -78,7 +148,26 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         public IMethodInfoAdapter GetMethod(string name, ITypeAdapter[] parameterTypes)
         {
-            throw new System.NotImplementedException();
+            var types = new List<Type>();
+            foreach (var parameterType in parameterTypes)
+            {
+                if (parameterType is FrameworkTypeAdapter framework)
+                {
+                    types.Add(framework.Adaptee);
+                } 
+                else if (parameterType is RoslynGenericTypeAdapter generic)
+                {
+                    types.Add(generic.ConstructedFrom);
+                }
+                else
+                {
+                    types.Add(null);
+                }
+            }
+
+            var method = ConstructedFrom.GetMethod(name, types.ToArray());
+            return new RoslynNativeGenericTypeMethodInfoAdapter(method, this);
+            //return method.GetAdapter();
         }
 
         public IMethodInfoAdapter GetMethod(string name, BindingFlags flags)
@@ -88,7 +177,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         public IMethodInfoAdapter[] GetMethods()
         {
-            throw new System.NotImplementedException();
+            return ConstructedFrom.GetMethods().Select(meth => new RoslynNativeGenericTypeMethodInfoAdapter(meth, this)).ToArray();
+            //return ConstructedFrom.GetMethods().Select(meth => meth.GetAdapter()).ToArray();
         }
 
         public IMethodInfoAdapter[] GetMethods(BindingFlags flags)
@@ -98,7 +188,26 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         public IConstructorInfoAdapter GetConstructor(ITypeAdapter[] parameterTypes)
         {
-            throw new System.NotImplementedException();
+            var types = new List<Type>();
+            foreach (var type in parameterTypes)
+            {
+                if (type is FrameworkTypeAdapter framework)
+                {
+                    types.Add(framework.Adaptee);
+                }
+                else if(type is RoslynGenericTypeAdapter generic)
+                {
+                    types.Add(generic.ConstructedFrom);
+                }
+                else
+                {
+                    types.Add(null);
+                }
+            }
+
+            var ctor = ConstructedFrom.GetConstructor(types.ToArray());
+            return new RoslynNativeGenericTypeConstructorInfoAdapter(ctor, this);
+            //return ctor.GetAdapter();
         }
 
         public IConstructorInfoAdapter[] GetConstructors()
@@ -123,7 +232,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         public ITypeAdapter GetGenericTypeDefinition()
         {
-            throw new System.NotImplementedException();
+            return _constructedFromAdapter;
         }
 
         public IPropertyInfoAdapter GetProperty(string name)
@@ -134,6 +243,11 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         public IPropertyInfoAdapter GetProperty(string name, BindingFlags flags)
         {
             throw new System.NotImplementedException();
+        }
+
+        public IPropertyInfoAdapter[] GetProperties()
+        {
+            throw new NotImplementedException();
         }
 
         public IFieldInfoAdapter GetField(string name, BindingFlags flags)

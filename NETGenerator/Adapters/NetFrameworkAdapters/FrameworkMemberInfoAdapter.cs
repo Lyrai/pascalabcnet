@@ -9,6 +9,10 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
         public abstract string Name { get; }
         public abstract bool IsPublic { get; }
         public abstract bool IsPrivate { get; }
+        public abstract bool IsAssembly { get; }
+        public abstract bool IsFamily { get; }
+        public abstract bool IsFamilyAndAssembly { get; }
+        public abstract bool IsFamilyOrAssembly { get; }
         public  MemberInfo Adaptee { get; }
 
         public FrameworkMemberInfoAdapter(MemberInfo info)

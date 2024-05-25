@@ -6,7 +6,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
     public class FrameworkMethodInfoAdapter: FrameworkMemberInfoAdapter, IMethodInfoAdapter
     {
         public ITypeAdapter ReturnType => Adaptee.ReturnType.GetAdapter();
-        public ITypeAdapter DeclaringType => Adaptee.DeclaringType.GetAdapter();
+        public virtual ITypeAdapter DeclaringType => Adaptee.DeclaringType.GetAdapter();
         public override string Name => Adaptee.Name;
         public int MetadataToken => Adaptee.MetadataToken;
         public bool IsStatic => Adaptee.IsStatic;
@@ -15,6 +15,10 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
         public bool IsSpecialName => Adaptee.IsSpecialName;
         public override bool IsPublic => Adaptee.IsPublic;
         public override bool IsPrivate => Adaptee.IsPrivate;
+        public override bool IsAssembly => Adaptee.IsAssembly;
+        public override bool IsFamily => Adaptee.IsFamily;
+        public override bool IsFamilyAndAssembly => Adaptee.IsFamilyAndAssembly;
+        public override bool IsFamilyOrAssembly => Adaptee.IsFamilyOrAssembly;
         public bool IsGenericMethod => Adaptee.IsGenericMethod;
         public bool IsGenericMethodDefinition => Adaptee.IsGenericMethodDefinition;
         public MethodAttributes Attributes => Adaptee.Attributes;

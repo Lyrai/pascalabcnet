@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters;
 using PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters;
@@ -14,15 +15,15 @@ namespace PascalABCCompiler.NETGenerator.Adapters
 #if !NETCOREAPP
             return TypeBuilder.GetMethod((type as FrameworkTypeAdapter).Adaptee, (method as FrameworkMethodInfoAdapter).Adaptee).GetAdapter();
 #else
-            if (type is RoslynGenericTypeAdapter native)
+            /*if (type is RoslynGenericTypeAdapter native)
             {
                 return TypeBuilder.GetMethod(native.ConstructedFrom, (method as FrameworkMethodInfoAdapter).Adaptee).GetAdapter();
             }
             
             if (type is RoslynTypeBuilderAdapter source)
-            {
-                return source.GetMethod(method.Name, method.GetParameters().Select(param => param.ParameterType).ToArray());
-            }
+            {*/
+                return type.GetMethod(method.Name, method.GetParameters().Select(param => param.ParameterType).ToArray());
+            //}
 
             return null;
 #endif
@@ -35,7 +36,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters
 #else
             if (type is RoslynGenericTypeAdapter native)
             {
-                return TypeBuilder.GetConstructor(native.ConstructedFrom, (constructor as FrameworkConstructorInfoAdapter).Adaptee).GetAdapter();
+                //return TypeBuilder.GetConstructor(native.ConstructedFrom, (constructor as FrameworkConstructorInfoAdapter).Adaptee).GetAdapter();
+                return native.GetConstructor(constructor.GetParameters().Select(param => param.ParameterType).ToArray());
             }
             
             if (type is RoslynTypeBuilderAdapter source)
@@ -51,8 +53,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters
 #if !NETCOREAPP
             return TypeBuilder.GetField((type as FrameworkTypeAdapter).Adaptee, (field as FrameworkFieldInfoAdapter).Adaptee).GetAdapter();
 #else
-            Console.WriteLine("TypeBuilderStaticAdapter.GetField not implemented");
-            return null;
+            return type.GetField(field.Name, BindingFlags.Default);
 #endif
         }
     }
