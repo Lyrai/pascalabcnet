@@ -10,37 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c7d8e511-b4d4-4b45-8aca-bb70e603e9e9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.pabcnetc/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.pabcnetc/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/IMemberInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/IMemberInfoAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/IPropertyInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/IPropertyInfoAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/ITypeAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/ITypeAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkConstructorInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkConstructorInfoAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkFieldInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkFieldInfoAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkMemberInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkMemberInfoAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkMethodInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkMethodInfoAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkPropertyInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkPropertyInfoAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkTypeAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkTypeAdapter.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynAssemblyBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynAssemblyBuilderAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynConstructorInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynConstructorInfoAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynFieldInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynFieldInfoAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynGenericTypeAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynGenericTypeAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynGenericTypeParameterBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynGenericTypeParameterBuilderAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynILGeneratorAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynILGeneratorAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynMemberInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynMemberInfoAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynMethodBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynMethodBuilderAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynMethodInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynMethodInfoAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynPropertyBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynPropertyBuilderAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynPropertyInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynPropertyInfoAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynTypeAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynTypeAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynTypeBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynTypeBuilderAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/TypeBuilderStaticAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/TypeBuilderStaticAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/ILConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/ILConverter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/ResolveHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/ResolveHelper.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/RoslynSymbols.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/RoslynSymbols.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/NETGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/NETGenerator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/net6.0/PABCNETC.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net6.0/PABCNETC.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/net7.0/PABCNETC.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net7.0/PABCNETC.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/net8.0/PABCNETC.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/PABCNETC.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/RoslynTest.cs" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -32,7 +32,6 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         
         public RoslynAssemblyBuilderAdapter(string assemblyName, string path)
         {
-            RoslynTest.Test();
             _compilation = CSharpCompilation.Create(assemblyName).WithReferences(
                 MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
                 MetadataReference.CreateFromFile(Assembly.Load("System.Console").Location),
