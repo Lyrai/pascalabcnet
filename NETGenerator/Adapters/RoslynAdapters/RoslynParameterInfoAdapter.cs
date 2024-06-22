@@ -17,7 +17,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         public RoslynParameterInfoAdapter(RoslynParameterBuilderAdapter builder)
         {
             ParameterType = builder.ParameterType;
-            Name = builder.Name;
+            Name = builder.Name ?? "";
             Position = builder.Position;
             IsByRef = builder.ParameterType.Name.EndsWith("&");
         }

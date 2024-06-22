@@ -35,7 +35,10 @@ namespace PascalABCCompiler
 		public static string ReadFileContent(string fileName, Encoding encoding)
 		{
             if (encoding == null)
-                encoding = System.Text.Encoding.GetEncoding(1251);
+            {
+	            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+	            encoding = System.Text.Encoding.GetEncoding(1251);
+            }
 			using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
 				return ReadFileContent(fs, ref encoding);
 			}

@@ -28,11 +28,6 @@ namespace PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters
         {
             Adaptee = info;
         }
-        
-        public IMethodInfoAdapter MakeGenericMethod(ITypeAdapter type)
-        {
-            return Adaptee.MakeGenericMethod((type as FrameworkTypeAdapter).Adaptee).GetAdapter();
-        }
 
         public IMethodInfoAdapter MakeGenericMethod(ITypeAdapter[] types)
         {

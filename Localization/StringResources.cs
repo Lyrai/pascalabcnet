@@ -610,6 +610,7 @@ namespace PascalABCCompiler
                 ResourceManager ResourceManager = new ResourceManager("PascalABCCompiler.DefaultLang", System.Reflection.Assembly.GetExecutingAssembly());
                 MemoryStream ms = new MemoryStream((byte[])ResourceManager.GetObject("DefaultLanguage", System.Threading.Thread.CurrentThread.CurrentCulture));
                 ms.Seek(0, SeekOrigin.Begin);
+                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
                 LoadFile(new StreamReader(ms,Encoding.GetEncoding(1251)));
             }
         }

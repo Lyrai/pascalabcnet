@@ -972,15 +972,9 @@ var __initialized := false;
 
 procedure __InitModule;
 begin
-  MainForm.Shown += (o,e)->
-  begin
-    MainForm.Hide;
-    BackColor := MainForm.BackColor;
-  end;
-  
-  //MainForm.Invoke(_HideInternal); // было до 08.05.24
+  MainForm.Invoke(_HideInternal);
   //MainForm.Hide;
-  //MainForm.Invoke(_InternalAssignBackColor);
+  MainForm.Invoke(_InternalAssignBackColor);
   //BackColor := MainForm.BackColor;
   
   LabelReadyColor  := RGB(95,109,154);

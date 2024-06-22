@@ -13,7 +13,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         public virtual bool IsGenericTypeDefinition { get; }
         public virtual bool IsGenericParameter { get; }
         public bool IsValueType { get; }
-        public bool IsPointer { get; }
+        public bool IsPointer => Name.EndsWith("*");
         public bool IsEnum { get; }
         public bool IsInterface { get; }
         public bool IsClass { get; }
@@ -29,7 +29,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         public string Namespace { get; }
         public string AssemblyQualifiedName { get; }
         public AssemblyAdapter Assembly { get; }
-        public int GenericParameterPosition { get; }
+        public virtual int GenericParameterPosition { get; }
         public ITypeAdapter BaseType { get; protected set; }
         public ITypeAdapter DeclaringType { get; }
         public IModuleAdapter Module { get; }
@@ -39,8 +39,9 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         protected Dictionary<string, List<IMemberInfoAdapter>> _members = new Dictionary<string, List<IMemberInfoAdapter>>();
         protected Dictionary<string, ITypeAdapter> _netstedTypes = new Dictionary<string, ITypeAdapter>();
         protected List<ITypeAdapter> _interfaces;
+        protected ITypeAdapter _constructedFrom;
 
-        protected RoslynTypeAdapter(IModuleAdapter module, string name, TypeAttributes attr, ITypeAdapter parent, ITypeAdapter[] interfaces)
+        protected RoslynTypeAdapter(IModuleAdapter module, string name, TypeAttributes attr, ITypeAdapter parent, ITypeAdapter[] interfaces, ITypeAdapter constructedFrom = null)
         {
             if (name.Contains('`'))
             {
@@ -56,9 +57,10 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             IsNotPublic = !IsPublic;
             BaseType = IsInterface ? parent : parent ?? typeof(object).GetAdapter();
             Module = module;
-            Assembly = module.Assembly;
+            Assembly = module?.Assembly;
             IsClass = true;
             Attributes = attr;
+            _constructedFrom = constructedFrom;
         }
 
         protected RoslynTypeAdapter(ITypeBuilderAdapter declaringType, string name, TypeAttributes attr)
@@ -226,15 +228,15 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         public ITypeAdapter GetInterface(string name)
         {
-            throw new System.NotImplementedException();
+            return _interfaces.FirstOrDefault(i => i.Name == name);
         }
 
         public ITypeAdapter[] GetInterfaces()
         {
-            throw new System.NotImplementedException();
+            return _interfaces.ToArray();
         }
 
-        public ITypeAdapter[] GetNestedTypes()
+        public virtual ITypeAdapter[] GetNestedTypes()
         {
             throw new System.NotImplementedException();
         }
@@ -263,7 +265,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             throw new System.NotImplementedException();
         }
 
-        public int GetArrayRank()
+        public virtual int GetArrayRank()
         {
             throw new System.NotImplementedException();
         }
@@ -280,12 +282,18 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         public ITypeAdapter MakeArrayType(int rank)
         {
-            throw new System.NotImplementedException();
+            ITypeAdapter type = this;
+            for (int i = 0; i < rank; ++i)
+            {
+                type = new RoslynArrayTypeAdapter(type);
+            }
+
+            return type;
         }
 
-        public ITypeAdapter MakePointerType()
+        public virtual ITypeAdapter MakePointerType()
         {
-            throw new System.NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public virtual ITypeAdapter MakeByRefType()

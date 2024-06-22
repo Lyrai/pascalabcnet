@@ -6,14 +6,24 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 {
     internal class RoslynGenericTypeParameterBuilderAdapter: RoslynTypeAdapter, IGenericTypeParameterBuilderAdapter
     {
+        public override int GenericParameterPosition { get; }
         public TypeSymbol Symbol { get; private set; }
-        public override bool IsGenericType => !IsArray;
-        public override bool IsGenericParameter => !IsArray;
+        public override bool IsGenericType => true;
+        public override bool IsGenericParameter => true;
+        public IAdapter DeclaringAdapter { get; }
 
         private RoslynGenericTypeParameterBuilderAdapter _byRefType;
 
-        public RoslynGenericTypeParameterBuilderAdapter(ITypeAdapter declaringType, string name): base(declaringType.Module, name, TypeAttributes.Class, null, null)
+        public RoslynGenericTypeParameterBuilderAdapter(ITypeAdapter declaringType, string name, int position): base(declaringType?.Module, name, TypeAttributes.Class, null, null)
         {
+            GenericParameterPosition = position;
+            DeclaringAdapter = declaringType;
+        }
+        
+        public RoslynGenericTypeParameterBuilderAdapter(IMethodInfoAdapter declaringMethod, string name, int position): base(declaringMethod?.DeclaringType.Module, name, TypeAttributes.Class, null, null)
+        {
+            GenericParameterPosition = position;
+            DeclaringAdapter = declaringMethod;
         }
         
         private RoslynGenericTypeParameterBuilderAdapter(IModuleAdapter module, string name, TypeAttributes attr, ITypeAdapter parent, ITypeAdapter[] interfaces) : base(module, name, attr, parent, interfaces)

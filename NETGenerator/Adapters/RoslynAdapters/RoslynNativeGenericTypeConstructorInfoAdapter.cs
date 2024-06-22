@@ -1,16 +1,19 @@
 ﻿using System.Reflection;
+using Microsoft.CodeAnalysis.CSharp.Symbols;
+using NETGenerator.Adapters.Utility;
 using PascalABCCompiler.NETGenerator.Adapters.NetFrameworkAdapters;
 
 namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 {
-    public class RoslynNativeGenericTypeConstructorInfoAdapter: FrameworkConstructorInfoAdapter
+    internal class RoslynNativeGenericTypeConstructorInfoAdapter: FrameworkConstructorInfoAdapter
     {
-        public override ITypeAdapter DeclaringType => _declaringType;
+        public override ITypeAdapter DeclaringType { get; }
+        public MethodSymbol Symbol { get; }
 
-        private ITypeAdapter _declaringType;
-        public RoslynNativeGenericTypeConstructorInfoAdapter(ConstructorInfo info, ITypeAdapter declaringType) : base(info)
+        public RoslynNativeGenericTypeConstructorInfoAdapter(ConstructorInfo info, RoslynGenericTypeAdapter declaringType) : base(info)
         {
-            _declaringType = declaringType;
+            DeclaringType = declaringType;
+            //Symbol = ResolveHelper.ResolveMethod(info.GetAdapter(), declaringType.Adaptee);
         }
     }
 }

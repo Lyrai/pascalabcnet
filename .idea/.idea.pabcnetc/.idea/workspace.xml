@@ -10,8 +10,220 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c7d8e511-b4d4-4b45-8aca-bb70e603e9e9" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.pabcnetc/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.pabcnetc/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Compiler/Compiler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Compiler/Compiler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Compiler/Compiler.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Compiler/Compiler.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Compiler/RemoteCompiler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Compiler/RemoteCompiler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Errors/Errors.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Errors/Errors.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LanguageIntegrator/LanguageIntegrator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LanguageIntegrator/LanguageIntegrator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Localization/StringResources.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Localization/StringResources.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/AdapterFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/AdapterFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/IMethodBaseAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/IMethodBaseAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/IMethodInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/IMethodInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkMethodInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkMethodInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynAdapterFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynAdapterFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynArrayType.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynAssemblyBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynAssemblyBuilderAdapter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/RoslynTest.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynConstructorBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynConstructorBuilderAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynConstructorInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynConstructorInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynEnumBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynEnumBuilderAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynFieldBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynFieldBuilderAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynFieldInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynFieldInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynGenericTypeAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynGenericTypeAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynGenericTypeParameterBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynGenericTypeParameterBuilderAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynILGeneratorAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynILGeneratorAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynLocalBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynLocalBuilderAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynMemberInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynMemberInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynMethodBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynMethodBuilderAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynMethodInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynMethodInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynModuleAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynModuleAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynModuleBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynModuleBuilderAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynNativeGenericTypeConstructorInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynNativeGenericTypeConstructorInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynNativeGenericTypeMethodInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynNativeGenericTypeMethodInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynParameterBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynParameterBuilderAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynParameterInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynParameterInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynPropertyBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynPropertyBuilderAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynPropertyInfoAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynPropertyInfoAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynTypeAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynTypeAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynTypeBuilderAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/RoslynAdapters/RoslynTypeBuilderAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/DeclarationsUtility.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/DeclarationsUtility.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/ILConverter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/ILConverter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/ResolveHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/ResolveHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/RoslynSymbols.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NETGenerator/Adapters/Utility/RoslynSymbols.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ParserTools/FileReader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ParserTools/FileReader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ParserTools/ParserTools.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ParserTools/ParserTools.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/2067.pas" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/AccessToFieldBaseInPropInGenClass.pas" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/AccessToFieldBaseInPropInGenClass1.pas" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/Arr_f1_f1.pas" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/ABCButtons.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/ABCButtons.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/ABCDatabases.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/ABCDatabases.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/ABCHouse.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/ABCHouse.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/ABCObjects.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/ABCObjects.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/ABCSprites.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/ABCSprites.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Arrays.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Arrays.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/BBCMicrobit.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/BBCMicrobit.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/CRT.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/CRT.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/ClientServer.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/ClientServer.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Collections.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Collections.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Controls.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Controls.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Core.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Core.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Countries.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Countries.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/DMCollect.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/DMCollect.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/DMTaskMaker.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/DMTaskMaker.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/DMZadan.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/DMZadan.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/DrawManField.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/DrawManField.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Drawman.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Drawman.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Events.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Events.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/FilesOperations.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/FilesOperations.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/FormsABC.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/FormsABC.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/GraphABC.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/GraphABC.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/GraphABCHelper.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/GraphABCHelper.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/GraphWPFBase.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/GraphWPFBase.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/IniFile.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/IniFile.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/LightPT.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/LightPT.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/MPI.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/MPI.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/NUnitABC.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/NUnitABC.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/NumLibABC.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/NumLibABC.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Oberon00System.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Oberon00System.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/OpenCLABC.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/OpenCLABC.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/PABCExtensions.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/PABCExtensions.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/PABCSystem.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/PABCSystem.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/PT4.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/PT4.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/PT4Databases.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/PT4Databases.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/PT4Exam.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/PT4Exam.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/PT4MakerNetX.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/PT4MakerNetX.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/PT4TaskMakerNET.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/PT4TaskMakerNET.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/PlotWPF.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/PlotWPF.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/PointRect.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/PointRect.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/PointerTools.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/PointerTools.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/RBDMUtils.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/RBDMUtils.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/RBDMUtilsDemo.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/RBDMUtilsDemo.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Robot.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Robot.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/RobotField.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/RobotField.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/RobotTaskMaker.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/RobotTaskMaker.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/RobotZadan.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/RobotZadan.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/SF.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/SF.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/School.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/School.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Sockets.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Sockets.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Sounds.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Sounds.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Speech.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Speech.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Tasks.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Tasks.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Tasks1Arr.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Tasks1Arr.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Tasks1Begin.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Tasks1Begin.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Tasks1BoolIfCase.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Tasks1BoolIfCase.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Tasks1Loops.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Tasks1Loops.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/TasksArr.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/TasksArr.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/TasksMatr.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/TasksMatr.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/TasksStr.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/TasksStr.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Timers.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Timers.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Turtle.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Turtle.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/TurtleWPF.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/TurtleWPF.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/TwoPanelsWindow.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/TwoPanelsWindow.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Utils.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Utils.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/VCL.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/VCL.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/WPFObjects.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/WPFObjects.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/XLSX.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/XLSX.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/__RedirectIOMode.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/__RedirectIOMode.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/__RunMode.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/__RunMode.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/graph3d.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/graph3d.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/xPT4MakerNetX.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/xPT4MakerNetX.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/xPT4TaskMakerNET.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/xPT4TaskMakerNET.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Мозаика.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Мозаика.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/МозаикаABC.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/МозаикаABC.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Робот.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Робот.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/CompilationSamples/Чертежник.pas" beforeDir="false" afterPath="$PROJECT_DIR$/TestSuite/CompilationSamples/Чертежник.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/ValueTupleUnpack.pas" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/abstract3.pas" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/abstract5.pas" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/abstract6.pas" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/arrays9.pas" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestSuite/case5.pas" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/TestRunner.exe" beforeDir="false" afterPath="$PROJECT_DIR$/bin/TestRunner.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/TestRunner.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/TestRunner.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/aa1.exe" beforeDir="false" afterPath="$PROJECT_DIR$/bin/aa1.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/aa1.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/aa1.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net6.0/PABCNETC.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net6.0/PABCNETC.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net7.0-windows/YieldConversionSyntax.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net7.0-windows/YieldConversionSyntax.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net7.0/PABCNETC.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net7.0/PABCNETC.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/ABCButtons.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/ABCButtons.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/ABCDatabases.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/ABCDatabases.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/ABCHouse.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/ABCHouse.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/ABCObjects.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/ABCObjects.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/ABCSprites.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/ABCSprites.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Arrays.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Arrays.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/BBCMicrobit.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/BBCMicrobit.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/CRT.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/CRT.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/ClientServer.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/ClientServer.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Collections.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Collections.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Controls.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Controls.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Core.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Core.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Countries.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Countries.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/DMCollect.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/DMCollect.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/DMTaskMaker.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/DMTaskMaker.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/DMZadan.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/DMZadan.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/DrawManField.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/DrawManField.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Drawman.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Drawman.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Events.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Events.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/FilesOperations.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/FilesOperations.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/FormsABC.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/FormsABC.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Graph3D.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Graph3D.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/GraphABC.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/GraphABC.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/GraphABCHelper.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/GraphABCHelper.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/GraphWPFBase.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/GraphWPFBase.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/IniFile.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/IniFile.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/LightPT.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/LightPT.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/MPI.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/MPI.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/NUnitABC.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/NUnitABC.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/NumLibABC.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/NumLibABC.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Oberon00System.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Oberon00System.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/PABCExtensions.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/PABCExtensions.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/PABCSystem.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/PABCSystem.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/PT4.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/PT4.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/PT4Databases.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/PT4Databases.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/PT4Exam.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/PT4Exam.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/PT4MakerNetX.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/PT4MakerNetX.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/PT4TaskMakerNET.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/PT4TaskMakerNET.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/PlotWPF.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/PlotWPF.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/PointRect.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/PointRect.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/PointerTools.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/PointerTools.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/RBDMUtils.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/RBDMUtils.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/RBDMUtilsDemo.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/RBDMUtilsDemo.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Robot.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Robot.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/RobotField.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/RobotField.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/RobotTaskMaker.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/RobotTaskMaker.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/RobotZadan.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/RobotZadan.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/SF.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/SF.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/School.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/School.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Sockets.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Sockets.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Sounds.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Sounds.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Speech.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Speech.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Tasks.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Tasks.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Tasks1Arr.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Tasks1Arr.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Tasks1Begin.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Tasks1Begin.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Tasks1BoolIfCase.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Tasks1BoolIfCase.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Tasks1Loops.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Tasks1Loops.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/TasksArr.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/TasksArr.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/TasksMatr.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/TasksMatr.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/TasksStr.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/TasksStr.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Timers.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Timers.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Turtle.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Turtle.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/TurtleWPF.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/TurtleWPF.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/TwoPanelsWindow.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/TwoPanelsWindow.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Utils.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Utils.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/VCL.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/VCL.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/WPFObjects.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/WPFObjects.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/XLSX.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/XLSX.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/__RedirectIOMode.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/__RedirectIOMode.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/__RunMode.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/__RunMode.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/xPT4MakerNetX.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/xPT4MakerNetX.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/xPT4TaskMakerNET.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/xPT4TaskMakerNET.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Мозаика.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Мозаика.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/МозаикаABC.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/МозаикаABC.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Робот.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Робот.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/Lib/Чертежник.pas" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/Lib/Чертежник.pas" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/net8.0/PABCNETC.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/net8.0/PABCNETC.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pabcnetc_clear/PABCNETCclear.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/pabcnetc_clear/PABCNETCclear.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,19 +242,10 @@
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/3fa134a4f7024c6a9faff12697fb4fb9c8e8a0/8c/8a5db4a4/Activator.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/3fa134a4f7024c6a9faff12697fb4fb9c8e8a0/b4/a9c72e0c/CastCache.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/3fa134a4f7024c6a9faff12697fb4fb9c8e8a0/dd/069dba5d/RuntimeHelpers.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/4fb042acec7a4afaab832cf749f3b99b74508/91/d65914ca/Debug.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/LambdaAnySynToSemConverter/Properties/AssemblyInfo.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/NETGenerator/Adapters/AdapterFactory.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/NETGenerator/Adapters/NetFrameworkAdapters/FrameworkParameterInfoAdapter.cs" root0="FORCE_HIGHLIGHTING" />
@@ -60,7 +263,7 @@
     <setting file="file://$PROJECT_DIR$/TreeConverter/SystemLib/StaticSystemLib.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TreeConverter/TreeConversion/syntax_tree_visitor.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TreeConverter/TreeRealization/functions.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/TreeConverter/TreeRealization/generics.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TreeConverter/TreeRealization/generics.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TreeConverter/TreeRealization/types.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/artifacts/obj/NETGenerator/Debug/net472/.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -70,6 +273,9 @@
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="Toolset" />
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="2PlzhsFRxtX4UE71ZDdFyiSqS60" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -96,8 +302,8 @@
   },
   "keyToStringList": {
     "rider.external.source.directories": [
-      "C:\\Users\\x355x\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\DecompilerCache",
-      "C:\\Users\\x355x\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\SourcesCache",
+      "C:\\Users\\x355x\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\DecompilerCache",
+      "C:\\Users\\x355x\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\SourcesCache",
       "C:\\Users\\x355x\\AppData\\Local\\Symbols\\src"
     ]
   }
@@ -124,6 +330,24 @@
     <configuration name="PABCNETC-NET8" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="$PROJECT_DIR$/bin/net8.0/PABCNETC.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/bin/net8.0" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/pabcnetc/PABCNETC.csproj" />
+      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
+      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
+      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+      <option name="PROJECT_KIND" value="DotNetCore" />
+      <option name="PROJECT_TFM" value="net8.0" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
+    <configuration name="PABCNETC" type="DotNetProject" factoryName=".NET Project">
+      <option name="EXE_PATH" value="$PROJECT_DIR$/bin/net472/PABCNETC.exe" />
+      <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/bin" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -134,25 +358,7 @@
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
       <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="0" />
       <option name="PROJECT_KIND" value="DotNetCore" />
-      <option name="PROJECT_TFM" value="net8.0" />
-      <method v="2">
-        <option name="Build" />
-      </method>
-    </configuration>
-    <configuration name="PABCNETC" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="$PROJECT_DIR$/bin/net7.0/PABCNETC.exe" />
-      <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/bin/net7.0" />
-      <option name="PASS_PARENT_ENVS" value="1" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
-      <option name="USE_MONO" value="0" />
-      <option name="RUNTIME_ARGUMENTS" value="" />
-      <option name="PROJECT_PATH" value="$PROJECT_DIR$/pabcnetc/PABCNETC.csproj" />
-      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
-      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
-      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
-      <option name="PROJECT_KIND" value="DotNetCore" />
-      <option name="PROJECT_TFM" value="net7.0" />
+      <option name="PROJECT_TFM" value=".NETFramework,Version=v4.7.2" />
       <method v="2">
         <option name="Build" />
       </method>
@@ -195,6 +401,9 @@
       <workItem from="1698577602420" duration="3280000" />
       <workItem from="1699169924010" duration="7225000" />
       <workItem from="1699770509892" duration="635000" />
+      <workItem from="1716708334228" duration="8177000" />
+      <workItem from="1718438392763" duration="9732000" />
+      <workItem from="1719050255343" duration="4389000" />
     </task>
     <servers />
   </component>
@@ -276,7 +485,67 @@
           </properties>
           <option name="timeStamp" value="30" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <condition expression="!elementTypeWithAnnotations.HasType" language="C#" />
+          <url>file://$PROJECT_DIR$/roslyn-compilers/src/Compilers/CSharp/Portable/Symbols/ArrayTypeSymbol.cs</url>
+          <line>27</line>
+          <properties documentPath="E:\Projects\pascalabcnet\roslyn-compilers\src\Compilers\CSharp\Portable\Symbols\ArrayTypeSymbol.cs" initialLine="27" containingFunctionPresentation="Constructor 'ArrayTypeSymbol'">
+            <startOffsets>
+              <option value="957" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1006" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="46" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/ParserTools/ParsersController.cs</url>
+          <line>161</line>
+          <properties documentPath="E:\Projects\pascalabcnet\ParserTools\ParsersController.cs" initialLine="162" containingFunctionPresentation="Method 'SelectParserForUnitAndBuildTree'">
+            <startOffsets>
+              <option value="6097" />
+            </startOffsets>
+            <endOffsets>
+              <option value="6140" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="52" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <condition expression="str is null" language="C#" />
+          <url>file://$PROJECT_DIR$/roslyn-compilers/src/Compilers/Core/Portable/PEWriter/MetadataWriter.cs</url>
+          <line>1427</line>
+          <properties documentPath="E:\Projects\pascalabcnet\roslyn-compilers\src\Compilers\Core\Portable\PEWriter\MetadataWriter.cs" initialLine="1427" containingFunctionPresentation="Method 'IsTooLongInternal'">
+            <startOffsets>
+              <option value="58645" />
+            </startOffsets>
+            <endOffsets>
+              <option value="58671" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="54" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <condition expression="param.Name is null" language="C#" />
+          <url>file://$PROJECT_DIR$/NETGenerator/Adapters/Utility/RoslynSymbols.cs</url>
+          <line>84</line>
+          <properties documentPath="E:\Projects\pascalabcnet\NETGenerator\Adapters\Utility\RoslynSymbols.cs" initialLine="84" containingFunctionPresentation="Method 'CreateParameters'">
+            <startOffsets>
+              <option value="4008" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4270" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="55" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="DotNetProject">
+        <watch expression="_compilation.Assembly.CorLibrary" language="C#" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

@@ -18,8 +18,6 @@
         IMethodInfoAdapter MakeGenericMethod(params ITypeAdapter[] types);
         object[] GetCustomAttributes(ITypeAdapter type, bool inherit);
         IMethodInfoAdapter GetGenericMethodDefinition();
-        IParameterInfoAdapter[] GetParameters();
         void Invoke(object obj, object[] parameters);
-        ITypeAdapter[] GetGenericArguments();
     }
 }

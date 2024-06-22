@@ -3,8 +3,10 @@
 unit FormsABC;
 
 {$apptype windows} 
-{$reference 'System.Windows.Forms.dll'}
-{$reference 'System.Drawing.dll'}
+{$reference 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\6.0.30\System.Windows.Forms.dll'}
+{$reference 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\6.0.30\System.Drawing.dll'}
+{$reference 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.30\System.Drawing.Primitives.dll'}
+{$reference 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\6.0.30\System.Drawing.Common.dll'}
 
 interface
 

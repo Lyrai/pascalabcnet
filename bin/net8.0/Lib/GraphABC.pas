@@ -6,8 +6,8 @@ unit GraphABC;
 //ne udaljat, IB 7.10.08 
 //с дополнениями 2015.01 (mabr) 
 {$apptype windows} 
-{$reference '%GAC%\System.Windows.Forms.dll'}
-{$reference '%GAC%\System.Drawing.dll'}
+{$reference 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.5\System.Windows.Forms.dll'}
+{$reference 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.5\System.Drawing.dll'}
 {$gendoc true}
 
 interface

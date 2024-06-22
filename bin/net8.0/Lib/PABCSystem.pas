@@ -12,14 +12,14 @@ unit PABCSystem;
 // Default Application type
 {$apptype console}
 
-{$reference '%GAC%\System.Private.CoreLib.dll'}
 {$reference '%GAC%\System.Core.dll'}
+{$reference '%GAC%\System.Private.CoreLib.dll'}
 {$reference '%GAC%\System.Runtime.dll'}
+{$reference '%GAC%\System.Console.dll'}
+{$reference '%GAC%\System.Collections.dll'}
 {$reference '%GAC%\System.Runtime.Numerics.dll'}
 {$reference '%GAC%\System.Linq.dll'}
-{$reference '%GAC%\System.Console.dll'}
 {$reference '%GAC%\System.Text.RegularExpressions.dll'}
-{$reference '%GAC%\System.Collections.dll'}
 {$reference '%GAC%\System.Runtime.Serialization.Formatters.dll'}
 {$reference '%GAC%\System.IO.FileSystem.DriveInfo.dll'}
 {$reference '%GAC%\System.Diagnostics.Process.dll'}
@@ -586,42 +586,10 @@ type
   
   // Class for binary files
   ///--
-  BinaryFile = sealed class(AbstractBinaryFile)
+  BinaryFile = class
   private 
-    function GetFilePos: int64;
-    procedure InternalCheck;
   public 
     function ToString: string; override;
-    /// Открывает существующий бестиповой файл на чтение и запись в указанной кодировке 
-    procedure Reset(en: Encoding);
-    /// Открывает существующий бестиповой файл на чтение и запись в указанной кодировке. Если файл не существовал, он создаётся, если существовал, он обнуляется
-    procedure Rewrite(en: Encoding);
-    /// Возвращает количество байт в бестиповом файле
-    function Size: int64;
-    /// Устанавливает текущую позицию файлового указателя в бестиповом файле на байт с номером n
-    procedure Seek(n: int64);
-    /// Возвращает или устанавливает текущую позицию файлового указателя в бестиповом файле
-    property Position: int64 read GetFilePos write Seek;
-    /// Записывает данные из байтового массива в бестиповой файл
-    procedure WriteBytes(a: array of byte);
-    /// Считывает указанное количество байтов из бестипового файла в байтовый массив
-    function ReadBytes(count: integer): array of byte;
-    /// Считывает целое из бестипового файла
-    function ReadInteger: integer;
-    /// Считывает логическое из бестипового файла
-    function ReadBoolean: boolean;
-    /// Считывает байт из бестипового файла
-    function ReadByte: byte;
-    /// Считывает символ из бестипового файла
-    function ReadChar: char;
-    /// Считывает вещественное из бестипового файла
-    function ReadReal: real;
-    /// Считывает строку из бестипового файла
-    function ReadString: string;
-    /// Сериализует объект в файл (объект должен иметь атрибут [Serializable])
-    procedure Serialize(obj: object);
-    /// Десериализует объект из файла 
-    function Deserialize: object;
   end;
   
 type 
@@ -1437,16 +1405,6 @@ procedure TypedFileInitWithShortString(var f: TypedFile; ElementType: System.Typ
 ///--
 function TypedFileRead(f: TypedFile): object;
 
-///--
-function FilePos(f: BinaryFile): int64;
-///--
-function FileSize(f: BinaryFile): int64;
-///--
-procedure Seek(f: BinaryFile; n: int64);
-///--
-procedure BinaryFileInit(var f: BinaryFile);
-///--
-function BinaryFileRead(var f: BinaryFile; ElementType: System.Type): object;
 
 // -----------------------------------------------------
 //>>     Cистемные подпрограммы # System subroutines
@@ -3002,9 +2960,9 @@ end;
 [System.Security.SecuritySafeCriticalAttribute]
 procedure AllocConsole;
 begin
-  //if not IsConsoleApplication and (System.Environment.OSVersion.Platform <> PlatformID.Unix) and (AppDomain.CurrentDomain.GetData('_RedirectIO_SpecialArgs') = nil) then
-  //  WINAPI_AllocConsole;
-  console_alloc := true;
+  {if not IsConsoleApplication and (System.Environment.OSVersion.Platform <> PlatformID.Unix) and (AppDomain.CurrentDomain.GetData('_RedirectIO_SpecialArgs') = nil) then
+    WINAPI_AllocConsole;
+  console_alloc := true;}
 end;
 
 function GetNullBasedArray(arr: object): System.Array;
@@ -4083,7 +4041,9 @@ begin
     Result := '(' + StructuredObjectToString(c.Real) + ',' + StructuredObjectToString(c.Imaginary) + ')';
   end
   else if (o.GetType.IsPrimitive) or (o.GetType = typeof(string)) then
+  begin
     Result := o.ToString
+  end
   else if o is System.Array then
   begin
     var a := o as System.Array;  
@@ -4445,7 +4405,7 @@ begin
   var yn := Object.ReferenceEquals(y,nil);
   if xn then
     Result := yn
-  else if yn then 
+  else 
     Result := xn;
   //else Result := x.SetEquals(y);
 end;   
@@ -6809,7 +6769,6 @@ function AbstractBinaryFile.Name := fi.Name;
 
 function AbstractBinaryFile.FullName := fi.FullName;
 
-
 // -----------------------------------------------------
 //                TypedFile & BinaryFile methods
 // -----------------------------------------------------
@@ -6819,83 +6778,11 @@ function TypedFile.GetFilePos: int64 := PABCSystem.FilePos(Self);
 
 procedure TypedFile.Seek(n: int64) := PABCSystem.Seek(Self, n); 
 
-procedure BinaryFile.Reset(en: Encoding) := PABCSystem.Reset(Self,en);
+//procedure BinaryFile.Reset(en: Encoding) := PABCSystem.Reset(Self,en);
 
-procedure BinaryFile.Rewrite(en: Encoding) := PABCSystem.Rewrite(Self,en);
+//procedure BinaryFile.Rewrite(en: Encoding) := PABCSystem.Rewrite(Self,en);
 
-function BinaryFile.GetFilePos: int64 := PABCSystem.FilePos(Self);
 
-function BinaryFile.Size: int64 := PABCSystem.FileSize(Self);
-
-procedure BinaryFile.Seek(n: int64) := PABCSystem.Seek(Self, n);
-
-procedure BinaryFile.InternalCheck;
-begin
-  if Self.fi = nil then
-    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
-  if Self.fs = nil then
-    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
-end;
-
-procedure BinaryFile.WriteBytes(a: array of byte);
-begin
-  InternalCheck;
-  Self.bw.Write(a);
-end;
-
-function BinaryFile.ReadBytes(count: integer): array of byte;
-begin
-  InternalCheck;
-  Result := Self.br.ReadBytes(count)
-end;
-
-function BinaryFile.ReadInteger: integer;
-begin
-  InternalCheck;
-  Result := Self.br.ReadInt32;  
-end;
-
-function BinaryFile.ReadBoolean: boolean;
-begin
-  InternalCheck;
-  Result := Self.br.ReadBoolean;  
-end;
-
-function BinaryFile.ReadByte: byte;
-begin
-  InternalCheck;
-  Result := Self.br.ReadByte;  
-end;
-
-function BinaryFile.ReadChar: char;
-begin
-  InternalCheck;
-  Result := Self.br.ReadChar;  
-end;
-
-function BinaryFile.ReadReal: real;
-begin
-  InternalCheck;
-  Result := Self.br.ReadDouble;  
-end;
-
-function BinaryFile.ReadString: string;
-begin
-  InternalCheck;
-  Result := Self.br.ReadString;  
-end;
-
-procedure BinaryFile.Serialize(obj: object);
-begin
-  var formatter := new BinaryFormatter;
-  formatter.Serialize(fs,obj);
-end;
-
-function BinaryFile.Deserialize: object;
-begin
-  var formatter := new BinaryFormatter;
-  Result := formatter.Deserialize(fs);
-end;
 
 // -----------------------------------------------------
 //                  Eoln - Eof
@@ -7940,47 +7827,7 @@ end;
 // -----------------------------------------------------
 //                  Binary files
 // -----------------------------------------------------
-function FilePos(f: BinaryFile): int64;
-begin
-  if f.fi = nil then
-    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
-  if f.fs = nil then
-    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
-  Result := f.fs.Position;
-end;
 
-function FileSize(f: BinaryFile): int64;
-begin
-  if f.fi = nil then
-    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
-  if f.fs = nil then
-    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
-  Result := f.fs.Length;
-end;
-
-procedure Seek(f: BinaryFile; n: int64);
-begin
-  if f.fi = nil then
-    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
-  if f.fs = nil then
-    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
-  f.fs.Position := n;
-end;
-
-procedure BinaryFileInit(var f: BinaryFile);
-begin
-  f := new BinaryFile();
-end;
-
-function BinaryFileRead(var f: BinaryFile; ElementType: System.Type): object;
-begin
-  if f.fi = nil then
-    raise new System.IO.IOException(GetTranslation(FILE_NOT_ASSIGNED));
-  if f.fs = nil then
-    raise new System.IO.IOException(GetTranslation(FILE_NOT_OPENED));
-  var ind := 0;
-  Result := AbstractBinaryFileReadT(f, ElementType, ind, false);
-end;
 
 // -----------------------------------------------------
 // Operating System subroutines: implementation

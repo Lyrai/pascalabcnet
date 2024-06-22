@@ -1,6 +1,7 @@
 ﻿unit NumLibABC;
 
-const &NumLibABCVersion = 'NumLibABC 1.0.2 от 20.03.2024';
+const &NumLibABCVersion = 'NumLibABC 1.0.1 от 14.09.2019';
+// предыдущая версия 1.0.0 от 06.09.2017
 
 type
   Point=auto class
@@ -74,8 +75,8 @@ type
   constructor (x,y:array of real; eps:real);
   begin
     nt:=x.Length;
-    Assert(nt=y.Length,
-        'Approx: несовпадение количества точек в аргументе и функции');
+    //Assert(nt=y.Length,
+    //    'Approx: несовпадение количества точек в аргументе и функции');
     Self.x:=x;
     Self.y:=y;
     f:=ArrFill(nt,0.0);
@@ -1204,7 +1205,7 @@ type
   begin
     Assert((pa.RowCount=pb.RowCount) and (pa.ColCount=pb.ColCount),
         'Сложение MarixR: Несовпадение размеров');
-    Result:=new Matrix(pa.RowCount,pa.ColCount);
+    Result:=new Matrix(pa.RowCount,pa.RowCount);
     for var i:=0 to pa.RowCount-1 do
       for var j:=0 to pa.ColCount-1 do
         Result.Value[i,j]:=pa.Value[i,j]+pb.Value[i,j]
@@ -1549,7 +1550,7 @@ type
     else Result.Value:=MatrFill(RowCount,ColCount,MaxReal);  
   end;
   
-  /// Решение системы линейных алгебраических уравнения (СЛАУ)
+  /// Решение системы линейных алнебраических уравнения (СЛАУ)
   function SLAU(vb:Vector; var cond:real):Vector;
   // Возвращает вектор, содержащий решение СЛАУ.
   // Заносит в cond число обусловленности исходной матрицы.

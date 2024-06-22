@@ -363,7 +363,9 @@ namespace PascalABCCompiler
         {
             sendCommand(id);
             MemoryStream ms = new MemoryStream();
+#pragma warning disable SYSLIB0011
             (new BinaryFormatter()).Serialize(ms, o);
+#pragma warning restore SYSLIB0011
             ms.WriteTo(pabcnetcProcess.StandardInput.BaseStream);            
         }
 

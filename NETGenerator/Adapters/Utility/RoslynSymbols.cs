@@ -73,13 +73,19 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             return _sortKey;
         }
         
-        protected void CreateParameters(IMethodBaseAdapter method)
+        protected void CreateParameters(IMethodBaseAdapter method, MethodSymbol symbol)
         {
             var parameters = new List<ParameterSymbol>();
             int paramCnt = 0;
             foreach (var param in method.GetParameters().Cast<RoslynParameterInfoAdapter>())
             {
-                var paramSymbol = new PascalParameterSymbol(this, paramCnt, param);
+                var type = ResolveHelper.ResolveType(param.ParameterType);
+                ResolveHelper.FixGenericTypeArgumentsIfNeeded(symbol, type);
+                var typeWithAnnotations = TypeWithAnnotations.Create(type);
+                var paramSymbol = new SourceSimpleParameterSymbol(this, typeWithAnnotations, paramCnt,
+                    param.IsByRef ? RefKind.Ref : RefKind.None, ScopedKind.None, param.Name,
+                    new List<Location> {NoLocation.Singleton}.ToImmutableArray());
+                
                 parameters.Add(paramSymbol);
                 ++paramCnt;
             }
@@ -121,7 +127,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             : base(method, containingType, isIterator)
         {
             CreateTypeParameters(method);
-            CreateParameters(method);
+            CreateParameters(method, this);
 
             _returnTypeWithAnnotations = TypeWithAnnotations.Create(ResolveHelper.ResolveType(method.ReturnType));
 
@@ -136,9 +142,19 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             if (method.IsVirtual)
             {
                 DeclarationModifiers |= DeclarationModifiers.Virtual;
+                var baseMethod = ResolveHelper.ResolveMethod(method, containingType.BaseTypeNoUseSiteDiagnostics);
+                if (baseMethod is object)
+                {
+                    DeclarationModifiers |= DeclarationModifiers.Override;
+                }
             }
 
             var methodKind = MethodKind.Ordinary;
+            if (method.Name.StartsWith("<>lambda")) methodKind = MethodKind.LambdaMethod;
+            else if (method.Name.StartsWith("get_")) methodKind = MethodKind.PropertyGet;
+            else if (method.Name.StartsWith("set_")) methodKind = MethodKind.PropertySet;
+            else if (method.Name.StartsWith("op_")) methodKind = MethodKind.UserDefinedOperator;
+            
             if (method.Name.Contains('.'))
             {
                 methodKind = MethodKind.ExplicitInterfaceImplementation;
@@ -206,7 +222,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters
         public PascalConstructorSymbol(IConstructorInfoAdapter ctor, NamedTypeSymbol declaringType)
             : base(ctor, declaringType, false)
         {
-            CreateParameters(ctor);
+            CreateParameters(ctor, this);
             MakeFlags(ctor.IsStatic ? MethodKind.StaticConstructor : MethodKind.Constructor, DeclarationModifiers, false, false, false);
         }
     }
@@ -214,7 +230,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters
     internal class PascalPropertySymbol: PropertySymbol
     {
         public override Symbol ContainingSymbol { get; }
-        public override ImmutableArray<Location> Locations => ImmutableArray<Location>.Empty;
+        public override ImmutableArray<Location> Locations => new List<Location> {NoLocation.Singleton}.ToImmutableArray();
         public override ImmutableArray<SyntaxReference> DeclaringSyntaxReferences =>
             ImmutableArray<SyntaxReference>.Empty;
         public override Accessibility DeclaredAccessibility { get; }
@@ -271,53 +287,29 @@ namespace PascalABCCompiler.NETGenerator.Adapters
         }
     }
 
-    class PascalParameterSymbol : ParameterSymbol
-    {
-        public override Symbol ContainingSymbol { get; }
-        public override ImmutableArray<Location> Locations => ImmutableArray<Location>.Empty;
-        public override ImmutableArray<SyntaxReference> DeclaringSyntaxReferences => ImmutableArray<SyntaxReference>.Empty;
-        public override TypeWithAnnotations TypeWithAnnotations { get; }
-        public override RefKind RefKind { get; }
-        public override bool IsDiscard => false;
-        public override ImmutableArray<CustomModifier> RefCustomModifiers => ImmutableArray<CustomModifier>.Empty;
-        internal override MarshalPseudoCustomAttributeData MarshallingInformation => null;
-        public override int Ordinal { get; }
-        public override bool IsParams => false;
-        internal override bool IsMetadataOptional => false;
-        internal override bool IsMetadataIn => false;
-        internal override bool IsMetadataOut => false;
-        internal override ConstantValue ExplicitDefaultConstantValue => null;
-        internal override bool IsIDispatchConstant => false;
-        internal override bool IsIUnknownConstant => false;
-        internal override bool IsCallerFilePath => false;
-        internal override bool IsCallerLineNumber => false;
-        internal override bool IsCallerMemberName => false;
-        internal override int CallerArgumentExpressionParameterIndex => Ordinal;
-        internal override FlowAnalysisAnnotations FlowAnalysisAnnotations => FlowAnalysisAnnotations.None;
-        internal override ImmutableHashSet<string> NotNullIfParameterNotNull => ImmutableHashSet<string>.Empty;
-        internal override ImmutableArray<int> InterpolatedStringHandlerArgumentIndexes => ImmutableArray<int>.Empty;
-        internal override bool HasInterpolatedStringHandlerArgumentError => false;
-        internal override ScopedKind EffectiveScope => ScopedKind.None;
-        internal override bool HasUnscopedRefAttribute => false;
-        internal override bool UseUpdatedEscapeRules => false;
-        public override string Name { get; }
-
-        public PascalParameterSymbol(Symbol containingSymbol, int ordinal, RoslynParameterInfoAdapter param)
-        {
-            ContainingSymbol = containingSymbol;
-            Ordinal = ordinal;
-            TypeWithAnnotations = TypeWithAnnotations.Create(ResolveHelper.ResolveType(param.ParameterType));
-            Name = param.Name;
-            RefKind = param.IsByRef ? RefKind.Ref : RefKind.None;
-        }
-    }
-
     class PascalFieldSymbol : SourceFieldSymbol
     {
+        public override string Name { get; }
+        public override ImmutableArray<Location> Locations => new List<Location> {NoLocation.Singleton}.ToImmutableArray();
+        public override ImmutableArray<SyntaxReference> DeclaringSyntaxReferences => ImmutableArray<SyntaxReference>.Empty;
+        public override RefKind RefKind => RefKind.None;
+        public override Symbol AssociatedSymbol { get; }
+        
+        internal override Location ErrorLocation => null;
+        
+        protected override DeclarationModifiers Modifiers => _modifiers;
+        protected override SyntaxList<AttributeListSyntax> AttributeDeclarationSyntaxList => new SyntaxList<AttributeListSyntax>();
+
+        private TypeSymbol _type;
+        private DeclarationModifiers _modifiers;
+        private LexicalSortKey _sortKey;
+        
         public PascalFieldSymbol(IFieldInfoAdapter field, SourceMemberContainerTypeSymbol containingType, string name, TypeSymbol type) : base(containingType)
         {
             Name = name;
             _type = type;
+            _sortKey = new LexicalSortKey(0, LexicalSortCounter.Counter++);
+            ResolveHelper.FixGenericTypeArgumentsIfNeeded(containingType, type);
 
             _modifiers = DeclarationModifiers.None;
 
@@ -335,20 +327,10 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             }
         }
 
-        public override string Name { get; }
-
-        public override ImmutableArray<Location> Locations => ImmutableArray<Location>.Empty;
-
-        public override ImmutableArray<SyntaxReference> DeclaringSyntaxReferences => ImmutableArray<SyntaxReference>.Empty;
-
-        public override RefKind RefKind => RefKind.None;
-
         internal override TypeWithAnnotations GetFieldType(ConsList<FieldSymbol> fieldsBeingBound)
         {
             return TypeWithAnnotations.Create(_type);
         }
-
-        public override Symbol AssociatedSymbol { get; }
 
         internal override ConstantValue GetConstantValue(ConstantFieldsInProgress inProgress,
             bool earlyDecodingWellKnownAttributes)
@@ -356,14 +338,10 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             return null;
         }
 
-        internal override Location ErrorLocation => null;
-
-        protected override DeclarationModifiers Modifiers => _modifiers;
-
-        protected override SyntaxList<AttributeListSyntax> AttributeDeclarationSyntaxList => new SyntaxList<AttributeListSyntax>();
-
-        private TypeSymbol _type;
-        private DeclarationModifiers _modifiers;
+        internal override LexicalSortKey GetLexicalSortKey()
+        {
+            return _sortKey;
+        }
     }
 
     class PascalTypeParameterSymbol : TypeParameterSymbol
@@ -394,6 +372,28 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             Variance = VarianceKind.None;
             builder.SetSymbol(this);
             Name = builder.Name;
+
+            try
+            {
+                if (builder.DeclaringAdapter is null)
+                {
+                    _containingSymbol = null;
+                }
+                else if (builder.DeclaringAdapter is ITypeAdapter type)
+                {
+                    _containingSymbol = ResolveHelper.ResolveType(type);
+                    _typeParameterKind = TypeParameterKind.Type;
+                }
+                else if (builder.DeclaringAdapter is IMethodInfoAdapter method)
+                {
+                    _containingSymbol = ResolveHelper.ResolveMethod(method);
+                    _typeParameterKind = TypeParameterKind.Method;
+                }
+            }
+            catch (NullReferenceException)
+            {
+                _containingSymbol = null;
+            }
         }
 
         public void SetContainingSymbol(Symbol symbol)
@@ -441,9 +441,11 @@ namespace PascalABCCompiler.NETGenerator.Adapters
     {
         public static TypeSymbol GetType(this AssemblySymbol assembly, ITypeAdapter type)
         {
-            if (type is RoslynGenericTypeParameterBuilderAdapter builder)
+            if (type.IsGenericParameter)
             {
-                return builder.Symbol;
+                var typeParameterBuilder = type as RoslynGenericTypeParameterBuilderAdapter ?? new RoslynGenericTypeParameterBuilderAdapter((ITypeAdapter)null, type.Name, 0);
+                var symbol = typeParameterBuilder?.Symbol ?? new PascalTypeParameterSymbol(typeParameterBuilder);
+                return symbol;
             }
             
             if (type.IsArray)
@@ -455,9 +457,13 @@ namespace PascalABCCompiler.NETGenerator.Adapters
 
             if (type.IsPointer)
             {
-                var name = type.FullName.Replace("*", "");
-                var t = assembly.GetTypeByMetadataName(name, true, false, out _);
+                var t = GetType(assembly, type.GetElementType());
                 return new PointerTypeSymbol(TypeWithAnnotations.Create(t));
+            }
+
+            if (type.IsByRef)
+            {
+                return GetType(assembly, type.GetElementType());
             }
             
             return GetNamedType(assembly, type);
@@ -487,6 +493,11 @@ namespace PascalABCCompiler.NETGenerator.Adapters
             }
             
             var t = assembly.GetTypeByMetadataName(name, true, false, out _);
+            if (t is null)
+            {
+                return null;
+            }
+            
             if (type.IsGenericType && !type.IsGenericTypeDefinition && !type.IsGenericParameter)
             {
                 var types = type

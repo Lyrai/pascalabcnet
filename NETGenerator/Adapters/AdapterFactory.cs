@@ -11,7 +11,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters
     internal abstract class AdapterFactory
     {
         private static AdapterFactory _instance = null;
-        
+
         public static IAppDomainAdapter AppDomain()
         {
             return Instance().CreateAppDomain();
@@ -200,6 +200,11 @@ namespace PascalABCCompiler.NETGenerator.Adapters
     public static class AdapterExtensions
     {
         private static Dictionary<object, IAdapter> _adaptees = new Dictionary<object, IAdapter>(new AdapterReferenceEqualityComparer());
+
+        public static void Init()
+        {
+            _adaptees.Clear();
+        }
 
         public static ITypeAdapter GetAdapter(this Type type)
         {

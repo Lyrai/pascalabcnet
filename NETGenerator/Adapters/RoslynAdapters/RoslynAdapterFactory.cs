@@ -32,7 +32,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         protected override IMethodInfoAdapter CreateMethodInfo(MethodInfo info)
         {
-            return new FrameworkMethodInfoAdapter(info);
+            return info.IsGenericMethod ? (IMethodInfoAdapter)new RoslynGenericMethodInfoAdapter(info, info.DeclaringType.GetAdapter()) : new FrameworkMethodInfoAdapter(info);
         }
 
         protected override IMethodBuilderAdapter CreateMethodBuilder(MethodBuilder builder)

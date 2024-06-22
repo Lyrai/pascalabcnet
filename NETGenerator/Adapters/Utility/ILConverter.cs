@@ -48,7 +48,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
                 var argument = _arguments.GetEnumerator();
                 argument.MoveNext();
                 object currentExceptionLabel = null;
-                
+                var exceptionLabels = new Stack<object>();
+
                 foreach (var instruction in _instructions)
                 {
                     switch (instruction)
@@ -62,9 +63,9 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
                                 {
                                     builder.EmitRet(isVoid);
                                 }
-                                else if (opcode == ILOpCode.Throw)
+                                else if (opcode == ILOpCode.Throw || opcode == ILOpCode.Rethrow)
                                 {
-                                    builder.EmitThrow(false);
+                                    builder.EmitThrow(opcode == ILOpCode.Rethrow);
                                 }
                                 else
                                 {
@@ -108,7 +109,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
                                     EmitType(builder, opcode, type);
                                     break;
                                 case Label label:
-                                    builder.EmitBranch(opcode, _labels[GetLabelNum(label)]);
+                                    builder.EmitBranch(opcode == ILOpCode.Leave ? ILOpCode.Br : opcode, _labels[GetLabelNum(label)]);
                                     break;
                                 case Label[] labels:
                                     var objectLabels = labels.Select(l => GetLabelNum(l)).Select(l => _labels[l]).ToArray();
@@ -143,6 +144,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
                         case Instruction.BeginExceptionBlock:
                             var tryLabel = (Label) argument.Current;
                             var tryLabelObject = new object();
+                            exceptionLabels.Push(tryLabelObject);
                             _labels.Add(GetLabelNum(tryLabel), tryLabelObject);
                             currentExceptionLabel = tryLabelObject;
                             builder.OpenLocalScope(ScopeType.TryCatchFinally);
@@ -162,6 +164,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
                             builder.CloseLocalScope();
                             builder.CloseLocalScope();
                             builder.MarkLabel(currentExceptionLabel);
+                            exceptionLabels.Pop();
+                            currentExceptionLabel = exceptionLabels.Count > 0 ? exceptionLabels.Peek() : null;
                             break;
                     }
 
@@ -270,9 +274,8 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             private void EmitMethod(ILBuilder builder, ILOpCode opcode, IMethodBaseAdapter method)
             {
                 var type = ResolveHelper.ResolveType(method.DeclaringType);
-                type = FixGenericTypeArgumentsIfNeeded(method.DeclaringType, type);
+                ResolveHelper.FixGenericTypeArgumentsIfNeeded(_method, type);
                 var symbol = ResolveHelper.ResolveMethod(method, type);
-                //var symbol = ResolveHelper.ResolveMethod(method);
                 var stackAdjustment = 0;
                 if (opcode == ILOpCode.Newobj)
                 {
@@ -325,50 +328,14 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             private ITypeReference GetToken(ITypeAdapter type)
             {
                 var symbol = ResolveHelper.ResolveType(type);
-                symbol = FixGenericTypeArgumentsIfNeeded(type, symbol);
+                ResolveHelper.FixGenericTypeArgumentsIfNeeded(_method, symbol);
                 return _moduleBuilder.Translate(symbol, null, DiagnosticBag.GetInstance());
             }
 
-            private TypeSymbol FixGenericTypeArgumentsIfNeeded(ITypeAdapter type, TypeSymbol symbol)
-            {
-                if (type is RoslynGenericTypeAdapter generic && !generic.Adaptee.IsUnboundGenericType)
-                {
-                    var types = new List<TypeWithAnnotations>();
-                    bool flag = false;
-                    foreach (var typeArg in generic.Adaptee.TypeArgumentsWithAnnotationsNoUseSiteDiagnostics)
-                    {
-                        if (typeArg.Type is PascalTypeParameterSymbol param && param.ContainingSymbol is null)
-                        {
-                            var methodParameter = _method
-                                .TypeParameters
-                                .First(methParam => methParam.Name == param.Name);
-
-                            if (!(methodParameter is null))
-                            {
-                                flag = true;
-                            }
-                            
-                            types.Add(TypeWithAnnotations.Create(methodParameter));
-                        }
-                        else
-                        {
-                            types.Add(typeArg);
-                        }
-                    }
-
-                    if(flag)
-                    {
-                        symbol = (symbol.ConstructedFrom() as NamedTypeSymbol).ConstructIfGeneric(types.ToImmutableArray());
-                    }
-                }
-
-                return symbol;
-            }
-    
             private IFieldReference GetToken(IFieldInfoAdapter field)
             {
                 var type = ResolveHelper.ResolveType(field.DeclaringType);
-                type = FixGenericTypeArgumentsIfNeeded(field.DeclaringType, type);
+                /*type = */ResolveHelper.FixGenericTypeArgumentsIfNeeded(_method, type);
                 var symbol = ResolveHelper.ResolveField(field, type);
                 return _moduleBuilder.Translate(symbol, null, DiagnosticBag.GetInstance());
             }

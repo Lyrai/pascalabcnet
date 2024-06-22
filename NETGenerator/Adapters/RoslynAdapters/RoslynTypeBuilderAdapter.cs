@@ -28,7 +28,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         private Dictionary<ITypeAdapter, ITypeAdapter> _instantiationDict;
 
         public RoslynTypeBuilderAdapter(IModuleAdapter module, string name, TypeAttributes attr, ITypeAdapter parent,
-            ITypeAdapter[] interfaces)
+            ITypeAdapter[] interfaces, ITypeAdapter constructedFrom = null)
             : base(module, name, attr, parent, interfaces)
         {
             _genericParameters = Array.Empty<ITypeAdapter>();
@@ -36,6 +36,7 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             _isGenericType = false;
             _isGenericTypeDefinition = false;
             _genericDefinition = null;
+            _constructedFrom = constructedFrom;
         }
 
         private RoslynTypeBuilderAdapter(RoslynTypeBuilderAdapter declaringType, string name, TypeAttributes attr)
@@ -122,7 +123,12 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         public override ITypeAdapter MakeByRefType()
         {
-            return new RoslynTypeBuilderAdapter(Module, FullName + "&", Attributes, BaseType, _interfaces.ToArray());
+            return new RoslynTypeBuilderAdapter(Module, FullName + "&", Attributes, BaseType, _interfaces.ToArray(), this);
+        }
+
+        public override ITypeAdapter MakePointerType()
+        {
+            return new RoslynTypeBuilderAdapter(Module, FullName + "*", Attributes, BaseType, _interfaces.ToArray(), this);
         }
 
         public IConstructorBuilderAdapter DefineDefaultConstructor(MethodAttributes attributes)
@@ -158,19 +164,16 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         public IGenericTypeParameterBuilderAdapter[] DefineGenericParameters(string[] names)
         {
-            var genericParameters = names
-                .Select(name => new RoslynGenericTypeParameterBuilderAdapter(this, name))
-                .Cast<IGenericTypeParameterBuilderAdapter>()
-                .ToArray();
-
-            _genericParameters = genericParameters
-                .Cast<ITypeAdapter>()
-                .ToArray();
+            _genericParameters = new ITypeAdapter[names.Length];
+            for (int i = 0; i < names.Length; i++)
+            {
+                _genericParameters[i] = new RoslynGenericTypeParameterBuilderAdapter(this, names[i], i);
+            }
 
             _isGenericType = true;
             _isGenericTypeDefinition = true;
             
-            return genericParameters;
+            return _genericParameters.Cast<IGenericTypeParameterBuilderAdapter>().ToArray();
         }
 
         public override ITypeAdapter[] GetGenericArguments()
@@ -214,6 +217,11 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             CallingConvention nativeCallConv, CharSet nativeCharSet)
         {
             throw new System.NotImplementedException();
+        }
+
+        public override ITypeAdapter[] GetNestedTypes()
+        {
+            return _netstedTypes.Values.ToArray();
         }
 
         public ITypeBuilderAdapter DefineNestedType(string name, TypeAttributes attributes)
@@ -378,6 +386,13 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             return base.GetConstructors();
         }
 
+        public override ITypeAdapter GetElementType()
+        {
+            if (IsByRef || IsPointer) return _constructedFrom;
+
+            return null;
+        }
+
         public ITypeAdapter CreateType()
         {
             if (Declaration is null)
@@ -399,14 +414,14 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
             if (IsAbstract) declarationModifiers |= DeclarationModifiers.Abstract;
             if (IsPublic) declarationModifiers |= DeclarationModifiers.Public;
             if (IsSealed) declarationModifiers |= DeclarationModifiers.Sealed;
-
+            
             var typeDeclarationFlags = SingleTypeDeclaration.TypeDeclarationFlags.None;
             if (_members.Any()) typeDeclarationFlags |= SingleTypeDeclaration.TypeDeclarationFlags.HasAnyNontypeMembers;
 
             DeclarationKind declarationKind = DeclarationKind.Struct;
             if (IsClass) declarationKind = DeclarationKind.Class;
             if (IsInterface) declarationKind = DeclarationKind.Interface;
-            
+
             var nestedTypes = _netstedTypes
                 .Values
                 .Select(type => (type as RoslynTypeBuilderAdapter).CreateDeclaration())

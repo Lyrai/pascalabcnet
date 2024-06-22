@@ -1,4 +1,7 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -30,8 +33,12 @@ namespace NETGenerator.Adapters.Utility
 
         public static MethodSymbol ResolveMethod(IMethodBaseAdapter methodInfo, TypeSymbol declaringType = null)
         {
+            if (methodInfo is RoslynGenericMethodInfoAdapter genericMethod)
+            {
+                return genericMethod.Adaptee;
+            }
+            
             var argumentTypes = GetParameterTypes(methodInfo);
-            var methodName = methodInfo.Name;
             
             if(declaringType is null)
             {
@@ -47,7 +54,11 @@ namespace NETGenerator.Adapters.Utility
 
             do
             {
-                methodSymbol = FindMethodInType(declaringType, methodName, argumentTypes);
+                if (declaringType is null)
+                {
+                    return null;
+                }
+                methodSymbol = FindMethodInType(declaringType, methodInfo, argumentTypes);
                 declaringType = declaringType.BaseTypeNoUseSiteDiagnostics;
             } while (methodSymbol is null);
 
@@ -67,13 +78,74 @@ namespace NETGenerator.Adapters.Utility
 
         public static MethodSymbol ResolveMethodInType(TypeSymbol declaringType, IMethodBaseAdapter method)
         {
-            return FindMethodInType(declaringType, method.Name, GetParameterTypes(method));
+            return FindMethodInType(declaringType, method, GetParameterTypes(method));
         }
 
         public static FieldSymbol ResolveField(IFieldInfoAdapter field, TypeSymbol declaringType = null)
         {
             var netType = declaringType ?? ResolveType(field.DeclaringType);
             return netType.GetMembers(field.Name).OfType<FieldSymbol>().First();
+        }
+        
+        public static void FixGenericTypeArgumentsIfNeeded(Symbol containingSymbol, TypeSymbol symbol)
+        {
+            if (symbol is ArrayTypeSymbol arr)
+            {
+                FixGenericTypeArgumentsIfNeeded(containingSymbol, arr.ElementType);
+            }
+
+            if (symbol is PointerTypeSymbol ptr)
+            {
+                FixGenericTypeArgumentsIfNeeded(containingSymbol, ptr.PointedAtType);
+                return;
+            }
+
+            if (symbol is PascalTypeParameterSymbol pascalTypeParameter)
+            {
+                if(pascalTypeParameter.ContainingSymbol is null)
+                {
+                    containingSymbol = FindTypeParameter(containingSymbol, pascalTypeParameter.Name).ContainingSymbol;
+                    pascalTypeParameter.SetContainingSymbol(containingSymbol);
+                }
+                
+                return;
+            }
+            
+            if (!(symbol is NamedTypeSymbol namedType))
+            {
+                return;
+            }
+
+            if (!namedType.IsGenericType || namedType.IsUnboundGenericType)
+                return;
+            
+            bool flag = false;
+            foreach (var typeArg in namedType.TypeArgumentsWithAnnotationsNoUseSiteDiagnostics)
+            {
+                FixGenericTypeArgumentsIfNeeded(containingSymbol, typeArg.Type);
+            }
+        }
+
+        private static TypeSymbol FindTypeParameter(Symbol containing, string name)
+        {
+            TypeSymbol parameter = null;
+            if(containing is MethodSymbol method)
+            {
+                parameter = method
+                    .TypeParameters
+                    .FirstOrDefault(methParam => methParam.Name == name);
+                containing = method.ContainingSymbol;
+            }
+
+            if (parameter is null && containing is NamedTypeSymbol type)
+            {
+                parameter = type
+                    .TypeParameters
+                    .FirstOrDefault(typeParameter => typeParameter.Name == name);
+            }
+
+            Debug.Assert(parameter is TypeParameterSymbol);
+            return parameter;
         }
         
         private static bool SelectMethodByParamsExact(Symbol symbol, ITypeAdapter[] argumentTypes)
@@ -84,7 +156,7 @@ namespace NETGenerator.Adapters.Utility
 
             return parameterTypes
                 .Zip(args, (param, arg) => (param, arg))
-                .All(tuple => tuple.param.MetadataName == tuple.arg.MetadataName);
+                .All(tuple => tuple.param.Equals(tuple.arg));
         }
 
         private static bool SelectMethodByParamsWithCastChecks(Symbol symbol, ITypeAdapter[] argumentTypes)
@@ -101,7 +173,7 @@ namespace NETGenerator.Adapters.Utility
                 .All(t => t.arg.CanUnifyWith(t.param) || t.arg.IsEqualToOrDerivedFrom(t.param, TypeCompareKind.ConsiderEverything, ref useSiteInfo));
         }
 
-        private static MethodSymbol FindMethodInType(TypeSymbol type, string methodName, ITypeAdapter[] argumentTypes)
+        private static MethodSymbol FindMethodInType(TypeSymbol type, IMethodBaseAdapter method, ITypeAdapter[] argumentTypes)
         {
             /*if (type.IsUnboundGenericType())
             {
@@ -109,7 +181,8 @@ namespace NETGenerator.Adapters.Utility
             }*/
             
             var members = type
-                .GetMembers(methodName)
+                .GetMembers(method.Name)
+                .OfType<MethodSymbol>()
                 .Where(symbol => symbol.GetParameters().Length == argumentTypes.Length)
                 .ToArray();
 
@@ -118,8 +191,21 @@ namespace NETGenerator.Adapters.Utility
                 return null;
             }
 
-            return (members.FirstOrDefault(symbol => SelectMethodByParamsExact(symbol, argumentTypes))
-                    ?? members.FirstOrDefault(symbol => SelectMethodByParamsWithCastChecks(symbol, argumentTypes))) as MethodSymbol;
+            var exactMatch = members.FirstOrDefault(symbol => SelectMethodByParamsExact(symbol, argumentTypes));
+            if (exactMatch is object)
+            {
+                return exactMatch as MethodSymbol;
+            }
+
+            if (!(method is IMethodInfoAdapter methodInfo) || !methodInfo.IsGenericMethod)
+            {
+                return members.FirstOrDefault(symbol => SelectMethodByParamsWithCastChecks(symbol, argumentTypes)) as MethodSymbol;
+            }
+
+            return members
+                .Cast<MethodSymbol>()
+                .Where(symbol => symbol.IsGenericMethod)
+                .FirstOrDefault(symbol => SelectMethodByParamsWithCastChecks(symbol, argumentTypes));
         }
 
         private static ITypeAdapter[] GetParameterTypes(IMethodBaseAdapter method)

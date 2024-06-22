@@ -102,10 +102,11 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         public void DefineGenericParameters(string[] names)
         {
-            _genericParameters = names
-                .Select(name => new RoslynGenericTypeParameterBuilderAdapter(DeclaringType, name))
-                .Cast<ITypeAdapter>()
-                .ToArray();
+            _genericParameters = new ITypeAdapter[names.Length];
+            for (int i = 0; i < names.Length; i++)
+            {
+                _genericParameters[i] = new RoslynGenericTypeParameterBuilderAdapter(this, names[i], i);
+            }
 
             IsGenericMethod = true;
             IsGenericMethodDefinition = true;

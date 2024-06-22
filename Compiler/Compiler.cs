@@ -1,4 +1,4 @@
-﻿// Copyright (c) Ivan Bondarev, Stanislav Mikhalkovich (for details please see \doc\copyright.txt)
+﻿﻿// Copyright (c) Ivan Bondarev, Stanislav Mikhalkovich (for details please see \doc\copyright.txt)
 // This code is distributed under the GNU LGPL (for details please see \doc\license.txt)
 /***************************************************************************
 *   
@@ -4401,8 +4401,28 @@ namespace PascalABCCompiler
             string tn = Path.Combine(standartAssemblyPath, name);
             if (File.Exists(tn))
                 return tn;
+            var isNetCore = false;
+#if NETCOREAPP
+            isNetCore = true;
+#endif
             if (Environment.OSVersion.Platform != PlatformID.Unix && Environment.OSVersion.Platform != PlatformID.MacOSX)
             {
+                if (isNetCore)
+                {
+                    var coreLibLocation = new DirectoryInfo(typeof(object).Assembly.Location);
+                    var version = coreLibLocation.Parent.Name;
+                    var searchBase = coreLibLocation.Parent.Parent.Parent.FullName;
+                    var searchLocations = new string[] {"Microsoft.NETCore.App", "Microsoft.WindowsDesktop.App"};
+                    foreach (var location in searchLocations)
+                    {
+                        var candidate = Path.Combine(searchBase, location, version, name);
+                        if(File.Exists(candidate)) {
+                            return candidate;
+                        }
+                    }
+                    
+                    return null;
+                }
                 string windir = Path.Combine(Environment.GetEnvironmentVariable("windir"), "Microsoft.NET");
                 tn = windir + @"\assembly\GAC_MSIL\";
                 tn += ttn + "\\";

@@ -24,12 +24,10 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
         public void SetSetMethod(IMethodBuilderAdapter method)
         {
             _setMethod = method;
-            if (PropertyType is object && !Equals(PropertyType, method.GetParameters()[0].ParameterType))
+            if(PropertyType is null)
             {
-                throw new InvalidOperationException("Property getter/setter type mismatch");
+                PropertyType = method.GetParameters()[0].ParameterType;
             }
-
-            PropertyType = method.GetParameters()[0].ParameterType;
         }
 
         public override IMemberInfoAdapter Instantiate(Dictionary<ITypeAdapter, ITypeAdapter> typeArguments,

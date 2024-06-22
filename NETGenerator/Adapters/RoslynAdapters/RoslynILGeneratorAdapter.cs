@@ -86,10 +86,6 @@ namespace PascalABCCompiler.NETGenerator.Adapters.RoslynAdapters
 
         public void Emit(OpCode opcode, IConstructorInfoAdapter constructor)
         {
-            if (constructor.DeclaringType is RoslynGenericTypeAdapter generic && generic.Adaptee.IsUnboundGenericType)
-            {
-                Console.WriteLine("Here");
-            }
             _instructions.Add(Instruction.Emit);
             _arguments.Add(new EmitInstruction(opcode, constructor));
         }

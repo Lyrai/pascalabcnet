@@ -15,51 +15,22 @@ uses
   System;
 
 const
-//{{{doc: Начало секции 0 }}} 
-// -----------------------------------------------------
-//>>     Цветовые константы модуля CRT # CRT constants
-// -----------------------------------------------------
-
-/// Черный цвет  
-  Black        = 0;
-/// Синий цвет  
+  Black        = 0; 
   Blue         = 1; 
-/// Зеленый цвет  
   Green        = 2;
-/// Бирюзовый цвет  
   Cyan         = 3;
-/// Красный цвет  
   Red          = 4;
-/// Малиновый цвет  
   Magenta      = 5; 
-/// Коричневый цвет  
   Brown        = 6; 
-/// Светло-серый цвет  
   LightGray    = 7;
-/// Темно-серый цвет  
   DarkGray     = 8; 
-/// Светло-голубой цвет  
   LightBlue    = 9; 
-/// Светло-зеленый цвет  
   LightGreen   = 10; 
-/// Светло-бирюзовый цвет  
   LightCyan    = 11; 
-///  цвет  
   LightRed     = 12; 
-/// Светло-малиновый цвет  
   LightMagenta = 13; 
-/// Желтый цвет  
   Yellow       = 14; 
-/// Белый цвет  
   White        = 15;
-//{{{--doc: Конец секции 0 }}} 
-
-
-//{{{doc: Начало секции 1 }}} 
-
-// -----------------------------------------------------
-//>>     Подпрограммы модуля CRT # CRT functions
-// -----------------------------------------------------
 
 /// <summary>
 /// Задает заголовок консольного окна
@@ -94,6 +65,7 @@ function WindowWidth: integer;
 /// <summary>
 /// Возвращает высоту экрана
 /// </summary>
+/// <returns></returns>
 function WindowHeight: integer;
 /// <summary>
 /// Возвращает Х-координату курсора
@@ -137,8 +109,6 @@ procedure ClearLine;
 /// Делает паузу на ms миллисекунд
 /// </summary>
 procedure Delay(ms: integer);
-
-//{{{--doc: Конец секции 1 }}} 
 
 ///--
 procedure __InitModule__;
@@ -185,9 +155,9 @@ function ReadKey: char;// TODO продумать это
 var
   KeyInfo: ConsoleKeyInfo;
 begin
-  if NextKey <> #0 then 
+  if NextKey <> Chr(0) then 
   begin
-    ReadKey := NextKey;
+    ReadKey := nextkey;
     NextKey := #0;
   end 
   else 
@@ -202,7 +172,7 @@ end;
 
 function KeyPressed: boolean;
 begin
-  KeyPressed := (NextKey <> #0) or Console.KeyAvailable;
+  KeyPressed := Console.KeyAvailable;
 end;
 
 function WindowWidth: integer;

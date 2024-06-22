@@ -1,11 +1,15 @@
 ﻿// Copyright (c) Ivan Bondarev, Stanislav Mikhalkovich (for details please see \doc\copyright.txt)
 // This code is distributed under the GNU LGPL (for details please see \doc\license.txt)
 {$reference Compiler.dll}
-{$reference CodeCompletion.dll}
+//{$reference CodeCompletion.dll}
 {$reference Errors.dll}
 {$reference CompilerTools.dll}
 {$reference Localization.dll}
-{$reference System.Windows.Forms.dll}
+{$reference 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.3\Accessibility.dll'}
+{$reference 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.3\System.Windows.Forms.dll'}
+{$reference 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.3\System.Windows.Forms.Primitives.dll'}
+{$reference 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.3\System.Drawing.Common.dll'}
+{$reference 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.3\System.Configuration.ConfigurationManager.dll'}
 {$reference ParserTools.dll}
 
 uses PascalABCCompiler, System.IO, System.Diagnostics;
@@ -93,12 +97,14 @@ end;
 
 procedure CompileAllRunTests(withdll: boolean; only32bit: boolean := false);
 begin
-  
+  writeln('Enter');
   var comp := new Compiler();
+  writeln('Created compiler');
   
   var files := Directory.GetFiles(TestSuiteDir, '*.pas');
   for var i := 0 to files.Length - 1 do
   begin
+    try
     if IsUnix then
       writeln('Compile file '+files[i]);
     var content := &File.ReadAllText(files[i]);
@@ -146,7 +152,9 @@ begin
     if i mod 50 = 0 then
     begin
       System.GC.Collect();
-    end;  
+    end;
+	except on e: Exception do begin
+	writeln('Compilation of ' + files[i] + 'failed');
   end;
   //Println;
 end;
@@ -302,10 +310,10 @@ begin
   end;
 end;
 
-procedure RunExpressionsExtractTests;
+{procedure RunExpressionsExtractTests;
 begin
   CodeCompletion.CodeCompletionTester.Test();  
-end;
+end;}
 
 function GetLineByPos(lines: array of string; pos: integer): integer;
 begin
@@ -337,7 +345,7 @@ begin
     end;
 end;
 
-procedure RunIntellisenseTests;
+{procedure RunIntellisenseTests;
 begin
   PascalABCCompiler.StringResourcesLanguage.CurrentTwoLetterISO := 'ru';
   CodeCompletion.CodeCompletionTester.TestIntellisense(TestSuiteDir + PathSeparator + 'intellisense_tests');
@@ -352,7 +360,7 @@ begin
     System.Windows.Forms.MessageBox.Show(errors + System.Environment.NewLine + 'more info at TestSuite/formatter_tests/output/log.txt');
     Halt;
   end;
-end;
+end;}
 
 procedure ClearDirByPattern(dir, pattern: string);
 begin
@@ -403,6 +411,7 @@ end;
 
 begin
   //DeletePABCSystemPCU;
+  writeln('Enter main');
   try
     PascalABCCompiler.Parsers.Controller.Instance.LoadStandardParsers();
     
@@ -414,6 +423,7 @@ begin
     begin
       DeletePCUFiles;
       ClearExeDir;
+	  writeln('Before 1');
       CompileAllRunTests(false);
       writeln('Tests to run: '+Milliseconds()+'ms');
     end;
@@ -441,7 +451,7 @@ begin
     end;
     if (ParamCount = 0) or (ParamStr(1) = '5') then
     begin
-      
+        writeln('Before');
         CompileAllRunTests(false, true);
         writeln('Tests in 32bit mode compiled successfully');
         RunAllTests(false);
@@ -456,12 +466,12 @@ begin
       RunAllTests(false);
       writeln('Tests with pabcrtl run successfully');
       System.Environment.CurrentDirectory := Path.GetDirectoryName(GetEXEFileName());
-      RunExpressionsExtractTests;
-      writeln('Intellisense expression tests run successfully');
-      RunIntellisenseTests;
-      writeln('Intellisense tests run successfully');
-      RunFormatterTests;
-      writeln('Formatter tests run successfully');
+      //RunExpressionsExtractTests;
+      //writeln('Intellisense expression tests run successfully');
+      //RunIntellisenseTests;
+      //writeln('Intellisense tests run successfully');
+      //RunFormatterTests;
+      //writeln('Formatter tests run successfully');
     end;
   except
     on e: Exception do

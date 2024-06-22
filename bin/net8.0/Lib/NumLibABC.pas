@@ -75,8 +75,8 @@ type
   constructor (x,y:array of real; eps:real);
   begin
     nt:=x.Length;
-    Assert(nt=y.Length,
-        'Approx: несовпадение количества точек в аргументе и функции');
+    //Assert(nt=y.Length,
+    //    'Approx: несовпадение количества точек в аргументе и функции');
     Self.x:=x;
     Self.y:=y;
     f:=ArrFill(nt,0.0);

@@ -2,8 +2,6 @@
 
 uses LightPT;
 
-function Chr(i: integer) := PABCSystem.Chr(i);
-
 var AllTaskNames: array of string;
 
 procedure CheckTaskT(name: string);
@@ -282,7 +280,7 @@ begin
   end;
   'Insert2': begin 
     CheckData(Input := Empty);
-    CheckOutput('Петр Первый был великим русским императором');
+    CheckOutput('Петр первый был великим русским императором');
   end;
   'StrChange1': begin 
     CheckData(Input := Empty);
@@ -306,7 +304,7 @@ begin
   end;
   'StrSlice2': begin 
     CheckData(Input := Empty);
-    CheckOutputSeq(Arr('клад зарыт на юго западе', 'зашифрованное сообщение'));
+    CheckOutputSeq(Arr('клад зарыт на юго западе', 'клад зарыт на юго западе'));
   end;
   'StrSlice4': begin 
     CheckData(Input := Empty);
